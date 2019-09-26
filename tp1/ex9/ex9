@@ -1,0 +1,16 @@
+a) Quem são os alunos do professor X?
+
+| ?- professor(carlos, Y), aluno(Z, Y).
+
+
+b) Quem são as pessoas da universidade X? (alunos ou docentes)
+
+| ?- frequenta(X, feup), funcionario(Y, feup).
+
+
+c) Quem é colega de quem? Se aluno: é colega se for colega de disciplina ou colega de curso ou colega
+de universidade. Se professor: se for professor da mesma universidade.
+
+| ?- frequenta(X, Y), frequenta(Z, Y), X\=Z, @X<Z ;
+aluno(X, Y), aluno(Z, Y), X\=Z, @X<Z ;
+funcionario(X, Y), funcionario(Z, Y) , X\=Z, @X<Z.

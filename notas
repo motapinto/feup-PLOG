@@ -1,0 +1,13 @@
+% how to open files: consult(filePath).
+% how to debug: trace.
+% how to stop debugging: notrace.
+% '_' representa uma wildcard; 
+% ',' representa "e";
+% ';' representa "ou";
+% ":-" significa "se"
+% "\=" significa diferente.
+% "<" compara numeros.
+% "@<" compara atomos.
+once - nao haver repetidos dentro do mm predicado
+
+Backtraking: problema prolog (constantes nas clausulas)
