@@ -9,19 +9,12 @@ genre('ficção').
 
 questionB(Author) :-
     author(Author, 'português'),
-    wrote(Author, book),
-    book(book, 'romance').
+    wrote(Author, Book),
+    book(Book, 'romance').
 
 questionC(Author) :-
-    wrote(Author, book1),
-    book(book1, 'ficção'),
-    wrote(Author, book2),
-    book(book2, Genero),
+    wrote(Author, Book1),
+    book(Book1, 'ficção'),
+    wrote(Author, Book2),
+    book(Book2, Genero),
     Genero \= 'ficção'.
-
-% ---
-% Answers to exercises:
-% a) wrote(author, 'Os Maias')
-% b) questionB(author)
-% c) questionC(author)
-% ---

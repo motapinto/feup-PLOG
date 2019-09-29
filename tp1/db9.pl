@@ -15,9 +15,9 @@ funcionario(pedro, ist).
 funcionario(ana_paula, feup).
 funcionario(carlos, feup).
 
-alunosDoProf(ProfX) :-
-    aluno(A, D),
-    professor(ProfX, D).
+alunosDoProf(Aluno, ProfX) :-
+    professor(ProfX, Disc),
+    aluno(Aluno, Disc).
 
 daUniversidade(Uni) :-
     frequenta(Pessoa, Uni) ;
