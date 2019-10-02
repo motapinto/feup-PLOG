@@ -1,6 +1,8 @@
 % how to open files: consult(filePath).
 % how to debug: trace.
 % how to stop debugging: notrace.
+% 'spy "predicate"' to debug a predicate
+
 % '_' representa uma wildcard; 
 % ',' representa "e";
 % ';' representa "ou";
