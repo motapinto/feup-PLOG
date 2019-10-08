@@ -56,8 +56,6 @@ printBoardBody([H|T]) :-
     printBoardHead(Line, Line),
     printBoardBody(T, N).
 
-
-
 printBoard(X) :-
     printBoardHead(13, 1),
     printBoardBody(X).
