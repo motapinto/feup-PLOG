@@ -31,9 +31,9 @@ printBoardHead(N, N) :-
     write('|\n').
 
 printBoardHead(Columns, N) :-
-    Columns > Ni,
     format('| ~d ', N),
     Ni is N + 1,
+    Columns > Ni,
     printBoardHead(Columns, Ni) ; 
     write('|\n').
 
