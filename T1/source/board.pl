@@ -5,57 +5,55 @@
 %   10 of a given color; in a 2 players game, 5 pieces of each color), while keeping every other piece safe.
 
 initialBoard(
-[
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-    [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ]
-]).
+    [
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ]
+    ]
+).
 
 piece(nullCell, S) :- S ='-'.
 piece(red, S) :- S ='R'.
 piece(yellow, S) :- S ='Y'.
 piece(blue, S) :- S ='B'.
+    
 
-printBoardHead(N, N) :-
-    write('---|'),
-    Ni is N - 1,
-    printBoardHead(Ni, Ni);
-    write('|\n').
+printBoardHead :-
+    write('   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12|'),
+    printLineConst.
 
-printBoardHead(Columns, N) :-
-    format('| ~d ', N),
-    Ni is N + 1,
-    Columns > Ni,
-    printBoardHead(Columns, Ni) ; 
-    write('|\n').
-
+printLineConst :-
+    write('\n---|---|---|---|---|---|---|---|---|---|---|---|---|\n').
+    
 printLine([]).
 printLine([H|T]) :-
-    symbol(H, S),
+    piece(H, S),
     write(S),
     write(' | '),
     printLine(T).
 
 printBoardBody([]).
-printBoardBody([H|T]) :-
+printBoardBody([H|T], N) :-
     write(' '),
     write(N),
     write(' | '),
 
-    N is N + 1,
+    Ni is N + 1,
+    Ni < 13,
 
     printLine(H),
-    printBoardHead(Line, Line),
-    printBoardBody(T, N).
+    printLineConst,
+    printBoardBody(T, Ni).
 
 printBoard(X) :-
-    printBoardHead(13, 1),
-    printBoardBody(X).
+    printBoardHead,
+    printBoardBody(X, 1).
+    printBoardHeader(1).
