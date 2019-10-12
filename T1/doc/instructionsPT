@@ -1,0 +1,41 @@
+materiais
+• placa 11x11, caixas hexagonais
+• Bolsa contendo 63 peças (21 azuis, 21 amarelas e 21 vermelhas)
+definições
+Árvore: o conjunto de peões em jogo.
+Peão ao vivo: um peão em jogo que possui (A) pelo menos 2
+peças adjacentes da mesma cor ou (B) pelo menos 3
+peões adjacentes de qualquer cor. Figuras (C) e (D)
+mostram duas configurações mínimas compostas por todos
+peões vivos.
+Peão de outono: um peão em jogo que, devido ao efeito
+do movimento de um jogador, ele não está mais vivo.
+Colheita: o conjunto de peças coletadas por um jogador.
+preparação
+Agite os pedaços no saco e despeje-os aleatoriamente no tabuleiro. A partir do centro, aplainar e
+alinhe as peças para que uma seja exibida para cada hexadecimal. Identifique os peões que você não
+resultado ao vivo na configuração inicial e atribuí-los a seu critério aos jogadores: eles formarão seus próprios
+colheita inicial. No exemplo abaixo, a colheita inicial é dada pelo peão amarelo no canto superior direito.
+Asterism por Giuliano Polverari - pag. 1/2
+A
+C
+D
+B
+Jogando o jogo
+O jogo prossegue em turnos. Por sua vez, o jogador escolhe um peão em jogo e o coloca em sua colheita.
+Objetivo do jogo
+Os jogadores vencem se tiverem sucesso, sem soltar peões da árvore e sem quebrá-los em vários tocos,
+colete cada um:
+• pelo menos 5 peões de cada cor (15 no total), se jogados em dois;
+• pelo menos 10 fichas de uma cor, se jogadas em três.
+exemplo
+A partir da configuração aleatória mostrada na página anterior, mostramos uma possível
+evolução do jogo em dois. Os jogadores só podem coletar 14 peças cada e
+eles permanecem derrotados a um passo da vitória, enquanto colecionam qualquer um dos peões restantes
+faria as peças caírem adjacentes ou quebrar a árvore.
+Jornada 22 Jornada 25 Jornada 27
+Variante silenciosa
+A primeira vez que você joga Asterism, é natural pensar em voz alta e concordar com os movimentos. em
+então você também pode jogar sem trocar opiniões, tentando fazer a estratégia
+A colaboração surge diretamente dos movimentos realizados.
+Asterism por Giuliano Polverari - pag. 2/2
