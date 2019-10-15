@@ -8,4 +8,13 @@
 > Martim Silva ([motapinto](https://github.com/motapinto))\
 > José Guerra ([lockdowpt](https://github.com/lockdowpt))
 
+### To do
+
+- [x] Acabar tp3.
+- [x] Perceber regras - falar com prof.
+- [x] Perceber assert retract para fazer ad piece numa row e column especifica.
+- [x] fazer predicados e acabar relatorio.
+
+
+
 **Disclaimer** - This repository was created for educational purposes and we do not take any responsibility for anything related to its content. You are free to use any code or algorithm you find, but do so at your own risk.
