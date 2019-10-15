@@ -20,17 +20,18 @@ printMenu :-
     write('ooooooooooooooooooooooooooooooooooo'), nl, nl.
 
 selectOption :-
-    write('> Insert your option '),
-    inputHandler.
+    write('> Insert your option: '),
+    menuInputHandler.
 
 
-inputHandler :-
+menuInputHandler :-
     read(Input),
     (
         Input == 1, write('A');
         Input == 2, write('B');
         Input == 3, write('C');
-        Input > 4, selectOption ; Input < 1, selectOption
+        Input == 4, write('Exiting...');
+        selectOption
     ).
 
 selectMenu :- 
