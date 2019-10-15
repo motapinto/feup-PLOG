@@ -1,3 +1,7 @@
+%include library's
+:- [board].
+:- [rules].
+
 %   Prints different options for the next move type
 printMoveOption :-
     write('=> (1) Add piece'), nl,
@@ -47,11 +51,11 @@ removePieceMove :-
 
 %   Checks if a piece specified in Row and Column 
 %   can be added in the board game and if so add piece
-addPiece(Row, Column, Piece) :-
+addPiece(Row, Column, Piece, Board) :-
     %Checks if position is empty
 
     %If it is empty - can add
-    write('A').
+    assert(initialBoard('Bob', 'Jane')).
     % cell(Row, Column, )
     %If it is not empty - send to selectMove
 
@@ -78,4 +82,11 @@ checkMove(Row, Column, Piece) :-
 
     ) ; 
     write('Invalid play move\n\n'),
+    selectMove.
+
+%   Starts players vs player mode
+startPVP :-
+    write('PLayer1:\n'),
+    selectMove,
+    write('\n\nPLayer2:\n'),
     selectMove.

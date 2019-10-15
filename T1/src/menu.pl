@@ -1,3 +1,6 @@
+%include library's
+:- [game].
+
 printMenu :- 
     nl, nl,
     write('ooooooooooooooooooooooooooooooooooo'), nl, 
@@ -26,7 +29,7 @@ selectOption :-
 menuInputHandler :-
     read(Input),
     (
-        Input == 1, write('A');
+        Input == 1, startPVP;
         Input == 2, write('B');
         Input == 3, write('C');
         Input == 4, write('Exiting...');
