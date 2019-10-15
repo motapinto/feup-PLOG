@@ -7,15 +7,15 @@
 initialBoard = 
     [
         [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
         [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
         [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
         [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
         [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
+        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
         [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ]
     ].
 
@@ -37,18 +37,33 @@ printBoardLine([H|T]) :-
     piece(H, S),
     write(S),
     write(' | '),
-    printBoardLine(T).
+
+    printBoardLine(X).
 
 %DUVIDAAAAAAAAAAAAAAAAAAAA PQ QUE COM N EM VEZ DE 12 DA ERRO?
 printBoardBody([], 12).
 printBoardBody([H|T], N) :-
+    N<10,
     write(' '),
+    write(N),
+
+    Ni is N + 1,
+
+    printBoardLine1(H),
+    printBoardLine2(T),
+    printLineConst,
+    printBoardBody(T, Ni)
+
+    ;
+
+    N>9,
     write(N),
     write(' | '),
 
     Ni is N + 1,
 
-    printBoardLine(H),
+    printBoardLine1(H),
+    printBoardLine2(T),
     printLineConst,
     printBoardBody(T, Ni).
 
@@ -58,3 +73,44 @@ printBoard(X) :-
 
 print :-
     printBoard(initialBoard).
+
+printBoardLine1([]).
+printBoardLine1([H|T]) :-
+    write(' | '),
+    piece(H, S),
+    write(S),
+    write(' | '),
+
+    printBoardLine1(X).
+
+printBoardLine2([]).
+printBoardLine2([H|T]) :-
+    write('  | '),
+    piece(H, S),
+    write(S),
+    write(' | '),
+
+    printBoardLine2(X).
+
+
+addPieceMove() :-
+    write('> Choose your next play:\n'),
+    
+    write('> Select row: '),
+    read(Row), 
+    write('\n> Select column: '),
+    read(Column).
+    write('\n> Select piece(R/B/Y): '),
+    read(Piece),
+    %checks if piece exists
+    piece(X, Piece).
+
+removePieceMove() :-
+    write('> Choose your next play:\n'),
+    
+    write('> Select row: '),
+    read(Row), 
+    write('\n> Select column: '),
+    read(Column).
+
+
