@@ -3,72 +3,68 @@
 %   forming a compact tree. A piece is "safe" if is connected to at least 2 pieces of the same color, 
 %   or to at least 3 pieces. The goal for each player is to collect several pieces (in a 3 players game, 
 %   10 of a given color; in a 2 players game, 5 pieces of each color), while keeping every other piece safe.
+:- (dynamic initialBoard/0).
 
-initialBoard = 
-    [
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ],
-        [ nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell ]
-    ].
+initialBoard([[nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell]]).
+    
 
 
-piece(nullCell, '-').
-piece(red,'R').
+piece(nullCell, -).
+piece(red, 'R').
 piece(yellow, 'Y').
 piece(blue, 'B').
 
-printBoardHead :-
-    write('   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12|'),
-    printLineConst.
 
 printLineConst :-
     write('\n---|---|---|---|---|---|---|---|---|---|---|---|---|\n').
-    
-printBoardLine([]).
-printBoardLine([H|T]) :-
-    piece(H, S),
-    write(S),
-    write(' | '),
-    printBoardLine(T).
+
+printBoardTop :-
+    write('      _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n').
+
+
+printBoardUp :-
+    write('| a | b | c | d | e | f | g | h | i | j | l | m |\n ').
+
+
+printBoardLine([], Line) :-
+    (   
+        Line==12, write('|\n');   
+        Aux is Line mod 2, Aux==0, write('|_\n');   
+        write('|\n')
+    ).
+
+printBoardLine([H|T], Line) :-
+    write('|_'), piece(H, S), 
+    write(S), write('_'),
+    printBoardLine(T, Line).
 
 %DUVIDAAAAAAAAAAAAAAAAAAAA PQ QUE COM N EM VEZ DE 12 DA ERRO?
 printBoardBody([], 12).
 printBoardBody([H|T], Line) :-
-    
-    ((   
-        Line < 10,
-        write(' ')
-    );
-    (
-        Line > 9
-    )),
-        
-    write(Line),
-    write(' | '),
+    (   
+        Line<10, write(' ');   
+        Line>9
+    ),
 
-    
-
-
-
-
-
-    LineI is Line + 1,
-
-    printBoardLine(H),
-    printLineConst,
+    write(Line), write('   '),
+    Mod is Line mod 2,
+    (   
+        Mod==0, write('  ') ;
+        Mod==1
+    ),
+    printBoardUp,
+    write('    '),
+    (   
+        Mod==0, write(' _');   
+        Mod==1
+    ),
+    LineI is Line+1,
+    printBoardLine(H, LineI),
     printBoardBody(T, LineI).
 
 
 printBoard(X) :-
-    printBoardHead,
+    printBoardTop,
     printBoardBody(X, 1).
 
 print :-
