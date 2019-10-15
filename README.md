@@ -1,6 +1,6 @@
 # PLOG
 
-> **2018/2019** - 3rd Year, 1st Semester
+> **2019/2020** - 3rd Year, 1st Semester
 >
 > **Course:** Programação em Lógica: [PLOG page in sigarra](https://sigarra.up.pt/feup/en/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=272714) | Logic Programming
 >
@@ -10,10 +10,10 @@
 
 ### To do
 
-- [x] Acabar tp3.
-- [x] Perceber regras - falar com prof.
-- [x] Perceber assert retract para fazer ad piece numa row e column especifica.
-- [x] fazer predicados e acabar relatorio.
+- [ ] Acabar tp3.
+- [ ] Perceber regras - falar com prof.
+- [ ] Perceber assert retract para fazer ad piece numa row e column especifica.
+- [ ] fazer predicados e acabar relatorio.
 
 
 
