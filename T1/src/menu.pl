@@ -23,7 +23,6 @@ selectOption :-
     write('> Insert your option: '),
     menuInputHandler.
 
-
 menuInputHandler :-
     read(Input),
     (
