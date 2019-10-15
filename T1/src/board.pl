@@ -91,26 +91,3 @@ printBoardLine2([H|T]) :-
     write(' | '),
 
     printBoardLine2(X).
-
-
-addPieceMove() :-
-    write('> Choose your next play:\n'),
-    
-    write('> Select row: '),
-    read(Row), 
-    write('\n> Select column: '),
-    read(Column).
-    write('\n> Select piece(R/B/Y): '),
-    read(Piece),
-    %checks if piece exists
-    piece(X, Piece).
-
-removePieceMove() :-
-    write('> Choose your next play:\n'),
-    
-    write('> Select row: '),
-    read(Row), 
-    write('\n> Select column: '),
-    read(Column).
-
-
