@@ -3,7 +3,7 @@
 %   forming a compact tree. A piece is "safe" if is connected to at least 2 pieces of the same color, 
 %   or to at least 3 pieces. The goal for each player is to collect several pieces (in a 3 players game, 
 %   10 of a given color; in a 2 players game, 5 pieces of each color), while keeping every other piece safe.
-:- (dynamic initialBoard/0).
+:- dynamic initialBoard/0.
 
 initialBoard([[nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell]]).
     
@@ -38,7 +38,6 @@ printBoardLine([H|T], Line) :-
     write(S), write('_'),
     printBoardLine(T, Line).
 
-%DUVIDAAAAAAAAAAAAAAAAAAAA PQ QUE COM N EM VEZ DE 12 DA ERRO?
 printBoardBody([], 12).
 printBoardBody([H|T], Line) :-
     (   
