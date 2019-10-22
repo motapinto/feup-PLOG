@@ -5,7 +5,19 @@
 %   10 of a given color; in a 2 players game, 5 pieces of each color), while keeping every other piece safe.
 :- dynamic initialBoard/1.
 
-initialBoard([[nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], [nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell]]).
+initialBoard([
+                [red, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [yellow, blue, red, blue, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell],
+                [yellow, yellow, red, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell],
+                [blue, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [yellow, yellow, blue, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [blue, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [yellow, red, blue, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [red, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [red, red, yellow, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [red, blue, red, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
+                [yellow, blue, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell]
+            ]).
     
 piece(nullCell, -).
 piece(red, 'R').
