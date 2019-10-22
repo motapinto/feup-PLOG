@@ -1,44 +1,26 @@
-%include library's
+%   include library's
 :- [board].
 :- [rules].
 
-%   Prints different options for the next move type
-printMoveOption :-
-    write('=> (1) Remove piece'), nl,
-    write('=> (2) Quit'), nl.
 
-%   Handles user input for the next move type
-moveInputHandler :-
-    read(Input),
-    (
-        Input == 1, removePieceMove; 
-        Input == 2, selectMenu; 
-        selectMove
-    ).
 
-%   Select move type option to be sent to moveInputHandler
-selectMoveOption :-
-    write('> Insert your option: '),
-        moveInputHandler.
+%   Starts players with player mode
+startPP :-
+    initialBoard(Init),
+    printBoard(Init),
+    write('PLayer1:\n'),
+    removePieceMove(Init, Out),
+    
+    initialBoard(Init),
+    printBoard(Init),
+    write('\n\nPLayer2:\n'),
+    removePieceMove(Init, Out),
 
-%   Print move option and store user input
-selectMove :-
-    printMoveOption,
-    selectMoveOption.
-
-%   Checks if a piece specified in Row and Column 
-%   can be removed in the board game and if so remove piece
-removePiece(Row, Column) :-
-    %Checks if adjacent pieces are protected
-
-    %If they are protected - can remove
-    addPiece(Row, Column, '-').
-    %If they are not protected - check adjacent tiles
-
+    startPP.
 
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
-removePieceMove :-
+removePieceMove(BoardIn, BoardOut) :-
     write('> Removing piece...\n'),
     write('> Select row: '),
     read(Row), 
@@ -46,35 +28,38 @@ removePieceMove :-
     read(Column),
     
     checkMove(Row, Column),
-    removePiece(Row, Column). 
 
-%   Checks if a piece specified in Row and Column 
-%   can be added in the board game and if so add piece
-addPiece(Row, Column, Piece, Board) :-
-    %Checks if position is empty
+    retract(initialBoard(Init)),
+    removePiece(Init, Out, Row, Column),
+    assert(initialBoard(Out)),
+    printBoard(Out).
 
-    %If it is empty - can add
-    assert(initialBoard('Bob', 'Jane')).
-    % cell(Row, Column, )
-    %If it is not empty - send to selectMove
-
-%   Asks for user input to decide specifics of
-%   the play move, specifically row, column and piece
-
-
-%   Checks if row, column and piece respect board 
-%   limits and piece existance
+%   Checks if row, column respect board limits
 checkMove(Row, Column) :-
     (
         Row > 0, Row < 12,
         Column > 0, Column < 13
     ) ; 
     write('Invalid play move\n\n'),
-    selectMove.
+    removePieceMove.
 
-%   Starts players vs player mode
-startPP :-
-    write('PLayer1:\n'),
-    selectMove,
-    write('\n\nPLayer2:\n'),
-    selectMove.
+
+%   Removes the piece from BoardIn and updates in BoardOut
+removePiece(BoardIn, BoardOut, Row, Column) :-
+    updateRow(Row, Column, In, Out).
+%
+%
+updateRow(1, Column, [H|T], [Hout|T]):-
+    updateColumn(Column, H, Hout).
+%    
+updateRow(Row, Column, [H|T], [H|Tout]):-
+    Row > 1,
+    RowNext is Row - 1, 
+    updateRow(RowNext, Column, T, Tout).
+updateColumn(1, [H|T], [Hout|T]):-
+    Hout = nullCell.
+%
+updateColumn(Column, [H|T], [H|Tout]):-
+    Column > 1,
+    ColumnI is Column - 1, 
+    updateColumn(ColumnI, T, Tout).

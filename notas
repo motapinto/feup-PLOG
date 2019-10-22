@@ -10,6 +10,9 @@
 % "\=" significa diferente.
 % "<" compara numeros.
 % "@<" compara atomos.
-once - nao haver repetidos dentro do mm predicado
+once - nao haver repetidos dentro do mm 
+
+spy predicate.
+nospy predicate.
 
 Backtraking: problema prolog (constantes nas clausulas)

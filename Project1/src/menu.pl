@@ -13,13 +13,13 @@ printMenu :-
     write('o                                 o'), nl,
     write('o       => (3) Machine & Machine  o'), nl,
     write('o                                 o'), nl,
-    write('o       => (4) exit               o'), nl,
+    write('o       => (4) Exit               o'), nl,
     write('o                                 o'), nl,
     write('ooooooooooooooooooooooooooooooooooo'), nl,
     write('o        Created by:              o'), nl,
     write('o                                 o'), nl,
-    write('o      => martim silva            o'), nl,
-    write('o      =>  jose guerra            o'), nl,
+    write('o      => Martim Silva            o'), nl,
+    write('o      => Jose Guerra             o'), nl,
     write('ooooooooooooooooooooooooooooooooooo'), nl, nl.
 
 selectOption :-
@@ -36,6 +36,6 @@ menuInputHandler :-
         selectOption
     ).
 
-selectMenu :- 
+play :- 
     printMenu,
     selectOption.
