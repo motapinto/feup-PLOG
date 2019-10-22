@@ -10,48 +10,42 @@ startPP :-
     playLoop.
 
 %   Randomizes initial Board and prints it
-initGame(Init) :-
-    initialBoard(Init),
-    printBoard(Init).
+initGame(BoardIn) :-
+    initialBoard(BoardIn),
+    printBoard(BoardIn).
 
 %   Loop of playing
 playLoop :-
     write('Player1:\n'),
-    removePieceAsk(Init, Out),
-    
-    initialBoard(Init),
-    
+    initialBoard(BoardIn),
+    removePieceAsk(Row, Column),
+    removePieceDo(BoardIn, BoardOut, Row, Column),
+    initialBoard(BoardIn),
+    printBoard(BoardIn),
+
     write('\n\nPlayer2:\n'),
-    removePieceMove(Init, Out),
+    removePieceAsk(Row, Column),
+    removePieceDo(BoardIn, BoardOut, Row, Column),
+    initialBoard(BoardIn),
+    printBoard(BoardIn),
 
     playLoop.
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
-removePieceAsk(BoardIn, BoardOut) :-
+removePieceAsk(Row, Column) :-
     write('> Removing piece...\n'),
     write('> Select row: '),
     read(Row), 
     write('> Select column: '),
-    read(Column),
-    
-    checkMove(Row, Column, BoardIn, BoardOut),
-    removePieceDo(BoardIn, BoardOut).
+    read(Column).
+   % checkMove(Row, Column).
 
-removePieceDo(BoardIn, BoardOut) :-
-
-    retract(initialBoard(Init)),
-    removePiece(Init, Out, Row, Column),
-    assert(initialBoard(Out)),
-    printBoard(Out).
+removePieceDo(BoardIn, BoardOut, Row, Column) :-
+    retract(initialBoard(BoardIn)),
+    removePiece(BoardIn, BoardOut, Row, Column),
+    assert(initialBoard(BoardOut)).
 
 %   Checks if row, column respect board limits
-checkMove(Row, Column, In, Out) :-
-    (
-        Row > 0, Row < 12,
-        Column > 0, Column < 13
-    ) ; 
-    write('Invalid row and/or column\n\n'),
-    removePieceAsk(In, Out).
 
 %   Removes the piece from BoardIn and updates in BoardOut
 removePiece(BoardIn, BoardOut, Row, Column) :-
@@ -63,7 +57,7 @@ updateColumn(1, [H|T], [Hout|T]):-
 updateColumn(Column, [H|T], [H|Tout]):-
     Column > 1,
     ColumnI is Column - 1, 
-    atualizaColuna(ColumnI, T, Tout).
+    updateColumn(ColumnI, T, Tout).
 %
 updateRow(1, Column, [H|T], [Hout|T]):-
     updateColumn(Column, H, Hout).
