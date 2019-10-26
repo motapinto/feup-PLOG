@@ -4,7 +4,7 @@
 >	
 > **Course:** Programação em Lógica: [PLOG page in sigarra](https://sigarra.up.pt/feup/en/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=272714) | Logic Programming
 >	
-> **Project developed by:**\	> **Developed by:**\
+> **Project developed by:**\
 > Martim Silva ([motapinto](https://github.com/motapinto))\	> Martim Silva ([motapinto](https://github.com/motapinto))\
 > José Guerra ([lockdowpt](https://github.com/lockdowpt))	
 
