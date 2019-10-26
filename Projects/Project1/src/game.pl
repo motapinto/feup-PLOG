@@ -15,21 +15,20 @@ initGame(BoardIn) :-
     printBoard(BoardIn).
 
 %   Loop of playing
-playLoop :-
+playLoop:-
+    
     write('Player1:\n'),
     initialBoard(BoardIn),
     removePieceAsk(Row, Column),
     removePieceDo(BoardIn, BoardOut, Row, Column),
-    initialBoard(BoardIn),
-    printBoard(BoardIn),
+    printBoard(BoardOut),
 
-    write('\n\nPlayer2:\n'),
-    removePieceAsk(Row, Column),
-    removePieceDo(BoardIn, BoardOut, Row, Column),
-    initialBoard(BoardIn),
-    printBoard(BoardIn),
-
+    write('Player2:\n'),
+    removePieceAsk(Row1, Column1),
+    removePieceDo(BoardOut, BoardOut2, Row1, Column1),
+    printBoard(BoardOut2),
     playLoop.
+
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
 removePieceAsk(Row, Column) :-
