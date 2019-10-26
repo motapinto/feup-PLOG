@@ -25,6 +25,8 @@ piece(yellow, 'Y').
 piece(blue, 'B').
 
 
+
+
 printLineConst :-
     write('\n---|---|---|---|---|---|---|---|---|---|---|---|---|\n').
 
