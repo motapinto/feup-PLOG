@@ -2,19 +2,11 @@
 
 > **2019/2020** - 3rd Year, 1st Semester
 >
-> **Course:** Programação em Lógica: [PLOG page in sigarra](https://sigarra.up.pt/feup/en/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=272714) | Logic Programming
+> **LeetCode:**\
+> [LeetCode page](https://leetcode.com/)\
+> [LeetCode problems set](https://leetcode.com/problemset/all)
 >
-> **Project developed by:**\
-> Martim Silva ([motapinto](https://github.com/motapinto))\
-> José Guerra ([lockdowpt](https://github.com/lockdowpt))
+> **Developed by:**\
+> Martim Silva ([motapinto](https://github.com/motapinto))
 
-### To do
-
-- [ ] Acabar tp3.
-- [ ] Perceber regras - falar com prof.
-- [ ] Perceber assert retract para fazer ad piece numa row e column especifica.
-- [ ] fazer predicados e acabar relatorio.
-
-
-
-**Disclaimer** - This repository was created for educational purposes and we do not take any responsibility for anything related to its content. You are free to use any code or algorithm you find, but do so at your own risk.
+**Disclaimer** - This repository was created for educational purposes and I do not take any responsibility for anything related to its content. You are free to use any code or algorithm you find, but do so at your own risk.
