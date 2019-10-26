@@ -1,6 +1,6 @@
 :- [board].
 
-checkIfNotNull(Row, Column, ErrorType):-
+checkIfNotNull(Row, Column, ErrorType) :-
     initialBoard(In),
     checkRow(Row, Column, In, ErrorType).
 
