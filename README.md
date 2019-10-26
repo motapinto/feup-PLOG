@@ -4,7 +4,7 @@
 >
 > **LeetCode:**\
 > [LeetCode page](https://leetcode.com/)\
-> [LeetCode problem set](https://leetcode.com/problemset/all)
+> [LeetCode problems set](https://leetcode.com/problemset/all)
 >
 > **Developed by:**\
 > Martim Silva ([motapinto](https://github.com/motapinto))
