@@ -17,31 +17,31 @@ initGame(BoardIn) :-
 %it is bound. What you can do though, is force backtracking through the 
 %assignment, then this variable can be set again. 
 
-playLoop:-
+playLoop :-
     
     write('Player1:\n'),
-    initialBoard(BoardIn),
-    removePieceAsk(Row, Column),
-    removePieceDo(BoardIn, BoardOut, Row, Column),
-    printBoard(BoardOut),
+    removePieceAsk,
 
     write('Player2:\n'),
-    removePieceAsk(Row1, Column1),
-    removePieceDo(BoardOut, BoardOut2, Row1, Column1),
-    printBoard(BoardOut2),
+    removePieceAsk,
+    
     playLoop.
 
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
-removePieceAsk(Row, Column) :-
+removePieceAsk :-
         write('> Removing piece...\n'),
         write('> Select row: '),
         read(Row), 
         write('> Select column: '),
         read(Column),
         checkMove(Row, Column , ErrorType),
+        initialBoard(BoardIn),
         (
-                ErrorType == 0 -> true ;         
+                ErrorType == 0 -> (
+                                    removePieceDo(BoardIn, BoardOut, Row, Column), 
+                                    printBoard(BoardOut)
+                                  );         
                 (
                     removePieceAsk(Row1, Column1)
                 )
@@ -56,23 +56,28 @@ removePieceDo(BoardIn, BoardOut, Row, Column) :-
 
 checkMove(Row, Column, ErrorType):-
         (
-            Row > 0, 
-            Row < 12, 
-            Column > 0, 
-            Column < 13 , 
-            checkRules(Row, Column, ErrorType),
-            (
-                ErrorType == 0 -> true ;         
+            (   
+                Row > 0, 
+                Row < 12, 
+                Column > 0, 
+                Column < 13
+            ) -> checkRules(Row, Column, ErrorType) ;
+                ErrorType = 4
+        ),
                 (
                     (
-                        (ErrorType == 1, write('Tried to remove a piece that doesnt exist\n'));
-                        (ErrorType == 2,  write('Tried to remove a piece that makes other pieces unprotected\n'));
-                        (ErrorType == 3,  write('Tried to remove a piece that breaks the game tree\n'))
-                    ),
-                    write(' Try Again \n')
-                )
+                        ErrorType == 0 -> true ;         
+                        (
+                            (
+                                (ErrorType == 1, write('Tried to remove a piece that doesnt exist\n'));
+                                (ErrorType == 2,  write('Tried to remove a piece that makes other pieces unprotected\n'));
+                                (ErrorType == 3,  write('Tried to remove a piece that breaks the game tree\n'))
+                            ),
+                            write(' Try Again \n')
+                        )
+                    )
             )
-        ).
+        );
 
 %   Removes the piece from BoardIn and updates in BoardOut
 removePiece(BoardIn, BoardOut, Row, Column) :-
