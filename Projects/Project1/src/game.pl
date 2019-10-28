@@ -2,8 +2,6 @@
 :- [board].
 :- [rules].
 
-
-
 %   Starts players with player mode
 startPP :-
     initGame(Init),
@@ -36,21 +34,18 @@ playLoop:-
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
 removePieceAsk(Row, Column) :-
-    (write('> Removing piece...\n'),
-    write('> Select row: '),
-    read(Row), 
-    write('> Select column: '),
-    read(Column),
-    checkMove(Row, Column , ErrorType));
-
-    (write('Invalid Move!! '),
-    (
-    (ErrorType == 1, write('Tried to remove a piece that doesnt exist'));
-    (ErrorType == 2, write('Tried to remove a piece that makes other pieces unprotected'));
-    (ErrorType == 3, write('Tried to remove a piece that breaks the game tree')) 
-    ), 
-    write(' Try Again \n'),
-    removePieceAsk(Row1, Column1)).
+        write('> Removing piece...\n'),
+        write('> Select row: '),
+        read(Row), 
+        write('> Select column: '),
+        read(Column),
+        checkMove(Row, Column , ErrorType),
+        (
+                ErrorType == 0 -> true ;         
+                (
+                    removePieceAsk(Row1, Column1)
+                )
+        ).
 
 removePieceDo(BoardIn, BoardOut, Row, Column) :-
     retract(initialBoard(BoardIn)),
@@ -60,17 +55,30 @@ removePieceDo(BoardIn, BoardOut, Row, Column) :-
 %   Checks if row, column respect board limits
 
 checkMove(Row, Column, ErrorType):-
-    (Row > 0, 
-    Row < 12, 
-    Column > 0, 
-    Column < 13 , 
-    checkRules(Row, Column, ErrorType)
-    ).
+        (
+            Row > 0, 
+            Row < 12, 
+            Column > 0, 
+            Column < 13 , 
+            checkRules(Row, Column, ErrorType),
+            (
+                ErrorType == 0 -> true ;         
+                (
+                    (
+                        (ErrorType == 1, write('Tried to remove a piece that doesnt exist\n'));
+                        (ErrorType == 2,  write('Tried to remove a piece that makes other pieces unprotected\n'));
+                        (ErrorType == 3,  write('Tried to remove a piece that breaks the game tree\n'))
+                    ),
+                    write(' Try Again \n')
+                )
+            )
+        ).
 
 %   Removes the piece from BoardIn and updates in BoardOut
 removePiece(BoardIn, BoardOut, Row, Column) :-
     updateRow(Row, Column, BoardIn, BoardOut).
 
+%
 updateColumn(1, [H|T], [Hout|T]):-
     Hout = nullCell.
 %

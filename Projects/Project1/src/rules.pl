@@ -1,17 +1,18 @@
 :- [board].
 
+checkRules(Row, Column, ErrorType):-
+    checkIfNotNull(Row, Column, ErrorType).
+
 checkIfNotNull(Row, Column, ErrorType) :-
     initialBoard(In),
     checkRow(Row, Column, In, ErrorType).
 
-
-checkRules(Row, Column, ErrorType):-
-    checkIfNotNull(Row, Column, ErrorType).
-
 checkColumn(1, [H|T], ErrorType):-
-    (H == nullCell ->
-    ErrorType = 1,
-    fail; ErrorType = 0, true).
+    (
+        H == nullCell ->
+        ErrorType = 1; 
+        ErrorType = 0
+    ).
 
 checkColumn(Column, [H|T] , ErrorType):-
     Column > 1,
