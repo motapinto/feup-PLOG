@@ -1,6 +1,7 @@
 %   include library's
 :- [board].
 :- [rules].
+:- [players].
 
 %   Starts players with player mode
 startPP :-
@@ -20,16 +21,20 @@ initGame(BoardIn) :-
 playLoop :-
     
     write('Player1:\n'),
-    removePieceAsk,
+    removePieceAsk(Color),
+    addPieceToWhatPlayer(1, Color),
 
     write('Player2:\n'),
-    removePieceAsk,
+    removePieceAsk(Color),
+    addPieceToWhatPlayer(2, Color),
+    
+    printPlayersCurrentScore,
     
     playLoop.
 
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
-removePieceAsk :-
+removePieceAsk(Color) :-
         write('> Removing piece...\n'),
         write('> Select row: '),
         read(Row), 
@@ -39,7 +44,7 @@ removePieceAsk :-
         initialBoard(BoardIn),
         (
                 ErrorType == 0 -> (
-                                    removePieceDo(BoardIn, BoardOut, Row, Column), 
+                                    removePieceDo(BoardIn, BoardOut, Row, Column, Color), 
                                     printBoard(BoardOut)
                                   );         
                 (
@@ -47,9 +52,9 @@ removePieceAsk :-
                 )
         ).
 
-removePieceDo(BoardIn, BoardOut, Row, Column) :-
+removePieceDo(BoardIn, BoardOut, Row, Column, Color) :-
     retract(initialBoard(BoardIn)),
-    removePiece(BoardIn, BoardOut, Row, Column),
+    removePiece(BoardIn, BoardOut, Row, Column, Color),
     assert(initialBoard(BoardOut)).
 
 %   Checks if row, column respect board limits
@@ -75,22 +80,23 @@ checkMove(Row, Column, ErrorType):-
     ).
 
 %   Removes the piece from BoardIn and updates in BoardOut
-removePiece(BoardIn, BoardOut, Row, Column) :-
-    updateRow(Row, Column, BoardIn, BoardOut).
+removePiece(BoardIn, BoardOut, Row, Column, Color) :-
+    updateRow(Row, Column, BoardIn, BoardOut, Color).
 
 %
-updateColumn(1, [H|T], [Hout|T]):-
-    Hout = nullCell.
+updateColumn(1, [H|T], [Hout|T], Color):-
+    Hout = nullCell,
+    colorPiece(H, Color).
 %
-updateColumn(Column, [H|T], [H|Tout]):-
+updateColumn(Column, [H|T], [H|Tout], Color):-
     Column > 1,
     ColumnI is Column - 1, 
-    updateColumn(ColumnI, T, Tout).
+    updateColumn(ColumnI, T, Tout, Color).
 %
-updateRow(1, Column, [H|T], [Hout|T]):-
+updateRow(1, Column, [H|T], [Hout|T], Color):-
     updateColumn(Column, H, Hout).
 %    
-updateRow(Row, Column, [H|T], [H|Tout]):-
+updateRow(Row, Column, [H|T], [H|Tout], Color):-
     Row > 1,
     RowNext is Row - 1, 
-    updateRow(RowNext, Column, T, Tout).
+    updateRow(RowNext, Column, T, Tout, Color).
