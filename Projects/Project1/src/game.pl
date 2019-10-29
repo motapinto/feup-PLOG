@@ -43,7 +43,7 @@ removePieceAsk :-
                                     printBoard(BoardOut)
                                   );         
                 (
-                    removePieceAsk(Row1, Column1)
+                    removePieceAsk
                 )
         ).
 
@@ -55,29 +55,24 @@ removePieceDo(BoardIn, BoardOut, Row, Column) :-
 %   Checks if row, column respect board limits
 
 checkMove(Row, Column, ErrorType):-
+    (  
+        (Row > 0, Row < 12, Column > 0, Column < 13) -> checkRules(Row, Column, ErrorType);
+        ErrorType = 4),
+    
+    (
         (
-            (   
-                Row > 0, 
-                Row < 12, 
-                Column > 0, 
-                Column < 13
-            ) -> checkRules(Row, Column, ErrorType) ;
-                ErrorType = 4
-        ),
+            ErrorType == 0 -> true ;         
+            (
                 (
-                    (
-                        ErrorType == 0 -> true ;         
-                        (
-                            (
-                                (ErrorType == 1, write('Tried to remove a piece that doesnt exist\n'));
-                                (ErrorType == 2,  write('Tried to remove a piece that makes other pieces unprotected\n'));
-                                (ErrorType == 3,  write('Tried to remove a piece that breaks the game tree\n'))
-                            ),
-                            write(' Try Again \n')
-                        )
-                    )
+                    (ErrorType == 1, write('Tried to remove a piece that doesnt exist\n'));
+                    (ErrorType == 2,  write('Tried to remove a piece that makes other pieces unprotected\n'));
+                    (ErrorType == 3,  write('Tried to remove a piece that breaks the game tree\n'));
+                    (ErrorType == 4,  write('Tried to remove a piece that is out of bonds\n'))
+                ),
+                write(' Try Again \n')
             )
-        );
+        )
+    ).
 
 %   Removes the piece from BoardIn and updates in BoardOut
 removePiece(BoardIn, BoardOut, Row, Column) :-
