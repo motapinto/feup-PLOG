@@ -51,25 +51,19 @@ addPieceToPlayer(1, [H | T], [Hout | T]):-
 
 addPieceToPlayer(Column , [H|T], [H | Tout]):-
     Column > 1,
-    ColumnN is Column + 1, 
+    ColumnN is Column - 1, 
     addPieceToPlayer(ColumnN, T, Tout).
 
 addPieceToWhatPlayer(PlayerNumber, PieceColor):-
-    (PieceColor == red,
-    Index = 1);
-    (PieceColor == yellow,
-    Index = 2 );
-    (PieceColor == blue,
-    Index = 3);
+    colorPiece(PieceColor, Index),
 
-    (PlayerNumber == 1, 
-        retract(player1(Player1Pieces)),
-        addPieceToPlayer(1, Player1Pieces, Player1PiecesOut),
-        assert(player1(Player1PiecesOut))
-    );
-    (PlayerNumber == 2,
-            retract(player1(Player1Pieces)),
-            addPieceToPlayer(1, Player1Pieces, Player1PiecesOut),
-            assert(player1(Player1PiecesOut)) 
+    (PlayerNumber == 1 -> 
+        (retract(player1(Player1Pieces)),
+        addPieceToPlayer(Index, Player1Pieces, Player1PiecesOut),
+        assert(player1(Player1PiecesOut))) ;  
+        
+       (retract(player2(Player2Pieces)),
+        addPieceToPlayer(Index, Player2Pieces, Player2PiecesOut),
+        assert(player2(Player2PiecesOut)))
     ).
 

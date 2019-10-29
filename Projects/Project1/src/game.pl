@@ -20,15 +20,19 @@ initGame(BoardIn) :-
 
 playLoop :-
     
-    write('Player1:\n'),
+    write('Player1:\n'),!,
     removePieceAsk(Color),
     addPieceToWhatPlayer(1, Color),
 
-    write('Player2:\n'),
-    removePieceAsk(Color),
-    addPieceToWhatPlayer(2, Color),
+    %checkIfGameisOver
+
+    write('Player2:\n'),!,
+    removePieceAsk(Color1),
+    addPieceToWhatPlayer(2, Color1),
     
     printPlayersCurrentScore,
+
+    %checkIfGameisOver
     
     playLoop.
 
@@ -48,7 +52,7 @@ removePieceAsk(Color) :-
                                     printBoard(BoardOut)
                                   );         
                 (
-                    removePieceAsk
+                    removePieceAsk(Color)
                 )
         ).
 
@@ -86,7 +90,7 @@ removePiece(BoardIn, BoardOut, Row, Column, Color) :-
 %
 updateColumn(1, [H|T], [Hout|T], Color):-
     Hout = nullCell,
-    colorPiece(H, Color).
+    Color = H.
 %
 updateColumn(Column, [H|T], [H|Tout], Color):-
     Column > 1,
@@ -94,7 +98,7 @@ updateColumn(Column, [H|T], [H|Tout], Color):-
     updateColumn(ColumnI, T, Tout, Color).
 %
 updateRow(1, Column, [H|T], [Hout|T], Color):-
-    updateColumn(Column, H, Hout).
+    updateColumn(Column, H, Hout, Color).
 %    
 updateRow(Row, Column, [H|T], [H|Tout], Color):-
     Row > 1,
