@@ -25,15 +25,14 @@ printBoardTop :-
 printBoardUp :-
     write('| a | b | c | d | e | f | g | h | i | j | l | m |\n ').
 
+printBoardLine([], 11):-
+    write('|\n').
 
 printBoardLine([], Line) :-
-    (   Line==12,
-        write('|\n')
-    ;   Aux is Line mod 2,
-        Aux==0,
-        write('|_\n')
-    ;   write('|\n')
-    ).
+    Aux is Line mod 2,
+    (Aux==0 -> write('|\n')
+    ;   write('|_\n')
+).
 
 printBoardLine([H|T], Line) :-
     write('|_'),
@@ -61,8 +60,8 @@ printBoardBody([H|T], Line) :-
         write(' _')
     ;   Mod==1
     ),
+    printBoardLine(H, Line),
     LineI is Line+1,
-    printBoardLine(H, LineI),
     printBoardBody(T, LineI).
 
 

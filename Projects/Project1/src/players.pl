@@ -5,8 +5,8 @@
 
 
 % R Y B
-player1([0, 0, 0]).
-player2([0, 0, 0]).
+player1([4, 5, 5]).
+player2([5, 5, 5]).
 
 initializePlayers(Player1Pieces, Player2Pieces):-
     player1(Player1Pieces),
@@ -46,7 +46,7 @@ printPlayersCurrentScore:-
     
 
 addPieceToPlayer(1, [H | T], [Hout | T]):-
-    H < 5,
+   % H < 5,
     Hout is H + 1.
 
 addPieceToPlayer(Column , [H|T], [H | Tout]):-
@@ -66,4 +66,24 @@ addPieceToWhatPlayer(PlayerNumber, PieceColor):-
         addPieceToPlayer(Index, Player2Pieces, Player2PiecesOut),
         assert(player2(Player2PiecesOut)))
     ).
+
+checkIfPlayersHaveWon(ExitGame):-
+    player1(Player1Pieces),
+    checkPlayerPieces(1, Player1Pieces, Exit),
+    player2(Player2Pieces),
+    checkPlayerPieces(1, Player2Pieces, Exit1),
+    (
+        (Exit == 1, Exit1 == 1) ->
+        (write('THE PLAYERS HAVE WON THE GAME \n'),
+        ExitGame = 1); ExitGame = 0
+    ).
+
+checkPlayerPieces(4, [], 1).
+
+
+checkPlayerPieces(Column , [H|T], Exit):-
+    Column <  4,
+    ColumnN is Column + 1, 
+    (H == 5 -> checkPlayerPieces(ColumnN, T, Exit);
+        Exit = 0).
 

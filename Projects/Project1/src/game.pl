@@ -20,19 +20,20 @@ initGame(BoardIn) :-
 
 playLoop :-
     
-    write('Player1:\n'),!,
+    write('Player1:\n'),
     removePieceAsk(Color),
-    addPieceToWhatPlayer(1, Color),
-
-    %checkIfGameisOver
-
-    write('Player2:\n'),!,
+    addPieceToWhatPlayer(1, Color), !,
+    checkIfPlayersHaveWon(Exit),
+    (Exit == 1 -> false; true),
+    write('Player2:\n'),
     removePieceAsk(Color1),
     addPieceToWhatPlayer(2, Color1),
     
+    
+    checkIfPlayersHaveWon(Exit1),
+    (Exit1 == 1 -> false; true),
+    
     printPlayersCurrentScore,
-
-    %checkIfGameisOver
     
     playLoop.
 

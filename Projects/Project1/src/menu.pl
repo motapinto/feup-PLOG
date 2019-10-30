@@ -48,17 +48,8 @@ selectOption :-
 
 menuInputHandler :-
     read(Input),
-    (   (Input==1,
-startPP)
-    ;   (Input==2,
-        write('B'))
-    ;   (Input==3,
-        write('C'))
-    ;  (Input==4,
-        write('Exiting...')
-    ;   selectOption)
-    ).
-
+    Input==1,
+    startPP.
 play :-
     printMenu,
     selectOption.
