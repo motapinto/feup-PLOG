@@ -5,7 +5,7 @@
 
 %   Starts players with player mode
 startPP :-
-    initGame(Init),
+    initGame(Init), !, 
     playLoop.
 
 %   Randomizes initial Board and prints it
@@ -21,15 +21,15 @@ initGame(BoardIn) :-
 playLoop :-
     
     write('Player1:\n'),
-    removePieceAsk(Color),
+    removePieceAsk(Color), 
     addPieceToWhatPlayer(1, Color), !,
-    checkIfPlayersHaveWon(Exit),
+    checkIfPlayersHaveWon(Exit), 
     (Exit == 1 -> false; true),
     write('Player2:\n'),
-    removePieceAsk(Color1),
+    removePieceAsk(Color1), 
     addPieceToWhatPlayer(2, Color1),
     
-    
+    !,
     checkIfPlayersHaveWon(Exit1),
     (Exit1 == 1 -> false; true),
     
