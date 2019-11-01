@@ -21,13 +21,13 @@ initGame(BoardIn) :-
 playLoop :-
     
     write('Player1:\n'),
-    removePieceAsk(Color), 
+    removePieceAsk(Color, 1), 
     addPieceToWhatPlayer(1, Color), !,
     checkIfPlayersHaveWon(Exit), 
     (Exit == 1 -> false; true),
     write('Player2:\n'),
-    removePieceAsk(Color1), 
-    addPieceToWhatPlayer(2, Color1), !,
+    removePieceAsk(Color1, 2), 
+    addPieceToWhatPlayer(1, Color1), !,
     
     checkIfPlayersHaveWon(Exit1),
     (Exit1 == 1 -> false; true),
@@ -38,13 +38,13 @@ playLoop :-
 
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
-removePieceAsk(Color) :-
+removePieceAsk(Color, Player) :-
         write('> Removing piece...\n'),
         write('> Select row: '),
         read(Row), 
         write('> Select column: '),
         read(Column),
-        checkMove(Row, Column , ErrorType),
+        checkMove(Row, Column , ErrorType, Player),
         initialBoard(BoardIn),
         (
                 ErrorType == 0 -> (
@@ -52,7 +52,7 @@ removePieceAsk(Color) :-
                                     printBoard(BoardOut)
                                   );         
                 (
-                    removePieceAsk(Color)
+                    removePieceAsk(Color, Player)
                 )
         ).
 
@@ -63,11 +63,16 @@ removePieceDo(BoardIn, BoardOut, Row, Column, Color) :-
 
 %   Checks if row, column respect board limits
 
-checkMove(Row, Column, ErrorType):-
-    (  
-        (Row > 0, Row < 12, Column > 0, Column < 13) -> checkRules(Row, Column, ErrorType);
-        ErrorType = 4),
+checkMove(Row, Column, ErrorType, Player):-
+ 
+    checkIfPlayerPieceColorStash(Row, Column, ErrorType , Player),
+    (ErrorType == 0 ->
+        (  (Row > 0, Row < 12, Column > 0, Column < 13) -> checkRules(Row, Column, ErrorType);
+        ErrorType = 4)
+    ; true
+    ),
     
+
     (
         (
             ErrorType == 0 -> true ;         
@@ -76,12 +81,14 @@ checkMove(Row, Column, ErrorType):-
                     (ErrorType == 1, write('Tried to remove a piece that doesnt exist\n'));
                     (ErrorType == 2,  write('Tried to remove a piece that makes other pieces unprotected\n'));
                     (ErrorType == 3,  write('Tried to remove a piece that breaks the game tree\n'));
-                    (ErrorType == 4,  write('Tried to remove a piece that is out of bonds\n'))
+                    (ErrorType == 4,  write('Tried to remove a piece that is out of bonds\n'));
+                    (ErrorType == 5,  write('Tried to remove a piece that has reached its type limit for the player\n'))
                 ),
                 write(' Try Again \n')
             )
         )
     ).
+
 
 %   Return color from piece with Row and Column
 returnColorPiece(Row, Column, Board, Color) :-

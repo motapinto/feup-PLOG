@@ -8,6 +8,8 @@
 player1([0, 0, 0]).
 player2([0, 0, 0]).
 
+
+
 initializePlayers(Player1Pieces, Player2Pieces):-
     player1(Player1Pieces),
     player2(Player2Pieces).
@@ -78,6 +80,27 @@ checkIfPlayersHaveWon(ExitGame):-
         ExitGame = 1); ExitGame = 0
     ).
 
+
+checkIfPlayerPieceColorStash(Row, Column, ErrorType, Player):-
+    initialBoard(Board),
+    returnColorPiece(Row, Column, Board, Color),
+    (Player == 1 ->   player1(PlayerPieces) ; player2(PlayerPieces)),
+    colorPiece(Color, Index),
+    checkPlayersStashForColor(PlayerPieces, Index, ErrorType).
+
+checkPlayersStashForColor([H|T], 1, ErrorType):-
+    H == 5 -> ErrorType = 5; ErrorType = 0.
+    
+
+checkPlayersStashForColor([H|T], Column, ErrorType):-
+    Column >  0,
+    ColumnN is Column - 1, 
+    checkPlayersStashForColor(T, ColumnN, ErrorType).
+
+
+
+
+   
 checkPlayerPieces(4, [], 1).
 
 

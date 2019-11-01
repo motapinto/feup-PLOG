@@ -23,13 +23,13 @@ checkIfPiecesAreSafe(Row, Column, ErrorType):-
     NextColumn is Column + 1,
     (
         (
-            checkIfPieceIsSafe(PreviousRow, PreviousColumn, BoardOut),
             checkIfPieceIsSafe(PreviousRow, Column, BoardOut),
+            checkIfPieceIsSafe(PreviousRow, NextColumn, BoardOut),
             checkIfPieceIsSafe(Row, PreviousColumn, BoardOut),
             checkIfPieceIsSafe(Row, NextColumn, BoardOut),
-            checkIfPieceIsSafe(NextRow, PreviousColumn, BoardOut),
-            checkIfPieceIsSafe(NextRow, Column, BoardOut)
-        ) -> (ErrorType = 0 ; ErrorType = 2)
+            checkIfPieceIsSafe(NextRow, Column, BoardOut),
+            checkIfPieceIsSafe(NextRow, NextColumn, BoardOut)
+        ) -> ErrorType = 0 ; ErrorType = 2
     ).
 
     
@@ -51,18 +51,23 @@ checkIfPieceIsSafe(Row, Column, Board):-
                         (
                             returnColorPiece(Row, Column, Board, Color),
                             initCounters,
-                            checkAdjacentPiece(PreviousRow, PreviousColumn, Board, Color),
                             checkAdjacentPiece(PreviousRow, Column, Board, Color),
+                            checkAdjacentPiece(PreviousRow, NextColumn, Board, Color),
                             (
+                                    counterEq(PiecesEq),
                                     PiecesEq == 2 -> true ; (
                                     checkAdjacentPiece(Row, PreviousColumn, Board, Color),
-                                    ((PiecesEq == 2 ; PiecesDif == 3) -> true ; (
+                                    counterEq(PiecesEq1),counterDif(PiecesDif),
+                                    ((PiecesEq1 == 2 ; PiecesDif == 3) -> true ; (
                                         checkAdjacentPiece(Row, NextColumn, Board, Color),
-                                        ((PiecesEq == 2 ; PiecesDif == 3) -> true ; (
-                                            checkAdjacentPiece(NextRow, PreviousColumn, Board, Color),
-                                            ((PiecesEq == 2 ; PiecesDif == 3) -> true ; (
-                                                checkAdjacentPiece(NextRow, Column, Board, Color),
-                                                ((PiecesEq == 2 ; PiecesDif == 3) -> true ; ( 
+                                        counterEq(PiecesEq2),counterDif(PiecesDif1),
+                                        ((PiecesEq2 == 2 ; PiecesDif1 == 3) -> true ; (
+                                            checkAdjacentPiece(NextRow, Column, Board, Color),
+                                            counterEq(PiecesEq3),counterDif(PiecesDif2),
+                                            ((PiecesEq3 == 2 ; PiecesDif2 == 3) -> true ; (
+                                                checkAdjacentPiece(NextRow, NextColumn, Board, Color), !,
+                                                counterEq(PiecesEq4),counterDif(PiecesDif3), !,
+                                                ((PiecesEq4 == 2 ; PiecesDif3 == 3) -> true ; ( 
                                                     fail
                                                 ))
                                             ))
