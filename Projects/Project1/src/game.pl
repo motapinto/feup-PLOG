@@ -27,9 +27,8 @@ playLoop :-
     (Exit == 1 -> false; true),
     write('Player2:\n'),
     removePieceAsk(Color1), 
-    addPieceToWhatPlayer(2, Color1),
+    addPieceToWhatPlayer(2, Color1), !,
     
-    !,
     checkIfPlayersHaveWon(Exit1),
     (Exit1 == 1 -> false; true),
     
@@ -83,6 +82,10 @@ checkMove(Row, Column, ErrorType):-
             )
         )
     ).
+
+%   Return color from piece with Row and Column
+returnColorPiece(Row, Column, Board, Color) :-
+    removePiece(Board, _, Row, Column, Color).
 
 %   Removes the piece from BoardIn and updates in BoardOut
 removePiece(BoardIn, BoardOut, Row, Column, Color) :-

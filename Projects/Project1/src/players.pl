@@ -5,8 +5,8 @@
 
 
 % R Y B
-player1([4, 5, 5]).
-player2([5, 5, 5]).
+player1([0, 0, 0]).
+player2([0, 0, 0]).
 
 initializePlayers(Player1Pieces, Player2Pieces):-
     player1(Player1Pieces),
