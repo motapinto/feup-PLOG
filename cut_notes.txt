@@ -1,0 +1,101 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Cut in queries:
+
+teaches(dr_fred, history).              studies(angus, english).
+teaches(dr_fred, english).              studies(alice, english).
+teaches(dr_fred, drama).                studies(amelia, drama).
+teaches(dr_fiona, physics).	         	studies(alex, physics).
+
+?- teaches(dr_fred, Course), studies(Student, Course).
+
+Course = english
+Student = alice ;
+
+Course = english
+Student = angus ;
+
+Course = drama
+Student = amelia ;
+
+false.
+Backtracking is not inhibited here. Course is initially bound to history, but there are no students of history, so the second goals fails, backtracking occurs, Course is re-bound to english, the second goal is tried and two solutions found (alice and angus), then backtracking occurs again, and Course is bound to drama, and a final Student, amelia, is found.
+
+?- teaches(dr_fred, Course), !, studies(Student, Course).
+
+false.
+This time Course is initially bound to history, then the cut goal is executed, and then studies goal is tried and fails (because nobody studies history). Because of the cut, we cannot backtrack to the teaches goal to find another binding for Course, so the whole query fails.
+
+?- teaches(dr_fred, Course), studies(Student, Course), !.
+
+Course = english
+Student = alice ;
+
+false.
+Here the teaches goal is tried as usual, and Course is bound to history, again as usual. Next the studies goal is tried and fails, so we don't get to the cut at the end of the query at this point, and backtracking can occur. Thus the teaches goal is re-tried, and Course is bound to english. Then the studies goal is tried again, and succeeds, with Student = alice. After that, the cut goal is tried and of course succeeds, so no further backtracking is possible and only one solution is thus found.
+
+?- !, teaches(dr_fred, Course), studies(Student, Course).
+
+Course = english
+Student = alice ;
+
+Course = english
+Student = angus ;
+
+Course = drama
+Student = amelia ;
+
+false.
+?- 
+In this final example, the same solutions are found as if no cut was present, because it is never necessary to backtrack past the cut to find the next solution, so backtracking is never inhibited.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Cuts in Rules
+In practice, the cut is used in rules rather than in multi-goal queries, and some particular idioms apply in such cases. For example, consider the following code for max1(X, Y, Max), which is supposed to bind Max to the larger of X and Y, which are assumed to be numbers (see note [1] below).
+
+max1(X, Y, X) :- X > Y, !.
+max1(_X, Y, Y). 
+This is a way of saying: "if the first rule succeeds, use it and don't try the second rule. (Otherwise, use the second rule.) We could instead have written:
+
+max2(X, Y, X) :- X > Y.
+max2(X, Y, Y) :- X =< Y.
+in which case both rules will often be tried (unless backtracking is prevented by a cut in some other part of the code). This is slightly less efficient if X is in fact greater than Y (unnecessary backtracking occurs) but easier for people to understand, though regular Prolog programmers rapidly get to recognise this type of idiom. The extra computation in the case of max2 is trivial, but in cases where the second rule involves a long computation, there might be a strong argument for using the cut on efficiency grounds.
+Notes:
+Note that although the version of max above with the cut in it works correctly if called with the first two arguments instantiated, and an uninstantiated variable as the third argument, as in
+?- max1(6, 3, Max).
+Max = 6
+?- max1(3, 6, Max).
+Max = 6
+if called with all three arguments instantiated, and the third argument instantiated to the wrong one of the first two arguments, then the code will succeed (incorrectly), since clause doesn't check anything:
+?- max1(6, 3, 3).
+true.
+If the first two arguments are not instantiated, the code will also fail or generate an error message. E.g.
+
+?- max1(X, 3, 0).
+fail.
+?- max1(0, X, 0).
+ERROR: >/2: Arguments are not sufficiently instantiated
+   Exception: (7) max1(0, _G188, 0) ? 
+So you need to think carefully about how your Prolog predicate is going to be used, and comment it to inform or remind readers about the situations in which it will and won't work. This is true about any code, but particularly Prolog predicates with cuts. In this case, a suitable comment would indicate that the first two arguments must be instantiated at the time when max1 is called, and the third argument must be an uninstantiated variable.
+Another way of dealing with this is to note that while the code for max1 above with the cut works correctly if called as intended, there is in fact nothing wrong with adding the check X =< Y to the second rule of max1 to get max3:
+
+max3(X, Y, X) :- X > Y, !.
+max3(X, Y, Y) :- X =< Y.
+Because of the cut, the extra code (X =< Y) will only be used if X > Y fails (i.e. not as a result of inappropriate backtracking) so nothing is lost by doing this. The principle is: "A sound practice is to insert a cut in order to commit to the current clause choice, and also ensure as far as practically possible that clauses are written so as to stand independently as a correct statement about the predicate."
+_X rather than just X is used in max1 in order to avoid a singleton variable warning message.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Extra tip:
+
+Green cut
+A use of a cut which only improves efficiency is referred to as a green cut. Green cuts are used to make programs more efficient without changing program output. For example:
+
+ gamble(X) :- gotmoney(X),!.
+ gamble(X) :- gotcredit(X), \+ gotmoney(X).
+This is called a green cut operator. The ! tells the interpreter to stop looking for alternatives; however, if gotmoney(X) fails it will check the second rule. Although checking for gotmoney(X) in the second rule may appear redundant since Prolog's appearance is dependent on gotmoney(X) failing before, otherwise the second rule would not be evaluated in the first place. Adding \+ gotmoney(X) guarantees that the second rule will always work, even if the first rule is removed by accident or changed, or moved after the second one.
+
+Red cut
+A cut that is not a green cut is referred to as a red cut, for example:
+
+ gamble(X) :- gotmoney(X),!.
+ gamble(X) :- gotcredit(X).
+Proper placement of the cut operator and the order of the rules is required to determine their logical meaning. If for any reason the first rule is removed (e.g. by a cut-and-paste accident) or moved after the second one, the second rule will be broken, i.e., it will not guarantee the rule \+ gotmoney(X).

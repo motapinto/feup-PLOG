@@ -25,10 +25,10 @@ playLoop :-
     addPieceToWhatPlayer(1, Color), !,
     checkIfPlayersHaveWon(Exit), 
     (Exit == 1 -> false; true),
-    write('Player2:\n'),
-    removePieceAsk(Color1, 2), 
-    addPieceToWhatPlayer(1, Color1), !,
     
+    write('Player2:\n'),
+    removePieceAsk(Color2, 2), 
+    addPieceToWhatPlayer(2, Color2), !,
     checkIfPlayersHaveWon(Exit1),
     (Exit1 == 1 -> false; true),
     
@@ -65,7 +65,7 @@ removePieceDo(BoardIn, BoardOut, Row, Column, Color) :-
 
 checkMove(Row, Column, ErrorType, Player):-
  
-    checkIfPlayerPieceColorStash(Row, Column, ErrorType , Player),
+    checkPlayerPieceColorStash(Row, Column, ErrorType , Player),
     (ErrorType == 0 ->
         (  (Row > 0, Row < 12, Column > 0, Column < 13) -> checkRules(Row, Column, ErrorType);
         ErrorType = 4)
