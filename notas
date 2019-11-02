@@ -26,18 +26,28 @@ nospy predicate.
 Backtraking: problema prolog (constantes nas clausulas)
 
 
-Cut : !  faz com não haja backtracking de um predicado que tenha um cut antes da sua chamada
-
-Caso um predicado der fial todos os assignments são perdidos. 
+Caso um predicado der fail todos os assignments são perdidos. 
 
 Uma variavel só pode ser feito o assigment uma vez
 
 if and else em prolog      () -> (true, ) ; ()     condição -> se true entaõ faz isto ; senão isto  
 
-; é equivalente a U ou seja se a primeira condição for true ele vai ver na mesma a sengunda condição 
-
 ao fazer spy PlayLoop invés de spy playLoop , mete um spy point em todas os predicados que são chamados por playLoop,
 tem interesse caso tentar fazer leap 
+
+
+Cut:
+faz com não haja backtracking de um predicado que tenha um cut antes da sua chamada
+max(X, Y, X) :- X>=Y.
+max(X, Y, Y) :- X < Y.
+Se puser max(5, 4, 1) a primeira resposta sera 5 mas se fizer ;
+o prolog faz redo e volta a testar a segunda conclusao e retorna no.
+Com o cut retorna logo no e nao volta a cahamr o predicado
+
+Debug:
+trace / notrace
+spy "predicate" / nospy "predicate" / spyall / nospyall
+l -> leap function call
 
 
 
