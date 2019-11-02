@@ -11,6 +11,7 @@ startPP :-
 %   Randomizes initial Board and prints it
 initGame(BoardIn) :-
     initialBoard(BoardIn),
+    %randomBoard(BoardIn),
     printBoard(BoardIn).
 
 %   Loop of playing
