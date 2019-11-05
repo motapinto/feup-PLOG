@@ -5,16 +5,33 @@
 
 %   Starts players with player mode
 startPP :-
-    initGame(Init),
-    repeat,
+    initialBoard(Init),
+    player1(InitStash1),
+    player2(InitStash2),
+    playLoop,
+    %returning the board to its initial state , ready for another round
+    retract(initialBoard(_)),
+    assert(initialBoard(Init)),
+    %returning the player1 stash to its initial state , ready for another round
+    retract(player1(_)),
+    assert(player1(InitStash1)),
+    %returning the player2 stash  to its initial state , ready for another round
+    retract(player2(_)),
+    assert(player2(InitStash2)).
+    
+
+playLoop :-
+    initGame,
+    repeat, 
     once(playRound(1)),
-    checkIfPlayersHaveWon(Exit1),
+    once(checkIfPlayersHaveWon(Exit1)),
     once(playRound(2)),
-    checkIfPlayersHaveWon(Exit2),
-    (Exit1 == 0; Exit2 == 0) -> fail; true.
+    once(checkIfPlayersHaveWon(Exit2)),
+    once(printPlayersCurrentScore),
+    ((Exit1 == 0, Exit2 == 0) -> fail; true).
 
 %   Randomizes initial Board and prints it
-initGame(BoardIn) :-
+initGame:-
     initialBoard(BoardIn),
     printBoard(BoardIn).
 
@@ -24,8 +41,8 @@ initGame(BoardIn) :-
 %assignment, then this variable can be set again. 
 
 playRound(Player) :-
-    format('Player ~w', [Player]),
-    removePieceAsk(Color, 1), 
+    format('Player ~w:\n', [Player]),
+    removePieceAsk(Color, Player), 
     addPieceToWhatPlayer(Player, Color).
 
     
@@ -57,15 +74,18 @@ removePieceDo(BoardIn, BoardOut, Row, Column, Color) :-
 %   Checks if row, column respect board limits
 
 checkMove(Row, Column, ErrorType, Player):-
- 
-    checkPlayerPieceColorStash(Row, Column, ErrorType , Player),
-    (ErrorType == 0 ->
-        (  (Row > 0, Row < 12, Column > 0, Column < 13) -> checkRules(Row, Column, ErrorType);
-        ErrorType = 4)
-    ; true
+
+    checkPlayerPieceColorStash(Row, Column, ErrorType, Player),
+    write('sai'),
+    (
+        ErrorType == 5 -> true ;   
+        (
+            (Row > 0, Row < 12, Column > 0, Column < 13) -> checkRules(Row, Column, ErrorType);
+            ErrorType = 4
+        )
     ),
     
-
+    format('ERROR TYPE move ~w\n', ErrorType),
     (
         (
             ErrorType == 0 -> true ;         

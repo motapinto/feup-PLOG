@@ -113,32 +113,42 @@ checkAdjacentPiece(Row, Column, Board, Color) :-
     ).
 %   Inicializes counter of equal adjacent pieces and any adjacent pieces
 initCounters :-
-    retract(counterEq(PiecesEq)),
+    retract(counterEq(_)),
     PiecesEq1 = 0,
     assert(counterEq(PiecesEq1)),
 
-    retract(counterDif(PiecesDif)),
+    retract(counterDif(_)),
     PiecesDif1 = 0,
     assert(counterDif(PiecesDif1)).
+
+
 %   Counts number of equal adjacent pieces
 addEq :-
     retract(counterEq(PiecesEq)),
     PiecesEq1 is PiecesEq + 1,
     assert(counterEq(PiecesEq1)).
+
+
 %   Counts number of any adjacent pieces
 addDif :-
     retract(counterDif(PiecesDif)),
     PiecesDif1 is PiecesDif + 1,
     assert(counterDif(PiecesDif1)).
+
+
 %   Checks if piece specified by it's row and column is null and if so ErrorType = 1
 checkIfNotNullAdjacent(Row, Column, Board, ErrorType) :-
     checkRow(Row, Column, Board, ErrorType).
+
+
 %   Checks if piece specified by it's row and column is null and if so ErrorType = 1
 checkIfNotNull(Row, Column, ErrorType) :-
     initialBoard(In),
     checkRow(Row, Column, In, ErrorType).
+
+
 %  When it reaches the specified column if cell is nullCell then ErrorType = 1
-checkColumn(1, [H|T], ErrorType) :-
+checkColumn(1, [H|_], ErrorType) :-
     !,
     (
         (
@@ -148,16 +158,22 @@ checkColumn(1, [H|T], ErrorType) :-
         ;
         ErrorType = 0
     ).
+
+
 %  Search the board until it finds the specified column
-checkColumn(Column, [H|T] , ErrorType) :-
+checkColumn(Column, [_|T] , ErrorType) :-
     Column > 1,
     ColumnI is Column - 1, 
     checkColumn(ColumnI, T, ErrorType).
+
+
 %  When it reaches the specified row searches by column
-checkRow(1, Column, [H|T], ErrorType) :-
+checkRow(1, Column, [H|_], ErrorType) :-
     checkColumn(Column, H, ErrorType), !.
+
+
 %  Search the board until it finds the specified row
-checkRow(Row, Column, [H|T] , ErrorType) :-
+checkRow(Row, Column, [_|T] , ErrorType) :-
     Row > 1,
     RowNext is Row - 1, 
     checkRow(RowNext, Column, T, ErrorType).
