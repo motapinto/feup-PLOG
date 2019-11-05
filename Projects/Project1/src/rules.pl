@@ -3,20 +3,33 @@
 :- (dynamic counterEq/1).
 :- (dynamic counterDif/1).
 
+% CHANGE checkIfPieceIsSafe
+
 counterEq(0).
 counterDif(0).
 
-checkRules(Row, Column, ErrorType):-
-    checkIfNotNull(Row, Column, ErrorType1),
-    ErrorType1 == 0 -> (
-            checkIfPiecesAreSafe(Row, Column, ErrorType2),
-            ErrorType = ErrorType2
-    ) ; (ErrorType = ErrorType1).
+%   Checks all the rules
+checkRules(Row, Column, ErrorType) :-
+    checkIfNotNull(Row, Column, NullError),
+    %   If the piece in specified position is not null
+    (
+        NullError == 0, !,
+        checkIfPiecesAreSafe(Row, Column, ErrorType2),
+        ErrorType = ErrorType2
+    )
+    ;
+    %   If the piece in specified position is null
+    (
+        ErrorType = NullError
+    ).
 
-checkIfPiecesAreSafe(Row, Column, ErrorType):-
+%   Checks if each of adjacent pieces of piece specified by it's row and column is safe
+checkIfPiecesAreSafe(Row, Column, ErrorType) :-
+    %   Removes the piece in specified position to see the consequences of this move
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column, _),
     assert(initialBoard(BoardIn)),
+    %   Checks if all 6 possible adjacent pieces are safe
     PreviousRow is Row - 1,
     NextRow is Row + 1,
     PreviousColumn is Column - 1,
@@ -28,19 +41,23 @@ checkIfPiecesAreSafe(Row, Column, ErrorType):-
             checkIfPieceIsSafe(Row, PreviousColumn, BoardOut),
             checkIfPieceIsSafe(Row, NextColumn, BoardOut),
             checkIfPieceIsSafe(NextRow, Column, BoardOut),
-            checkIfPieceIsSafe(NextRow, NextColumn, BoardOut)
-        ) -> ErrorType = 0 ; ErrorType = 2
+            checkIfPieceIsSafe(NextRow, NextColumn, BoardOut),
+            ErrorType = 0, !
+        ) 
+        ;
+        (
+            ErrorType = 2
+        ) 
     ).
 
     
-
-checkIfPieceIsSafe(Row, Column, Board):-
-    %verifica se a peça está fora do bord
+%   For each adjacent pieces checks if it is connected to 2 pieces of same color or any 3 pieces
+checkIfPieceIsSafe(Row, Column, Board) :-
     (
         (Row > 0, Row < 12, 
         Column > 0, Column < 13) -> (
             %verifica se a peça é null
-            checkIfNotNull2(Row, Column, Board, ErrorType),
+            checkIfNotNullAdjacent(Row, Column, Board, ErrorType),
             ( ErrorType == 1 -> true; 
                 %verifica se as peças adjacentes das peças não null
                 (
@@ -80,22 +97,20 @@ checkIfPieceIsSafe(Row, Column, Board):-
             )
         ); true
     ).
-
+%   Checks which pieces are to add to addEq or addDif counters
 checkAdjacentPiece(Row, Column, Board, Color) :-
-    %verifica se a peça está fora do bord
     (
-        (Row > 0, Row < 12, 
-        Column > 0, Column < 13) -> (
+        (
+            Row > 0, Row < 12, 
+            Column > 0, Column < 13,
             returnColorPiece(Row, Column, Board, ColorAdj),
-            (
-                ColorAdj == nullCell -> true ; 
-                (
-                    ColorAdj == Color -> (addEq, addDif); addDif
-                )
-            )
-        ) ; true
+            ColorAdj \= nullCell, addDif, 
+            ColorAdj == Color, addEq
+        ) 
+        ; 
+        true  
     ).
-
+%   Inicializes counter of equal adjacent pieces and any adjacent pieces
 initCounters :-
     retract(counterEq(PiecesEq)),
     PiecesEq1 = 0,
@@ -104,40 +119,44 @@ initCounters :-
     retract(counterDif(PiecesDif)),
     PiecesDif1 = 0,
     assert(counterDif(PiecesDif1)).
-
+%   Counts number of equal adjacent pieces
 addEq :-
     retract(counterEq(PiecesEq)),
     PiecesEq1 is PiecesEq + 1,
     assert(counterEq(PiecesEq1)).
-
+%   Counts number of any adjacent pieces
 addDif :-
     retract(counterDif(PiecesDif)),
     PiecesDif1 is PiecesDif + 1,
     assert(counterDif(PiecesDif1)).
-
-checkIfNotNull2(Row, Column, Board, ErrorType) :-
+%   Checks if piece specified by it's row and column is null and if so ErrorType = 1
+checkIfNotNullAdjacent(Row, Column, Board, ErrorType) :-
     checkRow(Row, Column, Board, ErrorType).
-
+%   Checks if piece specified by it's row and column is null and if so ErrorType = 1
 checkIfNotNull(Row, Column, ErrorType) :-
     initialBoard(In),
     checkRow(Row, Column, In, ErrorType).
-
-checkColumn(1, [H|T], ErrorType):-
+%  When it reaches the specified column if cell is nullCell then ErrorType = 1
+checkColumn(1, [H|T], ErrorType) :-
+    !,
     (
-        H == nullCell ->
-        ErrorType = 1; 
+        (
+            H == nullCell,
+            ErrorType = 1    
+        )
+        ;
         ErrorType = 0
     ).
-
-checkColumn(Column, [H|T] , ErrorType):-
+%  Search the board until it finds the specified column
+checkColumn(Column, [H|T] , ErrorType) :-
     Column > 1,
     ColumnI is Column - 1, 
     checkColumn(ColumnI, T, ErrorType).
-
-checkRow(1, Column, [H|T], ErrorType):-
-    checkColumn(Column, H, ErrorType).
-    
-checkRow(Row, Column, [H|T] , ErrorType):-
+%  When it reaches the specified row searches by column
+checkRow(1, Column, [H|T], ErrorType) :-
+    checkColumn(Column, H, ErrorType), !.
+%  Search the board until it finds the specified row
+checkRow(Row, Column, [H|T] , ErrorType) :-
     Row > 1,
     RowNext is Row - 1, 
     checkRow(RowNext, Column, T, ErrorType).
