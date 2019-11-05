@@ -12,11 +12,11 @@ printMenu :-
     nl,
     write('|                                    |'),
     nl,
-    write('|       > (1) P & P                  |'),
+    write('|       > (1) Player & Player        |'),
     nl,
     write('|                                    |'),
     nl,
-    write('|       > (2) P & Machine            |'),
+    write('|       > (2) Player & Machine       |'),
     nl,
     write('|                                    |'),
     nl,
@@ -48,8 +48,11 @@ selectOption :-
 
 menuInputHandler :-
     read(Input),
-    Input==1,
-    startPP.
+    (
+        (Input==1, !, startPP);
+        (Input==2, !, startPM);
+        (Input==3, !, startMM)
+    ).
 play :-
     printMenu,
     selectOption.
