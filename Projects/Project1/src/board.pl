@@ -1,24 +1,24 @@
 :- (dynamic initialBoard/1).
 
 initialBoard([
-        [red, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell],
-        [yellow, blue, red, blue, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell],
-        [yellow, yellow, red, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
-        [blue, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
-        [yellow, yellow, blue, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
-        [blue, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell],
-        [yellow, red, blue, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
-        [red, red, blue, yellow, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
-        [red, red, red, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
-        [red, red, red, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell], 
-        [red, red, red, red, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell, nullCell]
+        [r, r, b, y, n, n, n, n, n, n, n, n],
+        [y, b, r, b, n, n, n, n, n, n, n, n],
+        [y, y, r, y, n, n, n, n, n, n, n, n], 
+        [b, r, b, y, n, n, n, n, n, n, n, n], 
+        [y, y, b, r, n, n, n, n, n, n, n, n], 
+        [b, r, b, y, n, n, n, n, n, n, n, n],
+        [y, r, b, r, n, n, n, n, n, n, n, n], 
+        [r, r, b, y, n, n, n, n, n, n, n, n], 
+        [r, r, r, r, n, n, n, n, n, n, n, n], 
+        [r, r, r, r, n, n, n, n, n, n, n, n], 
+        [r, r, r, r, n, n, n, n, n, n, n, n]
     ]).
 
 %   Conversion between what is stored and whats is displayed     
-piece(nullCell, -).
-piece(red, 'R').
-piece(yellow, 'Y').
-piece(blue, 'B').
+piece(n, -).
+piece(r, 'R').
+piece(y, 'Y').
+piece(b, 'B').
 %
 printLineConst :-
     write('\n---|---|---|---|---|---|---|---|---|---|---|---|---|\n').
@@ -29,8 +29,10 @@ printBoardTop :-
 printBoardUp :-
     write('| a | b | c | d | e | f | g | h | i | j | l | m |\n ').
 %
+
 printBoardLine([], 11):-
     write('|\n').
+
 printBoardLine([], Line) :-
     Aux is Line mod 2,
     (
@@ -63,7 +65,7 @@ printBoardBody([H|T], Line) :-
     (  
         (
             Mod == 0, !,
-            write(' _')
+            write('  ')
         )
         ;  
         Mod == 1
@@ -95,9 +97,9 @@ print :-
 % RANDOM BOARD EXPERIENCE
 %--------------------------------------------------------------------------------------------------------------------
 
-colorIndex(red, 1).
-colorIndex(yellow, 2).
-colorIndex(blue, 3).
+colorIndex(r, 1).
+colorIndex(y, 2).
+colorIndex(b, 3).
 
 randomBoard(BoardIn) :-
     initialBoard(BoardIn),
@@ -126,7 +128,7 @@ updateColumnRandom(1, [H|T], [Hout|T], Color):-
     Hout = Color, !.
 %
 updateColumnRandom(Column, [H|T], [H|Tout], Color):-
-    ColumnI is Column - 1, 
+    ColumnI is Column - 1,
     updateColumnRandom(ColumnI, T, Tout, Color).
 %
 updateRowRandom(1, Column, [H|T], [Hout|T], Color):-

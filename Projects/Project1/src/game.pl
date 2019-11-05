@@ -5,13 +5,17 @@
 
 %   Starts players with player mode
 startPP :-
-    initGame(Init), !, 
-    playLoop.
+    initGame(Init),
+    repeat,
+    once(playRound(1)),
+    checkIfPlayersHaveWon(Exit1),
+    once(playRound(2)),
+    checkIfPlayersHaveWon(Exit2),
+    (Exit1 == 0; Exit2 == 0) -> fail; true.
 
 %   Randomizes initial Board and prints it
 initGame(BoardIn) :-
     initialBoard(BoardIn),
-    %randomBoard(BoardIn),
     printBoard(BoardIn).
 
 %   Loop of playing
@@ -19,24 +23,12 @@ initGame(BoardIn) :-
 %it is bound. What you can do though, is force backtracking through the 
 %assignment, then this variable can be set again. 
 
-playLoop :-
-    
-    write('Player1:\n'),
+playRound(Player) :-
+    format('Player ~w', [Player]),
     removePieceAsk(Color, 1), 
-    addPieceToWhatPlayer(1, Color), !,
-    checkIfPlayersHaveWon(Exit), 
-    (Exit == 1 -> false; true),
-    
-    write('Player2:\n'),
-    removePieceAsk(Color2, 2), 
-    addPieceToWhatPlayer(2, Color2), !,
-    checkIfPlayersHaveWon(Exit1),
-    (Exit1 == 1 -> false; true),
-    
-    printPlayersCurrentScore,
-    
-    playLoop.
+    addPieceToWhatPlayer(Player, Color).
 
+    
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
 removePieceAsk(Color, Player) :-
@@ -101,7 +93,7 @@ removePiece(BoardIn, BoardOut, Row, Column, Color) :-
 
 %
 updateColumn(1, [H|T], [Hout|T], Color):-
-    Hout = nullCell,
+    Hout = n,
     Color = H.
 %
 updateColumn(Column, [H|T], [H|Tout], Color):-

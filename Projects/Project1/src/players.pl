@@ -2,12 +2,12 @@
 :- dynamic player2/1.
 
 %        R, Y, B
-player1([0, 0, 0]).
-player2([0, 0, 0]).
+player1([4, 5, 5]).
+player2([4, 5, 5]).
 
-colorPiece(red, 1).
-colorPiece(yellow, 2).
-colorPiece(blue, 3).
+colorPiece(r, 1).
+colorPiece(y, 2).
+colorPiece(b, 3).
 
 %   Inicializes the players pieces
 initializePlayers(Player1Pieces, Player2Pieces):-

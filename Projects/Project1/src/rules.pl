@@ -99,16 +99,17 @@ checkIfPieceIsSafe(Row, Column, Board) :-
     ).
 %   Checks which pieces are to add to addEq or addDif counters
 checkAdjacentPiece(Row, Column, Board, Color) :-
-    (
-        (
-            Row > 0, Row < 12, 
-            Column > 0, Column < 13,
+ (
+        (Row > 0, Row < 12, 
+        Column > 0, Column < 13) -> (
             returnColorPiece(Row, Column, Board, ColorAdj),
-            ColorAdj \= nullCell, addDif, 
-            ColorAdj == Color, addEq
-        ) 
-        ; 
-        true  
+            (
+                ColorAdj == nullCell -> true ; 
+                (
+                    ColorAdj == Color -> (addEq, addDif); addDif
+                )
+            )
+        ) ; true
     ).
 %   Inicializes counter of equal adjacent pieces and any adjacent pieces
 initCounters :-
@@ -141,7 +142,7 @@ checkColumn(1, [H|T], ErrorType) :-
     !,
     (
         (
-            H == nullCell,
+            H == n,
             ErrorType = 1    
         )
         ;

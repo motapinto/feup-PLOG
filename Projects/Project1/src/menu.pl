@@ -49,10 +49,11 @@ selectOption :-
 menuInputHandler :-
     read(Input),
     (
-        (Input==1, !, startPP);
-        (Input==2, !, startPM);
-        (Input==3, !, startMM)
+        (Input==1, !, startPP, play);
+        (Input==2, !, startPM, play);
+        (Input==3, !, startMM, play)
     ).
+
 play :-
     printMenu,
     selectOption.
