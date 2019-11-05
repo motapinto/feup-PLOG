@@ -1,5 +1,8 @@
+:-[shared].
+
 :- (dynamic initialBoard/1).
 
+%   Initial Configuration of Board
 initialBoard([
         [r, r, b, y, n, n, n, n, n, n, n, n],
         [y, b, r, b, n, n, n, n, n, n, n, n],
@@ -19,77 +22,60 @@ piece(n, -).
 piece(r, 'R').
 piece(y, 'Y').
 piece(b, 'B').
-%
-printLineConst :-
-    write('\n---|---|---|---|---|---|---|---|---|---|---|---|---|\n').
-%
+
+%   To print the top part of a line 
 printBoardTop :-
     write('      _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n').
-%
+
+%   To print the columns headers
 printBoardUp :-
     write('| a | b | c | d | e | f | g | h | i | j | l | m |\n ').
-%
 
+%   To print the contents of a line 
 printBoardLine([], 11):-
-    write('|\n').
+    write('|\n'), !.
 
+%   To print the contents of a line 
 printBoardLine([], Line) :-
     Aux is Line mod 2,
-    (
-        (
-            Aux==0, !, write('|\n')
-        )
-        ;
-        write('|_\n')
-    ).
+    if_then_else(Aux==0, write('|\n'), write('|_\n')).
+
+%   To print the contents of a line
 printBoardLine([H|T], Line) :-
     write('|_'),
     piece(H, S),
     write(S),
     write('_'),
     printBoardLine(T, Line).
-%
+
+%   Iterates through the rows of the board
 printBoardBody([], 12).
 printBoardBody([H|T], Line) :-
-    (   
-        (
-            Line<10, !,
-            write(' ')
-        )
-        ;  
-        Line>9
-    ),
+
+    %   Because theres another digit after line 10 that we need to account for
+    if_then_else(Line<10, write(' '), true),
+    
+    %   Prints the number of the row
     write(Line),
     write('   '),
     Mod is Line mod 2,
-    (  
-        (
-            Mod == 0, !,
-            write('  ')
-        )
-        ;  
-        Mod == 1
-    ),
+    
+    %   Prints a space that is used in case the row number is even
+    if_then_else(Mod==0, write('  '), true),
+    
     printBoardUp,
     write('    '),
-    (  
-        (
-            Mod == 0, !,
-            write(' _')
-        )
-        ;  
-        Mod == 1
-    ),
+
+    %   Prints the last _ if the row number is even
+    if_then_else(Mod==0, write(' _'), true),
+
     printBoardLine(H, Line),
     LineI is Line+1,
     printBoardBody(T, LineI).
-%
-printBoard(X) :-
-    printBoardTop,
-    printBoardBody(X, 1).
-%
-print :-
+
+
+%   Prints the current Board
+printBoard:-
     initialBoard(Init),
-    printBoard(Init).
-
-
+    printBoardTop,
+    printBoardBody(Init, 1).

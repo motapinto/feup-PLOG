@@ -2,50 +2,51 @@
 :- [board].
 :- [rules].
 :- [players].
+:- [shared].
 
 %   Starts players with player mode
 startPP :-
+    %   Saving Initial configuration
     initialBoard(Init),
     player1(InitStash1),
     player2(InitStash2),
+
+    printBoard, 
     playLoop,
-    %returning the board to its initial state , ready for another round
-    retract(initialBoard(_)),
-    assert(initialBoard(Init)),
-    %returning the player1 stash to its initial state , ready for another round
-    retract(player1(_)),
-    assert(player1(InitStash1)),
-    %returning the player2 stash  to its initial state , ready for another round
-    retract(player2(_)),
-    assert(player2(InitStash2)).
+    initGame.
     
+%   Restart the game parameters so that a new game can be played
+initGame(InitBoard, Player1Stash, Player2Stash):-
+     %returning the board to its initial state , ready for another round
+     retract(initialBoard(_)),
+     assert(initialBoard(Init)),
+     %returning the player1 stash to its initial state , ready for another round
+     retract(player1(_)),
+     assert(player1(InitStash1)),
+     %returning the player2 stash  to its initial state , ready for another round
+     retract(player2(_)),
+     assert(player2(InitStash2)).
 
-playLoop :-
-    initGame,
-    repeat, 
-    once(playRound(1)),
-    once(checkIfPlayersHaveWon(Exit1)),
-    once(playRound(2)),
-    once(checkIfPlayersHaveWon(Exit2)),
-    once(printPlayersCurrentScore),
-    ((Exit1 == 0, Exit2 == 0) -> fail; true).
-
-%   Randomizes initial Board and prints it
-initGame:-
-    initialBoard(BoardIn),
-    printBoard(BoardIn).
 
 %   Loop of playing
 %I agree that there is no command you can use to change a variable once 
 %it is bound. What you can do though, is force backtracking through the 
 %assignment, then this variable can be set again. 
 
+playLoop :-
+    initGame,
+    repeat, 
+    once(playRound(1)),
+    once(playRound(2)),
+    once(printPlayersCurrentScore),
+    if_then_else(once(checkIfPlayersHaveWon), true, fail).
+
 playRound(Player) :-
     format('Player ~w:\n', [Player]),
     removePieceAsk(Color, Player), 
     addPieceToWhatPlayer(Player, Color).
 
-    
+
 %   Asks for user input to decide specifics of
 %   the play move, specifically row and column
 removePieceAsk(Color, Player) :-
@@ -54,38 +55,72 @@ removePieceAsk(Color, Player) :-
         read(Row), 
         write('> Select column: '),
         read(Column),
-        checkMove(Row, Column , ErrorType, Player),
-        initialBoard(BoardIn),
-        (
-                ErrorType == 0 -> (
-                                    removePieceDo(BoardIn, BoardOut, Row, Column, Color), 
-                                    printBoard(BoardOut)
-                                  );         
-                (
-                    removePieceAsk(Color, Player)
-                )
+        if_then_else(
+            checkMove(Row, Column, Player),
+            (
+                removePieceDo(Row, Column, Color), 
+                printBoard
+            ),
+            removePieceAsk(Color, Player)
         ).
 
-removePieceDo(BoardIn, BoardOut, Row, Column, Color) :-
+removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column, Color),
     assert(initialBoard(BoardOut)).
 
 %   Checks if row, column respect board limits
 
-checkMove(Row, Column, ErrorType, Player):-
-
-    checkPlayerPieceColorStash(Row, Column, ErrorType, Player),
-    write('sai'),
-    (
-        ErrorType == 5 -> true ;   
-        (
-            (Row > 0, Row < 12, Column > 0, Column < 13) -> checkRules(Row, Column, ErrorType);
-            ErrorType = 4
-        )
-    ),
+checkMove(Row, Column, Player):-
     
-    format('ERROR TYPE move ~w\n', ErrorType),
+    if_then_else(
+        (
+            Row > 0, 
+            Row < 12, 
+            Column > 0, 
+            Column < 13
+        ), 
+        (
+            returnColorPiece(Row, Column, Color),
+            if_then_else(
+                Color \== n,
+                if_then_else(
+                    checkPieceLimit(Color, Player),
+                    (
+                        checkRules(Row, Column, ErrorType),
+                        if_then_else(
+                            ErrorType == 0, 
+                            true,
+                            if_then_else(
+                                ErrorType == 1,
+                                (    
+                                    write('Tried to remove a piece that doesnt exist\n'), 
+                                    fail
+                                ),
+                                if_then_else(
+                                        ErrorType == 2,
+                                        (    
+                                            write('Tried to remove a piece that makes other pieces unprotected\n'), 
+                                            fail
+                                        ),
+                                        if_then_else(
+                                                ErrorType == 3,
+                                                (    
+                                                    write('Tried to remove a piece that breaks the game tree\n'), 
+                                                    fail
+                                                ), true
+
+                            write('Tried to remove a piece that has reached its type limit for the player\n'),
+                        fail
+                    )
+                ),
+                fail
+            )
+        ),
+        (
+            write('Tried to remove a piece that is out of bonds\n'),
+            fail
+        ).
     (
         (
             ErrorType == 0 -> true ;         
