@@ -2,8 +2,8 @@
 :- dynamic player2/1.
 
 %        R, Y, B
-player1([5, 5, 4]).
-player2([4, 5, 5]).
+player1([0, 0, 0]).
+player2([0, 0, 0]).
 
 colorPiece(red, 1).
 colorPiece(yellow, 2).
@@ -46,9 +46,8 @@ printPlayersCurrentScore:-
     
 %   Adds a piece to a player
 addPieceToPlayer(1, [H | T], [Hout | T]):-
-    Hout is H + 1.
+    Hout is H + 1, !.
 addPieceToPlayer(Column , [H|T], [H | Tout]):-
-    Column > 1,
     ColumnN is Column - 1, 
     addPieceToPlayer(ColumnN, T, Tout).
 
@@ -56,7 +55,7 @@ addPieceToPlayer(Column , [H|T], [H | Tout]):-
 addPieceToWhatPlayer(PlayerNumber, PieceColor):-
     colorPiece(PieceColor, Index),
 
-    %   If the PlayerNumber == 1 doesnt need to check the other condition
+    %   If the PlayerNumber == 1 doesn't need to check the other condition
     %   They are mutually exclusive, only one can succed
     ((
         PlayerNumber == 1, !,
@@ -66,7 +65,6 @@ addPieceToWhatPlayer(PlayerNumber, PieceColor):-
     ) 
         ;
     (
-        PlayerNumber == 2, !,
         retract(player2(Player2Pieces)),
         addPieceToPlayer(Index, Player2Pieces, Player2PiecesOut),
         assert(player2(Player2PiecesOut))
@@ -103,12 +101,26 @@ checkPlayerPieceColorStash(Row, Column, ErrorType, Player):-
     initialBoard(Board),
     returnColorPiece(Row, Column, Board, Color),
     colorPiece(Color, Index),
-    (Player == 1 ->   player1(PlayerPieces) ; player2(PlayerPieces)),
+    (
+        (
+            Player == 1, !, player1(PlayerPieces)
+        )
+        ;
+        (
+            Player == 2, !, player2(PlayerPieces)
+        )
+            
+    ),
     checkPlayersStashForColor(PlayerPieces, Index, ErrorType).
 
 %   Checks if player has reached the limit for a piece color
 checkPlayersStashForColor([H|T], 1, ErrorType):-
-    H == 5 -> ErrorType = 5; ErrorType = 0.
+    (
+        H == 5, !, ErrorType = 5
+    )
+    ; 
+    ErrorType = 0.
+%
 checkPlayersStashForColor([H|T], Column, ErrorType):-
     ColumnN is Column - 1, 
     checkPlayersStashForColor(T, ColumnN, ErrorType).
