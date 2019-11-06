@@ -41,7 +41,7 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
     retract(player2(_)),
     assert(player2(Player2Stash)).
 
-%
+%   Loop of play of all 3 modes
 playLoop(Mode, Difficulty):-
     repeat, 
     if_then_else(
@@ -82,20 +82,19 @@ playLoop(Mode, Difficulty):-
         fail
     ).
 
-%
+%   Asks for user input and add's the removed piece to the player stash
 playRound(Player) :-
     format('\nPlayer ~w:\n\n', [Player]),
     removePieceAsk(Color, Player), 
     addPieceToWhatPlayer(Player, Color).
 
-%
+%   Randomizes piece to remove and add's the removed piece to the player stash
 playRoundMachine(Player, Difficulty) :-
     format('\nMachine ~w:\n\n', [Player]),
     removePieceAskMachine(Color, Player, Difficulty), 
     addPieceToWhatPlayer(Player, Color).
 
-%   Asks for user input to decide specifics of
-%   the play move, specifically row and column
+%   Asks for user input to decide piece to be removed and checks if it is a legal move
 removePieceAsk(Color, Player) :-
     write('    > Removing piece...\n'),
     write('    > Select row: '),
@@ -109,7 +108,7 @@ removePieceAsk(Color, Player) :-
         removePieceAsk(Color, Player)
     ).
 
-%
+%   Randomizes piece to remove and checks if it is a legal move
 removePieceAskMachine(Color, Player, Difficulty):-
     random(1,11, Row),
     random(1,12, Column),
@@ -124,7 +123,7 @@ removePieceAskMachine(Color, Player, Difficulty):-
             removePieceAskMachine(Color, Player)
     ).
 
-%
+%   After checking if the move is legal, removes piece
 removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column, Color),
