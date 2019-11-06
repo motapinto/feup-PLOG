@@ -4,28 +4,41 @@
 :- [players].
 :- [shared].
 
+%   To convert the letter the user inputs for the colum to a number
+columnLetterToNumber('a', 1).
+columnLetterToNumber('b', 2).
+columnLetterToNumber('c', 3).
+columnLetterToNumber('d', 4).
+columnLetterToNumber('e', 5).
+columnLetterToNumber('f', 6).
+columnLetterToNumber('g', 7).
+columnLetterToNumber('h', 8).
+columnLetterToNumber('i', 9).
+columnLetterToNumber('j', 10).
+columnLetterToNumber('l', 11).
+columnLetterToNumber('m', 12).
+
 %   Starts players with player mode
 startPP :-
     %   Saving Initial configuration
     initialBoard(Init),
     player1(InitStash1),
     player2(InitStash2),
-
     printBoard, 
     playLoop,
-    initGame.
+    initGame(Init, InitStash1, InitStash2).
     
 %   Restart the game parameters so that a new game can be played
 initGame(InitBoard, Player1Stash, Player2Stash):-
      %returning the board to its initial state , ready for another round
      retract(initialBoard(_)),
-     assert(initialBoard(Init)),
+     assert(initialBoard(InitBoard)),
      %returning the player1 stash to its initial state , ready for another round
      retract(player1(_)),
-     assert(player1(InitStash1)),
+     assert(player1(Player1Stash)),
      %returning the player2 stash  to its initial state , ready for another round
      retract(player2(_)),
-     assert(player2(InitStash2)).
+     assert(player2(Player2Stash)).
 
 
 %   Loop of playing
@@ -34,12 +47,16 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
 %assignment, then this variable can be set again. 
 
 playLoop :-
-    initGame,
     repeat, 
     once(playRound(1)),
     once(playRound(2)),
     once(printPlayersCurrentScore),
-    if_then_else(once(checkIfPlayersHaveWon), true, fail).
+    write('fuck'),
+    if_then_else(
+        once(checkIfPlayersHaveWon), 
+        write('THE PLAYERS HAVE WON THE GAME'), 
+        fail
+    ).
 
 playRound(Player) :-
     format('Player ~w:\n', [Player]),
@@ -54,9 +71,10 @@ removePieceAsk(Color, Player) :-
         write('> Select row: '),
         read(Row), 
         write('> Select column: '),
-        read(Column),
+        read(ColumnAux),
+        columnLetterToNumber(ColumnAux, Column),
         if_then_else(
-            checkMove(Row, Column, Player),
+            checkRules(Row, Column, Player),
             (
                 removePieceDo(Row, Column, Color), 
                 printBoard
@@ -69,76 +87,15 @@ removePieceDo(Row, Column, Color):-
     removePiece(BoardIn, BoardOut, Row, Column, Color),
     assert(initialBoard(BoardOut)).
 
-%   Checks if row, column respect board limits
 
-checkMove(Row, Column, Player):-
-    
-    if_then_else(
-        (
-            Row > 0, 
-            Row < 12, 
-            Column > 0, 
-            Column < 13
-        ), 
-        (
-            returnColorPiece(Row, Column, Color),
-            if_then_else(
-                Color \== n,
-                if_then_else(
-                    checkPieceLimit(Color, Player),
-                    (
-                        checkRules(Row, Column, ErrorType),
-                        if_then_else(
-                            ErrorType == 0, 
-                            true,
-                            if_then_else(
-                                ErrorType == 1,
-                                (    
-                                    write('Tried to remove a piece that doesnt exist\n'), 
-                                    fail
-                                ),
-                                if_then_else(
-                                        ErrorType == 2,
-                                        (    
-                                            write('Tried to remove a piece that makes other pieces unprotected\n'), 
-                                            fail
-                                        ),
-                                        if_then_else(
-                                                ErrorType == 3,
-                                                (    
-                                                    write('Tried to remove a piece that breaks the game tree\n'), 
-                                                    fail
-                                                ), true
+%   Return color from piece with Row and Column, uses removePiece
+%   but doesn't return no board without that piece, doing this
+%   so we don't have another predicate doing a similiar function  
+returnColorPiece(Row, Column, Color) :-
+    initialBoard(Board),
+    removePiece(Board, _, Row, Column, Color).
 
-                            write('Tried to remove a piece that has reached its type limit for the player\n'),
-                        fail
-                    )
-                ),
-                fail
-            )
-        ),
-        (
-            write('Tried to remove a piece that is out of bonds\n'),
-            fail
-        ).
-    (
-        (
-            ErrorType == 0 -> true ;         
-            (
-                (
-                    (ErrorType == 1, write('Tried to remove a piece that doesnt exist\n'));
-                    (ErrorType == 2,  write('Tried to remove a piece that makes other pieces unprotected\n'));
-                    (ErrorType == 3,  write('Tried to remove a piece that breaks the game tree\n'));
-                    (ErrorType == 4,  write('Tried to remove a piece that is out of bonds\n'));
-                    (ErrorType == 5,  write('Tried to remove a piece that has reached its type limit for the player\n'))
-                ),
-                write(' Try Again \n')
-            )
-        )
-    ).
-
-
-%   Return color from piece with Row and Column
+%   Same Function has before, but reveives a certain board to search in
 returnColorPiece(Row, Column, Board, Color) :-
     removePiece(Board, _, Row, Column, Color).
 
@@ -146,19 +103,18 @@ returnColorPiece(Row, Column, Board, Color) :-
 removePiece(BoardIn, BoardOut, Row, Column, Color) :-
     updateRow(Row, Column, BoardIn, BoardOut, Color).
 
-%
+%   iterates through the columns of the board, return the Color of the Piece that was removed
 updateColumn(1, [H|T], [Hout|T], Color):-
     Hout = n,
     Color = H.
-%
 updateColumn(Column, [H|T], [H|Tout], Color):-
     Column > 1,
     ColumnI is Column - 1, 
     updateColumn(ColumnI, T, Tout, Color).
-%
+
+%   Iterate through the rows of the board 
 updateRow(1, Column, [H|T], [Hout|T], Color):-
-    updateColumn(Column, H, Hout, Color).
-%    
+    updateColumn(Column, H, Hout, Color).    
 updateRow(Row, Column, [H|T], [H|Tout], Color):-
     Row > 1,
     RowNext is Row - 1, 

@@ -79,3 +79,8 @@ printBoard:-
     initialBoard(Init),
     printBoardTop,
     printBoardBody(Init, 1).
+
+
+printBoard(X):-
+    printBoardTop,
+    printBoardBody(X, 1).

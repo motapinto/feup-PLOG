@@ -1,3 +1,5 @@
 
-if_then_else(P,Q,R):- P, !, Q.
-if_then_else(P,Q,R):- R.
+
+% if then else implemntation
+if_then_else(P,Q,_):- P, !, Q.
+if_then_else(_,_,R):- R.

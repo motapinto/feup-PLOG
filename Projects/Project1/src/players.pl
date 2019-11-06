@@ -4,8 +4,8 @@
 :- dynamic player2/1.
 
 %   Players stashes (R Y B)
-player1([3, 5, 5]).
-player2([3, 5, 5]).
+player1([4, 5, 5]).
+player2([4, 5, 5]).
 
 %   Used to translate the color of a piece to a index in the players Stash
 colorPiece(r, 1).
@@ -75,14 +75,13 @@ addPieceToWhatPlayer(PlayerNumber, PieceColor):-
 
 %   Checks if both players have 5 pieces of each color, then the game ends
 checkIfPlayersHaveWon:-
-    
     player1(Player1Pieces),
     if_then_else(
-        iteratePlayerPieces(1, Player1Pieces),
+        iteratePlayerPieces(3, Player1Pieces),
         (
             player2(Player2Pieces),
             if_then_else(
-                iteratePlayerPieces(2, Player2Pieces),
+                iteratePlayerPieces(3, Player2Pieces),
                 true,
                 fail       
             )
@@ -92,23 +91,23 @@ checkIfPlayersHaveWon:-
 
 %   Auxiliar predicates to the previous one that iterate through the player's stash searching
 %   if all the maximum amount of pieces has been reached for each color
-iteratePlayerPieces(4, []).
-iteratelayerPieces(Column , [H|T]):-
-    Column <  4,
-    ColumnN is Column + 1, 
-    if_then_else(H == 5, checkPlayerPieces(ColumnN, T), fail).
+iteratePlayerPieces(1, [H|_]):-
+    if_then_else(H == 5, true, fail).
+iteratePlayerPieces(Column , [H|T]):-
+    ColumnN is Column - 1, 
+    if_then_else(H == 5, iteratePlayerPieces(ColumnN, T), fail).
    
 %   Checks if when trying to add a piece to the player's stash, if the maximum amount of pieces of 
 %   that color has been reached
 checkPieceLimit(Color, Player):-
     if_then_else(Player == 1, player1(PlayerPieces),  player2(PlayerPieces)),
     colorPiece(Color, Index),
-    iterateStash(PlayerPieces, Index).
+    iterateStash(Index, PlayerPieces).
 
 %   Auxiliar predicates to previous one , that iterate through the player stashes
-iterateStash([H|T], 1):-
+iterateStash(1, [H|_]):-
     if_then_else(H == 5, fail, (!, true)).
-iterateStash([H|T], Column):-
+iterateStash(Column, [_|T]):-
     Column >  0,
     ColumnN is Column - 1, 
     iterateStash(T, ColumnN).

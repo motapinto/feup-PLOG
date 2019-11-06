@@ -3,105 +3,260 @@
 :- (dynamic counterEq/1).
 :- (dynamic counterDif/1).
 
+%   Counter for the number of Pieces with the same color and Pieces in
+%   in general
 counterEq(0).
 counterDif(0).
 
-checkRules(Row, Column, ErrorType):-
-    checkIfNotNull(Row, Column, ErrorType1),
-    ErrorType1 == 0 -> (
-            checkIfPiecesAreSafe(Row, Column, ErrorType2),
-            ErrorType = ErrorType2
-    ) ; (ErrorType = ErrorType1).
 
-checkIfPiecesAreSafe(Row, Column, ErrorType):-
+test:-
+    if_then_else(
+        (printBoard,
+    checkRules(1,2,1)),
+        write('Sem Merda'),
+        write('Merda')
+    ).
+    
+
+
+checkRules(Row, Column, Player):-
+ 
+    %   Detecting if the values in the input of the player are valid
+    if_then_else(
+        checkRowAndColumn(Row, Column),
+        true,
+        (
+            write('Tried to remove a piece that is out of bonds\n'),
+            fail  
+        )
+    ),
+
+    %   Determining id the spot chosen by the player is a null one or
+    %   if it correspond to an actual piece
+    returnColorPiece(Row, Column, Color),
+    if_then_else(
+            Color \== n,
+            true,
+            (
+                write('Tried to remove a piece that doesnt exist\n'), 
+                !,
+                fail  
+            )
+    ),
+    
+    %   Checking if the player already has the max amount of pieces with
+    %   a certain Color
+    if_then_else(
+        checkPieceLimit(Color, Player),
+        true,
+        (
+            write('Tried to remove a piece that has reached its type limit for the player\n'),
+            !,
+            fail  
+        )
+    ),
+    %   Checking if removing the piece the player choose makes other pieces
+    %   around it unsafe
+    if_then_else(
+            checkIfPiecesAreSafe(Row, Column),
+            true,
+            (
+                write('Tried to remove a piece that makes other pieces unprotected\n'), 
+                !,
+                fail  
+            )
+    ).
+
+checkRowAndColumn(Row, Column):-
+    Row > 0, 
+    Row < 12, 
+    Column > 0, 
+    Column < 13.
+
+
+
+checkIfPiecesAreSafe(Row, Column):-
+    
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column, _),
     assert(initialBoard(BoardIn)),
+
+  %  printBoard(BoardOut).
+
     PreviousRow is Row - 1,
     NextRow is Row + 1,
     PreviousColumn is Column - 1,
     NextColumn is Column + 1,
     (
-        (
-            checkIfPieceIsSafe(PreviousRow, Column, BoardOut),
-            checkIfPieceIsSafe(PreviousRow, NextColumn, BoardOut),
-            checkIfPieceIsSafe(Row, PreviousColumn, BoardOut),
-            checkIfPieceIsSafe(Row, NextColumn, BoardOut),
-            checkIfPieceIsSafe(NextRow, Column, BoardOut),
-            checkIfPieceIsSafe(NextRow, NextColumn, BoardOut)
-        ) -> ErrorType = 0 ; ErrorType = 2
+        if_then_else(
+            (   Aux is Row mod 2,
+                Aux == 0
+            ),
+            (
+                checkIfPieceIsSafe(PreviousRow, Column, BoardOut),!,
+                checkIfPieceIsSafe(PreviousRow, NextColumn, BoardOut),!
+            ),
+            (
+                checkIfPieceIsSafe(PreviousRow, PreviousColumn, BoardOut),!,
+                checkIfPieceIsSafe(PreviousRow, Column, BoardOut),!
+            )
+        ),
+        checkIfPieceIsSafe(Row, PreviousColumn, BoardOut),!,
+        checkIfPieceIsSafe(Row, NextColumn, BoardOut),!,
+        if_then_else(
+                (   Aux is Row mod 2,
+                    Aux == 0
+                ),
+                (
+                    checkIfPieceIsSafe(NextRow, Column, BoardOut),!,
+                    checkIfPieceIsSafe(NextRow, NextColumn, BoardOut),!
+                ),
+                (
+                    checkIfPieceIsSafe(NextRow, PreviousColumn, BoardOut),!,
+                    checkIfPieceIsSafe(NextRow, Column, BoardOut),!
+                )
+            )
     ).
 
     
 
 checkIfPieceIsSafe(Row, Column, Board):-
-    %verifica se a peça está fora do bord
-    (
-        (Row > 0, Row < 12, 
-        Column > 0, Column < 13) -> (
-            %verifica se a peça é null
-            checkIfNotNull2(Row, Column, Board, ErrorType),
-            ( ErrorType == 1 -> true; 
-                %verifica se as peças adjacentes das peças não null
-                (
-                        PreviousRow is Row - 1,
-                        NextRow is Row + 1,
-                        PreviousColumn is Column - 1,
-                        NextColumn is Column + 1,
+   
+    %   Index for the surrounding pieces
+    if_then_else(
+        checkRowAndColumn(Row,Column),
+        (
+            returnColorPiece(Row, Column,Board, Color),
+            if_then_else(
+                Color == n, 
+                true,
+                (  
+                    PreviousRow is Row - 1,
+                    NextRow is Row + 1,
+                    PreviousColumn is Column - 1,
+                    NextColumn is Column + 1,
+        
+                    % Restart the counter back to 0 after a call to the predicate
+                    initCounters,
+                    if_then_else(
+                        (   Aux is Row mod 2,
+                            Aux == 0
+                        ),
                         (
-                            returnColorPiece(Row, Column, Board, Color),
-                            initCounters,
                             checkAdjacentPiece(PreviousRow, Column, Board, Color),
-                            checkAdjacentPiece(PreviousRow, NextColumn, Board, Color),
-                            (
-                                    counterEq(PiecesEq),
-                                    PiecesEq == 2 -> true ; (
-                                    checkAdjacentPiece(Row, PreviousColumn, Board, Color),
-                                    counterEq(PiecesEq1),counterDif(PiecesDif),
-                                    ((PiecesEq1 == 2 ; PiecesDif == 3) -> true ; (
-                                        checkAdjacentPiece(Row, NextColumn, Board, Color),
-                                        counterEq(PiecesEq2),counterDif(PiecesDif1),
-                                        ((PiecesEq2 == 2 ; PiecesDif1 == 3) -> true ; (
-                                            checkAdjacentPiece(NextRow, Column, Board, Color),
+                            checkAdjacentPiece(PreviousRow, NextColumn, Board, Color)
+                        ),
+                        (
+                            checkAdjacentPiece(PreviousRow, PreviousColumn, Board, Color),
+                            checkAdjacentPiece(PreviousRow, Column, Board, Color)
+                        )
+                    ),
+                    counterEq(PiecesEq),
+                    if_then_else(
+                        PiecesEq == 2,
+                        true,
+                        (   
+                            checkAdjacentPiece(Row, PreviousColumn, Board, Color),
+                            counterEq(PiecesEq1),counterDif(PiecesDif),
+                            if_then_else(
+                                (
+                                    PiecesEq1 == 2;
+                                    PiecesDif == 3
+                                ),
+                                true,
+                                (
+                                    
+                                    checkAdjacentPiece(Row, NextColumn, Board, Color),
+                                    counterEq(PiecesEq2),counterDif(PiecesDif1),
+        
+                                    if_then_else(
+                                        (
+                                            PiecesEq2 == 2;
+                                            PiecesDif1 == 3
+                                        ),
+                                        true,
+                                        (
+                                            
+                                            if_then_else(
+                                                (
+                                                    Aux is Row mod 2,
+                                                    Aux == 0
+                                                ),
+                                                checkAdjacentPiece(NextRow, Column, Board, Color),
+                                                checkAdjacentPiece(NextRow, PreviousColumn, Board, Color)
+                                            ),
                                             counterEq(PiecesEq3),counterDif(PiecesDif2),
-                                            ((PiecesEq3 == 2 ; PiecesDif2 == 3) -> true ; (
-                                                checkAdjacentPiece(NextRow, NextColumn, Board, Color), !,
-                                                counterEq(PiecesEq4),counterDif(PiecesDif3), !,
-                                                ((PiecesEq4 == 2 ; PiecesDif3 == 3) -> true ; ( 
-                                                    fail
-                                                ))
-                                            ))
-                                        ))
-                                    ))
+                
+                                            if_then_else(
+                                                (
+                                                    PiecesEq3 == 2;
+                                                    PiecesDif2 == 3
+                                                ),
+                                                true,
+                                                (
+                                                    
+                                                    if_then_else(
+                                                            (
+                                                                Aux is Row mod 2,
+                                                                Aux == 0
+                                                            ),
+                                                            checkAdjacentPiece(NextRow, NextColumn, Board, Color),
+                                                            checkAdjacentPiece(NextRow, Column, Board, Color)
+                                                    ),
+                                                    counterEq(PiecesEq4),counterDif(PiecesDif3),
+                        
+                                                    if_then_else(
+                                                        (
+                                                            PiecesEq4 == 2;
+                                                            PiecesDif3 == 3
+                                                        ),
+                                                        true,
+                                                        fail
+                                                    )  
+                                                )
+                                            )   
+                                        )
+                                    )
                                 )
                             )
                         )
-                )
+                    ) 
+                )       
             )
-        ); true
-    ).
+        ),
+        true
+    ).                   
 
 checkAdjacentPiece(Row, Column, Board, Color) :-
     %verifica se a peça está fora do bord
-    (
-        (Row > 0, Row < 12, 
-        Column > 0, Column < 13) -> (
+    if_then_else(
+        checkRowAndColumn(Row,Column),
+        (
             returnColorPiece(Row, Column, Board, ColorAdj),
-            (
-                ColorAdj == n -> true ; 
+            if_then_else(
+                ColorAdj == n,
+                true,
                 (
-                    ColorAdj == Color -> (addEq, addDif); addDif
+                    if_then_else(
+                        ColorAdj == Color,
+                        (
+                            addEq,
+                            addDif
+                        ),
+                        addDif
+                    )
                 )
             )
-        ) ; true
+        ),
+        true
     ).
 
 initCounters :-
-    retract(counterEq(PiecesEq)),
+    retract(counterEq(_)),
     PiecesEq1 = 0,
     assert(counterEq(PiecesEq1)),
 
-    retract(counterDif(PiecesDif)),
+    retract(counterDif(_)),
     PiecesDif1 = 0,
     assert(counterDif(PiecesDif1)).
 
@@ -114,30 +269,3 @@ addDif :-
     retract(counterDif(PiecesDif)),
     PiecesDif1 is PiecesDif + 1,
     assert(counterDif(PiecesDif1)).
-
-checkIfNotNull2(Row, Column, Board, ErrorType) :-
-    checkRow(Row, Column, Board, ErrorType).
-
-checkIfNotNull(Row, Column, ErrorType) :-
-    initialBoard(In),
-    checkRow(Row, Column, In, ErrorType).
-
-checkColumn(1, [H|T], ErrorType):-
-    (
-        H == n ->
-        ErrorType = 1; 
-        ErrorType = 0
-    ).
-
-checkColumn(Column, [H|T] , ErrorType):-
-    Column > 1,
-    ColumnI is Column - 1, 
-    checkColumn(ColumnI, T, ErrorType).
-
-checkRow(1, Column, [H|T], ErrorType):-
-    checkColumn(Column, H, ErrorType).
-    
-checkRow(Row, Column, [H|T] , ErrorType):-
-    Row > 1,
-    RowNext is Row - 1, 
-    checkRow(RowNext, Column, T, ErrorType).

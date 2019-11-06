@@ -48,11 +48,29 @@ selectOption :-
 
 menuInputHandler :-
     read(Input),
-    (
-        (Input==1, !, startPP, play);
-        (Input==2, !, startPM, play);
-        (Input==3, !, startMM, play)
+    if_then_else(
+        Input == 1,
+        (
+            startPP,
+            play
+        ),
+        if_then_else(
+            Input == 2,
+            (
+                startPM,
+                play   
+            ),
+            if_then_else(
+                Input == 3,
+                (
+                    startMM,
+                    play       
+                ),
+                true
+            )
+        )        
     ).
+
 
 play :-
     printMenu,
