@@ -71,8 +71,8 @@ removePieceAsk(Color, Player) :-
         write('> Select row: '),
         read(Row), 
         write('> Select column: '),
-        read(ColumnAux),
-        columnLetterToNumber(ColumnAux, Column),
+        read(Column),
+        %columnLetterToNumber(ColumnAux, Column),
         if_then_else(
             checkRules(Row, Column, Player),
             (

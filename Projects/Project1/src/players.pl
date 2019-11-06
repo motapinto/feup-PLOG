@@ -4,8 +4,8 @@
 :- dynamic player2/1.
 
 %   Players stashes (R Y B)
-player1([4, 5, 5]).
-player2([4, 5, 5]).
+player1([0, 0, 0]).
+player2([0, 0, 0]).
 
 %   Used to translate the color of a piece to a index in the players Stash
 colorPiece(r, 1).
@@ -110,6 +110,6 @@ iterateStash(1, [H|_]):-
 iterateStash(Column, [_|T]):-
     Column >  0,
     ColumnN is Column - 1, 
-    iterateStash(T, ColumnN).
+    iterateStash(ColumnN, T).
 
 

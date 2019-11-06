@@ -9,16 +9,6 @@ counterEq(0).
 counterDif(0).
 
 
-test:-
-    if_then_else(
-        (printBoard,
-    checkRules(1,2,1)),
-        write('Sem Merda'),
-        write('Merda')
-    ).
-    
-
-
 checkRules(Row, Column, Player):-
  
     %   Detecting if the values in the input of the player are valid
