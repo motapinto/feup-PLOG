@@ -73,7 +73,7 @@ checkRules(Row, Column, Player, IsMachine):-
                 if_then_else(
                         IsMachine == 0,
                         (
-                            write('Tried to remove a piece that makes other pieces unprotected\n'), 
+                            write('\n    > Tried to remove a piece that makes other pieces unprotected!\n\n'), 
                             !,
                             fail  
                         ),

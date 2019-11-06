@@ -18,38 +18,58 @@ columnLetterToNumber('j', 10).
 columnLetterToNumber('l', 11).
 columnLetterToNumber('m', 12).
 
-start(Mode):-
+%   Inicializes the all game parameters
+start(Mode, Difficulty):-
     use_module(library(random)),
+    use_module(library(system)),
     initialBoard(Init),
     player1(InitStash1),
     player2(InitStash2),
     printBoard, 
-    playLoop(Mode),
+    playLoop(Mode, Difficulty),
     initGame(Init, InitStash1, InitStash2).
 
-playLoop(Mode):-
+%   Restart the game parameters so that a new game can be played
+initGame(InitBoard, Player1Stash, Player2Stash):-
+    %   returning the board to its initial state , ready for another round
+    retract(initialBoard(_)),
+    assert(initialBoard(InitBoard)),
+    %   returning the player1 stash to its initial state , ready for another round
+    retract(player1(_)),
+    assert(player1(Player1Stash)),
+    %   returning the player2 stash  to its initial state , ready for another round
+    retract(player2(_)),
+    assert(player2(Player2Stash)).
+
+%
+playLoop(Mode, Difficulty):-
     repeat, 
     if_then_else(
         Mode == 1,
         (
-            write('player'),
             once(playRound(1)),
-            write('player'),
-            once(playRound(2))
+            printBoard,
+            once(playRound(2)),
+            printBoard
         ),
         if_then_else(
             Mode == 2,
             (
-                write('player'),
                 once(playRound(1)),
-                write('machine'),
-                once(playRoundMachine(2))
+                printBoard,
+                sleep(3),
+                once(playRoundMachine(2, Difficulty)),
+                printBoard
             ),
             if_then_else(
                 Mode == 3,
                 (
-                    once(playRoundMachine(1)),
-                    once(playRoundMachine(2))
+                    once(playRoundMachine(1, Difficulty)),
+                    printBoard,
+                    sleep(3),
+                    once(playRoundMachine(2, Difficulty)),
+                    printBoard,
+                    sleep(3)
                 ),
                 fail
             )
@@ -62,79 +82,49 @@ playLoop(Mode):-
         fail
     ).
 
-playRoundMachine(Player) :-
-    format('Player ~w:\n', [Player]),
-    removePieceAskMachine(Color, Player), 
+%
+playRound(Player) :-
+    format('\nPlayer ~w:\n\n', [Player]),
+    removePieceAsk(Color, Player), 
     addPieceToWhatPlayer(Player, Color).
 
-removePieceAskMachine(Color, Player):-
+%
+playRoundMachine(Player, Difficulty) :-
+    format('\nMachine ~w:\n\n', [Player]),
+    removePieceAskMachine(Color, Player, Difficulty), 
+    addPieceToWhatPlayer(Player, Color).
+
+%   Asks for user input to decide specifics of
+%   the play move, specifically row and column
+removePieceAsk(Color, Player) :-
+    write('    > Removing piece...\n'),
+    write('    > Select row: '),
+    read(Row), 
+    write('    > Select column: '),
+    read(Column),
+    %columnLetterToNumber(ColumnAux, Column),
+    if_then_else(
+        checkRules(Row, Column, Player,0),
+        removePieceDo(Row, Column, Color), 
+        removePieceAsk(Color, Player)
+    ).
+
+%
+removePieceAskMachine(Color, Player, Difficulty):-
     random(1,11, Row),
     random(1,12, Column),
     if_then_else(
             checkRules(Row, Column, Player, 1),
             (
                 removePieceDo(Row, Column, Color), 
-                write('> Removing piece...\n'),
-                format('> Row: ~d\n', Row),
-                format('> Row: ~d\n', Column),
-                printBoard
+                write('    > Removing piece...\n'),
+                format('    > Row: ~d\n', Row),
+                format('    > Row: ~d\n', Column)
             ),
             removePieceAskMachine(Color, Player)
     ).
 
-%   Restart the game parameters so that a new game can be played
-initGame(InitBoard, Player1Stash, Player2Stash):-
-     %returning the board to its initial state , ready for another round
-     retract(initialBoard(_)),
-     assert(initialBoard(InitBoard)),
-     %returning the player1 stash to its initial state , ready for another round
-     retract(player1(_)),
-     assert(player1(Player1Stash)),
-     %returning the player2 stash  to its initial state , ready for another round
-     retract(player2(_)),
-     assert(player2(Player2Stash)).
-
-
-%   Loop of playing
-%I agree that there is no command you can use to change a variable once 
-%it is bound. What you can do though, is force backtracking through the 
-%assignment, then this variable can be set again. 
-
-playLoop :-
-    repeat, 
-    once(playRound(1)),
-    once(playRound(2)),
-    once(printPlayersCurrentScore),
-    if_then_else(
-        once(checkIfPlayersHaveWon), 
-        write('THE PLAYERS HAVE WON THE GAME'), 
-        fail
-    ).
-
-playRound(Player) :-
-    format('Player ~w:\n', [Player]),
-    removePieceAsk(Color, Player), 
-    addPieceToWhatPlayer(Player, Color).
-
-
-%   Asks for user input to decide specifics of
-%   the play move, specifically row and column
-removePieceAsk(Color, Player) :-
-        write('> Removing piece...\n'),
-        write('> Select row: '),
-        read(Row), 
-        write('> Select column: '),
-        read(Column),
-        %columnLetterToNumber(ColumnAux, Column),
-        if_then_else(
-            checkRules(Row, Column, Player,0),
-            (
-                removePieceDo(Row, Column, Color), 
-                printBoard
-            ),
-            removePieceAsk(Color, Player)
-        ).
-
+%
 removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column, Color),

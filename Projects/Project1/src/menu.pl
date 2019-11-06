@@ -54,13 +54,34 @@ menuInputHandler :-
             Input == 2;
             Input == 3
         ),
-        start(Input),
-        if_then_else(
-            Input == 4,
-            true,
-            play
+        (
+            if_then_else(
+                (Input == 2 ; Input == 3),   
+                readDifficulty(Level),
+                true
+            ),
+            start(Input, Level)   
+        ),
+            if_then_else(
+                Input == 4,
+                true,
+                play
             )
     ). 
+
+readDifficulty(Level) :-
+    write('> (1) AI level 0\n'),
+    write('> (2) AI level 1\n'),
+    write('Chose difficulty: '), 
+    read(Level),
+    if_then_else(
+        (
+            Level == 0;
+            Level == 1
+        ),
+        true,
+        readDifficulty(Level1)
+    ).
 
 
 play :-

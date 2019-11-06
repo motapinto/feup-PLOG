@@ -32,12 +32,12 @@ printPlayersScoreLine([H|T], Column) :-
 
 %   Prints the score of Player 1
 printPlayer1Score(Player1Pieces):-
-    write('Player 1 score:\n'),
+    write('\nPlayer 1 score:\n'),
     printPlayersScoreLine(Player1Pieces, 1).
 
 %   Prints the score of Player 2
 printPlayer2Score(Player2Pieces):-
-    write('Player 2 score:\n'),
+    write('\nPlayer 2 score:\n'),
     printPlayersScoreLine(Player2Pieces, 1).
 
 %   Prints the score of both Players
