@@ -9,15 +9,21 @@ counterEq(0).
 counterDif(0).
 
 
-checkRules(Row, Column, Player):-
+checkRules(Row, Column, Player, IsMachine):-
  
     %   Detecting if the values in the input of the player are valid
     if_then_else(
         checkRowAndColumn(Row, Column),
         true,
         (
-            write('Tried to remove a piece that is out of bonds\n'),
-            fail  
+            if_then_else(
+                IsMachine == 0,
+                (
+                    write('Tried to remove a piece that is out of bonds\n'),
+                    fail
+                ),
+                fail  
+            )
         )
     ),
 
@@ -28,9 +34,15 @@ checkRules(Row, Column, Player):-
             Color \== n,
             true,
             (
-                write('Tried to remove a piece that doesnt exist\n'), 
-                !,
-                fail  
+                if_then_else(
+                        IsMachine == 0,
+                        (
+                            write('Tried to remove a piece that doesnt exist\n'), 
+                            !,
+                            fail  
+                        ),
+                        fail  
+                )
             )
     ),
     
@@ -40,9 +52,16 @@ checkRules(Row, Column, Player):-
         checkPieceLimit(Color, Player),
         true,
         (
-            write('Tried to remove a piece that has reached its type limit for the player\n'),
-            !,
-            fail  
+            if_then_else(
+                    IsMachine == 0,
+                    (
+                        write('Tried to remove a piece that has reached its type limit for the player\n'),
+                        !,
+                        fail  
+                    ),
+                    fail  
+            )
+
         )
     ),
     %   Checking if removing the piece the player choose makes other pieces
@@ -51,9 +70,15 @@ checkRules(Row, Column, Player):-
             checkIfPiecesAreSafe(Row, Column),
             true,
             (
-                write('Tried to remove a piece that makes other pieces unprotected\n'), 
-                !,
-                fail  
+                if_then_else(
+                        IsMachine == 0,
+                        (
+                            write('Tried to remove a piece that makes other pieces unprotected\n'), 
+                            !,
+                            fail  
+                        ),
+                        fail  
+                )
             )
     ).
 

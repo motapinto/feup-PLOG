@@ -49,27 +49,18 @@ selectOption :-
 menuInputHandler :-
     read(Input),
     if_then_else(
-        Input == 1,
         (
-            startPP,
-            play
+            Input == 1;
+            Input == 2;
+            Input == 3
         ),
+        start(Input),
         if_then_else(
-            Input == 2,
-            (
-                startPM,
-                play   
-            ),
-            if_then_else(
-                Input == 3,
-                (
-                    startMM,
-                    play       
-                ),
-                true
+            Input == 4,
+            true,
+            play
             )
-        )        
-    ).
+    ). 
 
 
 play :-

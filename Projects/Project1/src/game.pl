@@ -18,16 +18,70 @@ columnLetterToNumber('j', 10).
 columnLetterToNumber('l', 11).
 columnLetterToNumber('m', 12).
 
-%   Starts players with player mode
-startPP :-
-    %   Saving Initial configuration
+start(Mode):-
+    use_module(library(random)),
     initialBoard(Init),
     player1(InitStash1),
     player2(InitStash2),
     printBoard, 
-    playLoop,
+    playLoop(Mode),
     initGame(Init, InitStash1, InitStash2).
-    
+
+playLoop(Mode):-
+    repeat, 
+    if_then_else(
+        Mode == 1,
+        (
+            write('player'),
+            once(playRound(1)),
+            write('player'),
+            once(playRound(2))
+        ),
+        if_then_else(
+            Mode == 2,
+            (
+                write('player'),
+                once(playRound(1)),
+                write('machine'),
+                once(playRoundMachine(2))
+            ),
+            if_then_else(
+                Mode == 3,
+                (
+                    once(playRoundMachine(1)),
+                    once(playRoundMachine(2))
+                ),
+                fail
+            )
+        )     
+    ),
+    once(printPlayersCurrentScore),
+    if_then_else(
+       once(checkIfPlayersHaveWon), 
+        write('THE PLAYERS HAVE WON THE GAME'), 
+        fail
+    ).
+
+playRoundMachine(Player) :-
+    format('Player ~w:\n', [Player]),
+    removePieceAskMachine(Color, Player), 
+    addPieceToWhatPlayer(Player, Color).
+
+removePieceAskMachine(Color, Player):-
+    random(1,11, Row),
+    random(1,12, Column),
+    if_then_else(
+            checkRules(Row, Column, Player, 1),
+            (
+                removePieceDo(Row, Column, Color), 
+                write('> Removing piece...\n'),
+                format('> Row: ~d\n', Row),
+                format('> Row: ~d\n', Column),
+                printBoard
+            ),
+            removePieceAskMachine(Color, Player)
+    ).
+
 %   Restart the game parameters so that a new game can be played
 initGame(InitBoard, Player1Stash, Player2Stash):-
      %returning the board to its initial state , ready for another round
@@ -51,7 +105,6 @@ playLoop :-
     once(playRound(1)),
     once(playRound(2)),
     once(printPlayersCurrentScore),
-    write('fuck'),
     if_then_else(
         once(checkIfPlayersHaveWon), 
         write('THE PLAYERS HAVE WON THE GAME'), 
@@ -74,7 +127,7 @@ removePieceAsk(Color, Player) :-
         read(Column),
         %columnLetterToNumber(ColumnAux, Column),
         if_then_else(
-            checkRules(Row, Column, Player),
+            checkRules(Row, Column, Player,0),
             (
                 removePieceDo(Row, Column, Color), 
                 printBoard
