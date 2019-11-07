@@ -19,26 +19,32 @@ if_then_else(_,_,R):- R.
 
 start :-
     use_module(library(lists)),
-    %possibleMoves(1, 1, []).
+    possibleMoves(1, 1, []).
 
 possibleMoves(Row, Column, Moves) :-
+    if_then_else(Row>11, finish(Moves), true),
     returnColorPiece(Row, Column, Color),
     if_then_else(
         Color == n,
         true, 
         if_then_else(
                 checkRules(Row, Column, Player, 0),
-                addMove(Row, Column, Moves, MovesN), 
+                append(Moves, [Row | Column], NewMoves),
                 true
             )
     ),
-    if_then_else(Column < 12, ColumnN is Column + 1, RowN is Row + 1),
-    if_then_else(RowN > 11, true, possibleMoves(RowN, ColumnN, MovesN)).
+    if_then_else(
+        Column < 12, 
+        (ColumnN is (Column + 1), possibleMoves(Row, ColumnN, NewMoves)),
+        (RowN is (Row + 1), possibleMoves(RowN, Column, NewMoves))
+    ).
 
-addMove(Row, Column, Moves, NewMoves) :-
-    NewPlay is [Row | Column],
-    append(Moves, NewPlay, NewMoves).
-
+finish([H|T]) :-
+    Aux = T,
+    Aux1 = [T|Out],
+    write('first move: \n'),
+    format('Row: ~w\nColumn: ~w\n\n', [H, T]).
+    
 
 returnColorPiece(Row, Column, Color) :-
     initialBoard(Board),
@@ -146,7 +152,6 @@ checkRules(Row, Column, Player, IsMachine):-
                 if_then_else(
                         IsMachine == 0,
                         (
-                            write('\n    > Tried to remove a piece that makes other pieces unprotected!\n\n'), 
                             !,
                             fail  
                         ),
