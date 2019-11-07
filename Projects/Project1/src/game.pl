@@ -65,11 +65,11 @@ playLoop(Mode, Difficulty):-
                 Mode == 3,
                 (
                     once(playRoundMachine(1, Difficulty)),
-                    printBoard,
                     sleep(3),
-                    once(playRoundMachine(2, Difficulty)),
                     printBoard,
-                    sleep(3)
+                    once(playRoundMachine(2, Difficulty)),
+                    sleep(3),
+                    printBoard
                 ),
                 fail
             )
@@ -120,7 +120,7 @@ removePieceAskMachine(Color, Player, Difficulty):-
                 format('    > Row: ~d\n', Row),
                 format('    > Row: ~d\n', Column)
             ),
-            removePieceAskMachine(Color, Player)
+            removePieceAskMachine(Color, Player, Difficulty)
     ).
 
 %   After checking if the move is legal, removes piece
