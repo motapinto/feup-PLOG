@@ -2,6 +2,7 @@
 :- [board].
 :- [rules].
 :- [players].
+:- [machine].
 :- [shared].
 
 %   To convert the letter the user inputs for the colum to a number
@@ -26,6 +27,7 @@ start(Mode, Difficulty):-
     player1(InitStash1),
     player2(InitStash2),
     printBoard, 
+    sleep(3),
     playLoop(Mode, Difficulty),
     initGame(Init, InitStash1, InitStash2).
 
@@ -57,6 +59,8 @@ playLoop(Mode, Difficulty):-
             (
                 once(playRound(1)),
                 printBoard,
+                write('\nMachine :\n\n'),
+                write('    > Removing piece...\n'),
                 sleep(3),
                 once(playRoundMachine(2, Difficulty)),
                 printBoard
@@ -64,11 +68,15 @@ playLoop(Mode, Difficulty):-
             if_then_else(
                 Mode == 3,
                 (
+                    write('\nMachine 1:\n\n'),
+                    write('    > Removing piece...\n'),
+                    sleep(3),
                     once(playRoundMachine(1, Difficulty)),
-                    sleep(3),
                     printBoard,
-                    once(playRoundMachine(2, Difficulty)),
+                    write('\nMachine 2:\n\n'),
+                    write('    > Removing piece...\n'),
                     sleep(3),
+                    once(playRoundMachine(2, Difficulty)),
                     printBoard
                 ),
                 fail
@@ -90,26 +98,40 @@ playRound(Player) :-
 
 %   Randomizes piece to remove and add's the removed piece to the player stash
 playRoundMachine(Player, Difficulty) :-
-    format('\nMachine ~w:\n\n', [Player]),
     removePieceAskMachine(Color, Player, Difficulty), 
     addPieceToWhatPlayer(Player, Color).
 
 %   Asks for user input to decide piece to be removed and checks if it is a legal move
 removePieceAsk(Color, Player) :-
-    write('    > Removing piece...\n'),
     write('    > Select row: '),
     read(Row), 
     write('    > Select column: '),
     read(Column),
     %columnLetterToNumber(ColumnAux, Column),
     if_then_else(
-        checkRules(Row, Column, Player,0),
+        checkRules(Row, Column, Player, 0),
         removePieceDo(Row, Column, Color), 
         removePieceAsk(Color, Player)
     ).
 
-%   Randomizes piece to remove and checks if it is a legal move
+%   Randomizes piece to remove and checks if it is a legal move for AI level 0
 removePieceAskMachine(Color, Player, Difficulty):-
+    Difficulty == 0, !,
+    random(1,11, Row),
+    random(1,12, Column),
+    if_then_else(
+            checkRules(Row, Column, Player, 1),
+            (
+                removePieceDo(Row, Column, Color), 
+                format('    > Row: ~d\n', Row),
+                format('    > Row: ~d\n', Column)
+            ),
+            removePieceAskMachine(Color, Player, Difficulty)
+    ).
+
+%   Chooses first play of possible moves for AI level 1
+removePieceAskMachine(Color, Player, Difficulty):-
+    Difficulty == 1, !,
     random(1,11, Row),
     random(1,12, Column),
     if_then_else(
@@ -129,7 +151,6 @@ removePieceDo(Row, Column, Color):-
     removePiece(BoardIn, BoardOut, Row, Column, Color),
     assert(initialBoard(BoardOut)).
 
-
 %   Return color from piece with Row and Column, uses removePiece
 %   but doesn't return no board without that piece, doing this
 %   so we don't have another predicate doing a similiar function  
@@ -145,7 +166,7 @@ returnColorPiece(Row, Column, Board, Color) :-
 removePiece(BoardIn, BoardOut, Row, Column, Color) :-
     updateRow(Row, Column, BoardIn, BoardOut, Color).
 
-%   iterates through the columns of the board, return the Color of the Piece that was removed
+%   Iterates through the columns of the board, return the Color of the Piece that was removed
 updateColumn(1, [H|T], [Hout|T], Color):-
     Hout = n,
     Color = H.
