@@ -49,8 +49,11 @@ playLoop(Mode, Difficulty):-
     if_then_else(
         Mode == 1,
         (
-            computePossibleMoves(1),
+            write('a');
+            %computePossibleMoves(1),
+            write('a');
             once(playRound(1)),
+            write('a');
             printBoard,
             computePossibleMoves(2),
             once(playRound(2)),

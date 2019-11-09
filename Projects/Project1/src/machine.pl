@@ -5,7 +5,7 @@
 :- (dynamic possibleMovesP2/1).
 
 %   Initial Configuration of possibleMoves for player 1
-possibleMovesP1([
+possibleMovesP1([ 
     [n, n, n, n, n, n, n, n, n, n, n, n],
     [n, n, n, n, n, n, n, n, n, n, n, n],
     [n, n, n, n, n, n, n, n, n, n, n, n], 
@@ -16,7 +16,7 @@ possibleMovesP1([
     [n, n, n, n, n, n, n, n, n, n, n, n], 
     [n, n, n, n, n, n, n, n, n, n, n, n], 
     [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n]
+    [n, n, n, n, n, n, n, n, n, n, n, y]
 ]).
 
 %   Initial Configuration of possibleMoves for player 2
@@ -62,11 +62,10 @@ nextPos(Row, Column, RowN, ColumnN) :-
         Column < 12, 
         (
             RowN = Row,
-            ColumnN is Column + 1,
-            if_then_else(ColumnN > 12, fail, true)
+            ColumnN is Column + 1
         ),
         (
-            ColumnN = Column,
+            ColumnN = 1,
             RowN is RowN + 1,
             if_then_else(RowN > 11, fail, true)
         )
