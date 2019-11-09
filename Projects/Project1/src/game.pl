@@ -49,19 +49,23 @@ playLoop(Mode, Difficulty):-
     if_then_else(
         Mode == 1,
         (
+            computePossibleMoves(1),
             once(playRound(1)),
             printBoard,
+            computePossibleMoves(2),
             once(playRound(2)),
             printBoard
         ),
         if_then_else(
             Mode == 2,
             (
+                computePossibleMoves(1),
                 once(playRound(1)),
                 printBoard,
                 write('\nMachine :\n\n'),
                 write('    > Removing piece...\n'),
                 sleep(3),
+                computePossibleMoves(2),
                 once(playRoundMachine(2, Difficulty)),
                 printBoard
             ),
@@ -71,11 +75,13 @@ playLoop(Mode, Difficulty):-
                     write('\nMachine 1:\n\n'),
                     write('    > Removing piece...\n'),
                     sleep(3),
+                    computePossibleMoves(1),
                     once(playRoundMachine(1, Difficulty)),
                     printBoard,
                     write('\nMachine 2:\n\n'),
                     write('    > Removing piece...\n'),
                     sleep(3),
+                    computePossibleMoves(2),
                     once(playRoundMachine(2, Difficulty)),
                     printBoard
                 ),

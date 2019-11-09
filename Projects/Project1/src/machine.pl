@@ -52,16 +52,25 @@ checkAll(Row, Column, Player) :-
     %   Checks next position in the board -> when reaches the end of the board returns fail
     if_then_else(
         nextPos(Row, Column, RowN, ColumnN),
-        true,
-        fail
-    ),
-    %   Recursive call
-    checkAll(RowN, ColumnN, Player).
+        checkAll(RowN, ColumnN, Player),
+        true
+    ).
 
+%   Decides next possition to check
 nextPos(Row, Column, RowN, ColumnN) :-
-    if_then_else(Column < 12, ColumnN = Column + 1, RowN is Row + 1),
-    if(RowN > 11, fail, true).
-
+    if_then_else(
+        Column < 12, 
+        (
+            RowN = Row,
+            ColumnN is Column + 1,
+            if_then_else(ColumnN > 12, fail, true)
+        ),
+        (
+            ColumnN = Column,
+            RowN is RowN + 1,
+            if_then_else(RowN > 11, fail, true)
+        )
+    ).
 
 addPossibleMove(Row, Column, Player) :-
     if_then_else(
