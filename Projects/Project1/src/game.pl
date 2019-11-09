@@ -48,21 +48,18 @@ playLoop(Mode, Difficulty):-
     repeat, 
     if_then_else(
         Mode == 1,
-        (
-            write('a');
-            %computePossibleMoves(1),
-            write('a');
+        (   
+           % computePossibleMoves(1),
             once(playRound(1)),
-            write('a');
             printBoard,
-            computePossibleMoves(2),
+        %   computePossibleMoves(2),
             once(playRound(2)),
             printBoard
         ),
         if_then_else(
             Mode == 2,
             (
-                computePossibleMoves(1),
+               % computePossibleMoves(1),
                 once(playRound(1)),
                 printBoard,
                 write('\nMachine :\n\n'),
@@ -80,12 +77,14 @@ playLoop(Mode, Difficulty):-
                     sleep(3),
                     computePossibleMoves(1),
                     once(playRoundMachine(1, Difficulty)),
+                    initPossibleMoves,
                     printBoard,
                     write('\nMachine 2:\n\n'),
                     write('    > Removing piece...\n'),
                     sleep(3),
                     computePossibleMoves(2),
                     once(playRoundMachine(2, Difficulty)),
+                    initPossibleMoves,
                     printBoard
                 ),
                 fail
@@ -125,9 +124,13 @@ removePieceAsk(Color, Player) :-
 
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
 removePieceAskMachine(Color, Player, Difficulty):-
-    Difficulty == 0, !,
-    random(1,11, Row),
-    random(1,12, Column),
+    if_then_else(
+        Difficulty == 0,
+        (   random(1,11, Row),
+            random(1,12, Column)
+        ),
+        firstPossibleMove(Row, Column, Player)
+    ),
     if_then_else(
             checkRules(Row, Column, Player, 1),
             (
@@ -159,6 +162,7 @@ removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column, Color),
     assert(initialBoard(BoardOut)).
+
 
 %   Return color from piece with Row and Column, uses removePiece
 %   but doesn't return no board without that piece, doing this

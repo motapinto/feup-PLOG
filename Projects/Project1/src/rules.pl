@@ -1,5 +1,3 @@
-:- [board].
-
 :- (dynamic counterEq/1).
 :- (dynamic counterDif/1).
 
@@ -10,7 +8,6 @@ counterDif(0).
 
 
 checkRules(Row, Column, Player, IsMachine):-
- 
     %   Detecting if the values in the input of the player are valid
     if_then_else(
         checkRowAndColumn(Row, Column),
@@ -30,6 +27,7 @@ checkRules(Row, Column, Player, IsMachine):-
     %   Determining id the spot chosen by the player is a null one or
     %   if it correspond to an actual piece
     returnColorPiece(Row, Column, Color),
+
     if_then_else(
             Color \== n,
             true,
@@ -219,7 +217,7 @@ checkIfPieceIsSafe(Row, Column, Board):-
                                                             checkAdjacentPiece(NextRow, Column, Board, Color)
                                                     ),
                                                     counterEq(PiecesEq4),counterDif(PiecesDif3),
-                        
+                                                    !,
                                                     if_then_else(
                                                         (
                                                             PiecesEq4 == 2;
@@ -227,7 +225,8 @@ checkIfPieceIsSafe(Row, Column, Board):-
                                                         ),
                                                         true,
                                                         fail
-                                                    )  
+                                                    ) 
+                                                    
                                                 )
                                             )   
                                         )

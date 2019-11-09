@@ -1,5 +1,3 @@
-:-[shared].
-
 :- (dynamic initialBoard/1).
 
 %   Initial Configuration of Board

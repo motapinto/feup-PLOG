@@ -70,8 +70,8 @@ menuInputHandler :-
     ). 
 
 readDifficulty(Level) :-
-    write('> (1) AI level 0\n'),
-    write('> (2) AI level 1\n'),
+    write('> (0) AI level 0\n'),
+    write('> (1) AI level 1\n'),
     write('Chose difficulty: '), 
     read(Level),
     if_then_else(

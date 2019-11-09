@@ -1,38 +1,13 @@
-:-[rules].
-:-[shared].
-
-:- (dynamic possibleMovesP1/1).
-:- (dynamic possibleMovesP2/1).
+:- (dynamic possibleMoves/1).
 
 %   Initial Configuration of possibleMoves for player 1
-possibleMovesP1([ 
-    [n, n, n, n, n, n, n, n, n, n, n, n],
-    [n, n, n, n, n, n, n, n, n, n, n, n],
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n],
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, y]
-]).
+possibleMoves([]).
+
 
 %   Initial Configuration of possibleMoves for player 2
-possibleMovesP2([
-    [n, n, n, n, n, n, n, n, n, n, n, n],
-    [n, n, n, n, n, n, n, n, n, n, n, n],
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n],
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n], 
-    [n, n, n, n, n, n, n, n, n, n, n, n]
-]).
+initPossibleMoves:-
+    retract(possibleMoves(_)),
+    assert(possibleMoves([])).
 
 computePossibleMoves(Player) :-
     if_then_else(
@@ -66,7 +41,7 @@ nextPos(Row, Column, RowN, ColumnN) :-
         ),
         (
             ColumnN = 1,
-            RowN is RowN + 1,
+            RowN is Row + 1,
             if_then_else(RowN > 11, fail, true)
         )
     ).

@@ -1,5 +1,3 @@
-:-[shared].
-
 :- dynamic player1/1.
 :- dynamic player2/1.
 
@@ -92,7 +90,7 @@ checkIfPlayersHaveWon:-
 %   Auxiliar predicates to the previous one that iterate through the player's stash searching
 %   if all the maximum amount of pieces has been reached for each color
 iteratePlayerPieces(1, [H|_]):-
-    if_then_else(H == 5, true, fail).
+    if_then_else(H == 5, true, (! ,fail)).
 iteratePlayerPieces(Column , [H|T]):-
     ColumnN is Column - 1, 
     if_then_else(H == 5, iteratePlayerPieces(ColumnN, T), fail).
@@ -106,7 +104,7 @@ checkPieceLimit(Color, Player):-
 
 %   Auxiliar predicates to previous one , that iterate through the player stashes
 iterateStash(1, [H|_]):-
-    if_then_else(H == 5, fail, (!, true)).
+    if_then_else(H == 5, (! , fail), true).
 iterateStash(Column, [_|T]):-
     Column >  0,
     ColumnN is Column - 1, 
