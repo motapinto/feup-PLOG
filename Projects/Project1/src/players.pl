@@ -5,44 +5,36 @@
 player1([0, 0, 0]).
 player2([0, 0, 0]).
 
-%   Used to translate the color of a piece to a index in the players Stash
+%   Used to parse the color of a piece to a index in the players Stash
 colorPiece(r, 1).
 colorPiece(y, 2).
 colorPiece(b, 3).
 
-%   Initializes both players Stash's
-initializePlayers(Player1Pieces, Player2Pieces):-
-    player1(Player1Pieces),
-    player2(Player2Pieces).
-
-%   Prints the score of one player in a organized fashion
+%   Prints the score of both player by color
 printPlayersScoreLine([], 4).
-printPlayersScoreLine([H|T], Column) :-
-    ColumnN is Column + 1,
-    if_then_else(Column == 1, write('Numbers of reds -->'), 
-        if_then_else(Column == 2, write('Numbers of yellows -->'), 
-            if_then_else(Column == 3, write('Numbers of blues -->'), true)
+printPlayersScoreLine([H1|T1], [H2|T2], Column) :-
+    if_then_else(
+        Column == 1, 
+        (write('                > Red: '), write(H1), write('            > Red: '), write(H2)),
+        if_then_else(
+            Column == 2, 
+            (write('                > Yellow: '), write(H1), write('         > Yellow: '), write(H2)),
+            if_then_else(
+                Column == 3, 
+                (write('                > Blue: '), write(H1), write('           > Blue: '), write(H2)),
+                true)
         )
     ),
-    write(H),
     write('\n'),
-    printPlayersScoreLine(T, ColumnN).
+    ColumnN is Column + 1,
+    printPlayersScoreLine(T1, T2, ColumnN).
 
-%   Prints the score of Player 1
-printPlayer1Score(Player1Pieces):-
-    write('\nPlayer 1 score:\n'),
-    printPlayersScoreLine(Player1Pieces, 1).
-
-%   Prints the score of Player 2
-printPlayer2Score(Player2Pieces):-
-    write('\nPlayer 2 score:\n'),
-    printPlayersScoreLine(Player2Pieces, 1).
-
-%   Prints the score of both Players
-printPlayersCurrentScore:-
-    initializePlayers(Player1Pieces, Player2Pieces),
-    printPlayer1Score(Player1Pieces),
-    printPlayer2Score(Player2Pieces).    
+%   Prints both players score
+printPlayersScore(Player1Pieces, Player2Pieces):-
+    player1(Player1Pieces),
+    player2(Player2Pieces),
+    write('\n                Player1:            Player2:\n'),
+    printPlayersScoreLine(Player1Pieces, Player2Pieces, 1).
     
 %   Adds 1 piece of a certain color to a player's stash 
 addPieceToPlayer(1, [H | T], [Hout | T]):-
@@ -51,7 +43,6 @@ addPieceToPlayer(Column , [H|T], [H | Tout]):-
     Column > 1,
     ColumnN is Column - 1, 
     addPieceToPlayer(ColumnN, T, Tout).
-
 
 %   Adds 1 piece of PieceColor color to the player PlayerNumber stash 
 addPieceToWhatPlayer(PlayerNumber, PieceColor):-
