@@ -1,4 +1,4 @@
-%include library's
+:- [shared].
 :- [game].
 
 printMenu :-
@@ -73,14 +73,14 @@ readDifficulty(Level) :-
     write('> (1) AI level 0\n'),
     write('> (2) AI level 1\n'),
     write('Chose difficulty: '), 
-    read(Level),
+    read(LevelAux),
     if_then_else(
         (
-            Level == 0;
-            Level == 1
+            LevelAux == 0;
+            LevelAux == 1
         ),
-        true,
-        readDifficulty(Level1)
+        Level = LevelAux,
+        readDifficulty(Level)
     ).
 
 
