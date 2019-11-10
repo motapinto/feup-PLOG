@@ -1,21 +1,22 @@
 :- [shared].
+:- [allBoards].
 
 :- (dynamic initialBoard/1).
 
 %   Initial Configuration of Board
 initialBoard([
-        [r, r, b, y, n, n, n, n, n, n, n, n],
-        [y, b, r, b, n, n, n, n, n, n, n, n],
-        [y, y, r, y, n, n, n, n, n, n, n, n], 
-        [b, r, b, y, n, n, n, n, n, n, n, n], 
-        [y, y, b, r, n, n, n, n, n, n, n, n], 
-        [b, r, b, y, n, n, n, n, n, n, n, n],
-        [y, r, b, r, n, n, n, n, n, n, n, n], 
-        [r, r, b, y, n, n, n, n, n, n, n, n], 
-        [r, r, r, r, n, n, n, n, n, n, n, n], 
-        [r, r, r, r, n, n, n, n, n, n, n, n], 
-        [r, r, r, r, n, n, n, n, n, n, n, n]
-    ]).
+    [n, n, n, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, n, n, n, n, n, n, n, n]
+]).
 
 %   Conversion between what is stored and whats is displayed     
 piece(n, -).
@@ -29,7 +30,7 @@ printBoardTop :-
 
 %   To print the columns headers
 printBoardUp :-
-    write('| a | b | c | d | e | f | g | h | i | j | l | m |\n ').
+    write('| a | n | c | d | e | f | g | h | i | j | l | m |\n ').
 
 %   To print the contents of a line 
 printBoardLine([], 11):-
@@ -84,3 +85,15 @@ printBoard:-
 printBoard(X):-
     printBoardTop,
     printBoardBody(X, 1).
+
+randomizeBoard :-
+    random(1, 3, BoardNumber),
+    if_then_else(
+            BoardNumber == 1,
+        (retract(initialBoard(In)), board1(Out), assert(initialBoard(Out))),
+        if_then_else(
+            BoardNumber == 2,
+            (retract(initialBoard(In)), board2(Out), assert(initialBoard(Out))),               
+            (retract(initialBoard(In)), board3(Out), assert(initialBoard(Out)))
+        )
+    ).
