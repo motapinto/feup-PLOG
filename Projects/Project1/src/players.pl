@@ -30,7 +30,7 @@ printPlayersScoreLine([H1|T1], [H2|T2], Column) :-
     printPlayersScoreLine(T1, T2, ColumnN).
 
 %   Prints both players score
-printPlayersScore(Player1Pieces, Player2Pieces):-
+printPlayersScore:-
     player1(Player1Pieces),
     player2(Player2Pieces),
     write('\n                Player1:            Player2:\n'),

@@ -23,11 +23,12 @@ columnLetterToNumber('m', 12).
 start(Mode, Difficulty):-
     use_module(library(random)),
     use_module(library(system)),
+    randomizeBoard,
     initialBoard(Init),
     player1(InitStash1),
     player2(InitStash2),
     printBoard, 
-    sleep(3),
+    %sleep(3),
     playLoop(Mode, Difficulty),
     initGame(Init, InitStash1, InitStash2).
 
@@ -49,10 +50,10 @@ playLoop(Mode, Difficulty):-
     if_then_else(
         Mode == 1,
         (   
-           % computePossibleMoves(1),
+            once(computePossibleMoves(1, CounterRet)),
             once(playRound(1)),
             printBoard,
-        %   computePossibleMoves(2),
+            once(computePossibleMoves(2, CounterRet)),
             once(playRound(2)),
             printBoard
         ),
@@ -60,13 +61,13 @@ playLoop(Mode, Difficulty):-
             Mode == 2,
             (
                % computePossibleMoves(1),
-                once(playRound(1)),
+                once(playRound(1, CounterRet)),
                 printBoard,
                 write('\nMachine :\n\n'),
                 write('    > Removing piece...\n'),
-                sleep(3),
-                computePossibleMoves(2),
-                once(playRoundMachine(2, Difficulty)),
+                %sleep(3),
+                once(computePossibleMoves(2, CounterRet)),
+                once(playRoundMachine(2, Difficulty, CounterRet)),
                 printBoard
             ),
             if_then_else(
@@ -74,24 +75,24 @@ playLoop(Mode, Difficulty):-
                 (
                     write('\nMachine 1:\n\n'),
                     write('    > Removing piece...\n'),
-                    sleep(3),
-                    computePossibleMoves(1),
-                    once(playRoundMachine(1, Difficulty)),
+                   % sleep(3),
+                    once(computePossibleMoves(1, CounterRet)),
+                    once(playRoundMachine(1, Difficulty, CounterRet)),
                     initPossibleMoves,
-                    printBoard,
+                  %  printBoard,
                     write('\nMachine 2:\n\n'),
                     write('    > Removing piece...\n'),
-                    sleep(3),
-                    computePossibleMoves(2),
-                    once(playRoundMachine(2, Difficulty)),
-                    initPossibleMoves,
-                    printBoard
+                  %  sleep(3),
+                    once(computePossibleMoves(2, CounterRet1)),
+                    once(playRoundMachine(2, Difficulty, CounterRet1)),
+                    initPossibleMoves
+                   % printBoard
                 ),
                 fail
             )
         )     
     ),
-    once(printPlayersCurrentScore),
+    once(printPlayersScore),
     if_then_else(
        once(checkIfPlayersHaveWon), 
         write('THE PLAYERS HAVE WON THE GAME'), 
@@ -105,8 +106,8 @@ playRound(Player) :-
     addPieceToWhatPlayer(Player, Color).
 
 %   Randomizes piece to remove and add's the removed piece to the player stash
-playRoundMachine(Player, Difficulty) :-
-    removePieceAskMachine(Color, Player, Difficulty), 
+playRoundMachine(Player, Difficulty, CounterRet) :-
+    removePieceAskMachine(Color, Player, Difficulty, CounterRet), 
     addPieceToWhatPlayer(Player, Color).
 
 %   Asks for user input to decide piece to be removed and checks if it is a legal move
@@ -123,13 +124,15 @@ removePieceAsk(Color, Player) :-
     ).
 
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
-removePieceAskMachine(Color, Player, Difficulty):-
+removePieceAskMachine(Color, Player, Difficulty, CounterRet):-
     if_then_else(
         Difficulty == 0,
         (   random(1,11, Row),
             random(1,12, Column)
         ),
-        firstPossibleMove(Row, Column, Player)
+        (
+        %sleep(2),
+        choosePieceToRemove(Row, Column, CounterRet))
     ),
     if_then_else(
             checkRules(Row, Column, Player, 1),
@@ -138,7 +141,7 @@ removePieceAskMachine(Color, Player, Difficulty):-
                 format('    > Row: ~d\n', Row),
                 format('    > Row: ~d\n', Column)
             ),
-            removePieceAskMachine(Color, Player, Difficulty)
+            removePieceAskMachine(Color, Player, Difficulty, CounterRet)
     ).
 
 %   Chooses first play of possible moves for AI level 1
