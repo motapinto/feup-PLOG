@@ -62,6 +62,16 @@ checkRules(Row, Column, Player, IsMachine):-
 
         )
     ),
+    % Checks if the piece is connected to six others
+    (
+        initialBoard(Init),
+        if_then_else(
+            checkIfBreaksTree(Row, Column),
+            fail,
+            true
+        )
+    ),
+
     %   Checking if removing the piece the player choose makes other pieces
     %   around it unsafe
     if_then_else(
@@ -264,6 +274,52 @@ checkAdjacentPiece(Row, Column, Board, Color) :-
         ),
         true
     ).
+
+checkIfBreaksTree(RoW, Column) :-
+    PreviousRow is Row - 1,
+    NextRow is Row + 1,
+    PreviousColumn is Column - 1,
+    NextColumn is Column + 1,
+    
+    if_then_else(
+        (   Aux is Row mod 2,
+            Aux == 0
+        ),
+        (
+            CheckIfAdjacentPositionIsPiece(PreviousRow, Column),!,
+            CheckIfAdjacentPositionIsPiece(PreviousRow, NextColumn),!
+        ),
+        (
+            CheckIfAdjacentPositionIsPiece(PreviousRow, PreviousColumn),!,
+            CheckIfAdjacentPositionIsPiece(PreviousRow, Column),!
+        )
+    ),
+
+    CheckIfAdjacentPositionIsPiece(Row, PreviousColumn),!,
+    CheckIfAdjacentPositionIsPiece(Row, NextColumn),!,
+
+    if_then_else(
+        (   Aux is Row mod 2,
+            Aux == 0
+        ),
+        (
+                CheckIfAdjacentPositionIsPiece(NextRow, Column),!,
+                CheckIfAdjacentPositionIsPiece(NextRow, NextColumn),!
+        ),
+        (
+                CheckIfAdjacentPositionIsPiece(NextRow, PreviousColumn),!,
+                CheckIfAdjacentPositionIsPiece(NextRow, Column),!
+        )
+    ).
+
+checkIfAdjacentPositionIsPiece(Row, Column) :-
+    returnColorPiece(Row, Column, Color), !,
+    if_then_else(
+        Color == n,
+        true,
+        fail    
+    ).
+
 
 initCounters :-
     retract(counterEq(_)),
