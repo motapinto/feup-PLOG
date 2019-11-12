@@ -51,7 +51,7 @@ playLoop(Mode, Difficulty):-
 
     if_then_else(
         CounterRet == 0,
-        write('Game Has Won , no more Possible Moves Available\n'),
+        write('\n Game Has Won , no more Possible Moves Available\n'),
         (
             if_then_else(
                 (
@@ -67,7 +67,7 @@ playLoop(Mode, Difficulty):-
             
             if_then_else(
                 CounterRet1 == 0,
-                write('Game Hassdasdasd Won , no more Possible Moves Available\n'),
+                write('\n Game Has Won , no more Possible Moves Available\n'),
                 (
                     if_then_else(
                         Mode == 1,
@@ -78,7 +78,7 @@ playLoop(Mode, Difficulty):-
 
                     if_then_else(
                     once(checkIfPlayersHaveWon), 
-                        write('\nThe players have won\n'), 
+                        write('\n The Players have won the game \n'), 
                         fail
                 )
             )
@@ -113,41 +113,35 @@ removePieceAsk(Color, Player) :-
     ).
 
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
-removePieceAskMachine(Color, Player, Difficulty, CounterRet):-
-    if_then_else(
-        Difficulty == 0,
-        (   random(1,11, Row),
-            random(1,12, Column)
-        ),
-        (
-        %sleep(2),
-        choosePieceToRemove(Row, Column, CounterRet))
-    ),
+removePieceAskMachine(Color, Player, Difficulty, CounterRet):-        
+    Difficulty == 0, !,
+    random(1,11, Row),
+    random(1,12, Column),
     if_then_else(
             checkRules(Row, Column, Player, 1),
             (
                 removePieceDo(Row, Column, Color),
 
                 format('    > Row: ~d\n', Row),
-                format('    > Row: ~d\n', Column)
+                format('    > Column: ~d\n', Column)
             ),
             removePieceAskMachine(Color, Player, Difficulty, CounterRet)
     ).
 
 %   Chooses first play of possible moves for AI level 1
-removePieceAskMachine(Color, Player, Difficulty):-
+removePieceAskMachine(Color, Player, Difficulty, CounterRet):-
+    
     Difficulty == 1, !,
-    random(1,11, Row),
-    random(1,12, Column),
+    choosePieceToRemove(Row, Column, CounterRet),
     if_then_else(
             checkRules(Row, Column, Player, 1),
-            (
+            (   
                 removePieceDo(Row, Column, Color), 
                 write('    > Removing piece...\n'),
                 format('    > Row: ~d\n', Row),
                 format('    > Column: ~d\n', Column)
             ),
-            removePieceAskMachine(Color, Player, Difficulty)
+            removePieceAskMachine(Color, Player, Difficulty, CounterRet)
     ).
 
 %   After checking if the move is legal, removes piece

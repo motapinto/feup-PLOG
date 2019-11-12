@@ -9,26 +9,33 @@ initPossibleMoves:-
     retract(possibleMoves(_)),
     assert(possibleMoves([n])).
 
+
 computePossibleMoves(Player, CounterRet) :-
     
     retract(possibleMoves(_)),
-    checkAll(1, 1, Player, _, Moves1, 0, CounterRet),
+    checkAll(1, 1, Player, Moves, Moves1, 0, CounterRet),
     assert(possibleMoves(Moves1)).
 
 choosePieceToRemove(Row, Column, CounterRet):-
-    random(1, CounterRet, Value),
+    if_then_else(
+        CounterRet == 1,
+        Value = 1,
+        random(1, CounterRet, Value)
+    ),
     possibleMoves(Possible),
-    write(Value),
     iteratePossibleMoves(Row, Column, Value, Possible).
 
-iterateRowAndColumn(Row, Column, [H | T]):-
-    Row = H,
-    Column = T.
+iterateColumn(Column, [H|_]):-
+    Column = H.
 
-iteratePossibleMoves(Row, Column, 1, [H|_]):-
-    iterateRowAndColumn(Row, Column, H).
+iterateRow(Row, Column, [H | T]):-
+    Row = H,
+    iterateColumn(Column, T).
+
+iteratePossibleMoves(Row, Column, 1, [H|T]):-
+    iterateRow(Row, Column, H).
     
-iteratePossibleMoves(Row, Column, Value, [_|T]):-
+iteratePossibleMoves(Row, Column, Value, [H|T]):-
     Value1 is Value - 1,
     iteratePossibleMoves(Row, Column, Value1, T).
 
