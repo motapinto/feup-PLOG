@@ -42,3 +42,17 @@ board3([
     [n, n, n, r, b, r, b, b, r, y, n, n],  
     [n, n, n, n, n, n, n, n, n, n, n, n]
 ]).
+
+board4([
+    [n, n, n, n, n, n, n, n, n, n, n, n], 
+    [n, n, n, n, b, n, r, r, y, n, n, n], 
+    [n, n, n, b, y, b, b, r, y, n, n, n], 
+    [n, n, n, y, y, b, r, b, b, y, n, n], 
+    [n, n, n, r, r, r, r, b, y, r, r, n], 
+    [n, n, n, r, b, y, y, y, y, r, b, n],  
+    [n, n, n, b, b, y, r, b, b, b, b, n],  
+    [n, n, n, y, y, r, r, b, y, y, n, n],  
+    [n, n, n, y, b, b, y, y, r, y, n, n],  
+    [n, n, n, n, n, b, r, y, r, r, n, n],  
+    [n, n, n, n, n, r, r, b, n, n, n, n]
+    ]).

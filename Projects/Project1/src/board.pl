@@ -112,13 +112,17 @@ printBoard(X):-
     printBoardBody(X, 1).
 
 randomizeBoard :-
-    random(1, 3, BoardNumber),
+    random(1, 4, BoardNumber),
     if_then_else(
             BoardNumber == 1,
         (retract(initialBoard(In)), board1(Out), assert(initialBoard(Out))),
         if_then_else(
             BoardNumber == 2,
-            (retract(initialBoard(In)), board2(Out), assert(initialBoard(Out))),               
-            (retract(initialBoard(In)), board3(Out), assert(initialBoard(Out)))
+            (retract(initialBoard(In)), board2(Out), assert(initialBoard(Out))),
+            if_then_else(
+                BoardNumber == 3,
+                (retract(initialBoard(In)), board3(Out), assert(initialBoard(Out))),
+                (retract(initialBoard(In)), board4(Out), assert(initialBoard(Out)))
+            )               
         )
     ).

@@ -1,29 +1,29 @@
-:- (dynamic possibleMoves/1).
-
-%   Initial Configuration of possibleMoves for player 1
-possibleMoves([n]).
 
 
-%   Initial Configuration of possibleMoves for player 2
-initPossibleMoves:-
-    retract(possibleMoves(_)),
-    assert(possibleMoves([n])).
+iterateThroughListOfMoves([], NumberOfMovesPossibleAux, NumberOfMovesPossible):-
+    NumberOfMovesPossible = NumberOfMovesPossibleAux.
+
+iterateThroughListOfMoves([_|T],  NumberOfMovesPossibleAux, NumberOfMovesPossible):-
+    NumberOfMovesPossibleAux1 is NumberOfMovesPossibleAux + 1,
+    iterateThroughListOfMoves(T, NumberOfMovesPossibleAux1, NumberOfMovesPossible).
 
 
-computePossibleMoves(Player, CounterRet) :-
-    
-    retract(possibleMoves(_)),
-    checkAll(1, 1, Player, Moves, Moves1, 0, CounterRet),
-    assert(possibleMoves(Moves1)).
+value(Player, Value):-
+    valid_moves(Player, ListOfMoves),
+    iterateThroughListOfMoves(ListOfMoves, 0, Value).
 
-choosePieceToRemove(Row, Column, CounterRet):-
+
+valid_moves(Player, ListOfMoves) :-
+    checkAll(1, 1, Player, _, ListOfMoves, 0).
+
+
+choosePieceToRemove(Row, Column, CounterRet, ListOfMoves):-
     if_then_else(
         CounterRet == 1,
         Value = 1,
         random(1, CounterRet, Value)
     ),
-    possibleMoves(Possible),
-    iteratePossibleMoves(Row, Column, Value, Possible).
+    iteratePossibleMoves(Row, Column, Value, ListOfMoves).
 
 iterateColumn(Column, [H|_]):-
     Column = H.
@@ -32,19 +32,15 @@ iterateRow(Row, Column, [H | T]):-
     Row = H,
     iterateColumn(Column, T).
 
-iteratePossibleMoves(Row, Column, 1, [H|T]):-
+iteratePossibleMoves(Row, Column, 1, [H|_]):-
     iterateRow(Row, Column, H).
     
-iteratePossibleMoves(Row, Column, Value, [H|T]):-
+iteratePossibleMoves(Row, Column, Value, [_|T]):-
     Value1 is Value - 1,
     iteratePossibleMoves(Row, Column, Value1, T).
 
-
-
-
-
 %   Checks all possible moves for each player
-checkAll(Row, Column, Player, Moves, MovesRet, Counter, CounterRet) :-
+checkAll(Row, Column, Player, Moves, MovesRet, Counter) :-
     %   Checks if play is legal for Row and Column
     if_then_else(
         checkRules(Row, Column, Player, 1),
@@ -52,22 +48,23 @@ checkAll(Row, Column, Player, Moves, MovesRet, Counter, CounterRet) :-
             addPossibleMove(Row, Column, Moves , MovesAux),
             if_then_else(
                 nextPos(Row, Column, RowN, ColumnN),
-                (CounterAux is Counter + 1,
-                checkAll(RowN, ColumnN, Player, MovesAux, MovesRet, CounterAux, CounterRet)),
-                (MovesRet = Moves, CounterRet = Counter, true)
+                (
+                    CounterAux is Counter + 1,
+                    checkAll(RowN, ColumnN, Player, MovesAux, MovesRet, CounterAux)
+                ),
+                MovesRet = Moves
             )
         ), 
         if_then_else(
                 nextPos(Row, Column, RowN, ColumnN),
-                checkAll(RowN, ColumnN, Player, Moves, MovesRet, Counter, CounterRet),
+                checkAll(RowN, ColumnN, Player, Moves, MovesRet, Counter),
                 (
                     if_then_else(
                         Counter >= 1,
                         (
-                            MovesRet = Moves, 
-                            CounterRet = Counter
+                            MovesRet = Moves
                         ),
-                        CounterRet = Counter
+                        true
                     )
                 )
         )

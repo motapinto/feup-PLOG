@@ -29,7 +29,9 @@ start(Mode, Difficulty):-
     printBoard, 
     %sleep(3),
     playLoop(Mode, Difficulty),
-    initGame(Init, InitStash1, InitStash2).
+    initGame(Init, InitStash1, InitStash2),
+    !,
+    fail.
 
 %   Restart the game parameters so that a new game can be played
 initGame(InitBoard, Player1Stash, Player2Stash):-
@@ -45,12 +47,14 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
 
 %   Loop of play of all 3 modes
 playLoop(Mode, Difficulty):-
+   
     repeat, 
     
-    once(computePossibleMoves(1, CounterRet)),
+    once(valid_moves(1, ListOfMoves1)),
+    once(value(1, Value1)),
 
     if_then_else(
-        CounterRet == 0,
+        Value1 == 0,
         write('\n Game Has Won , no more Possible Moves Available\n'),
         (
             if_then_else(
@@ -59,20 +63,21 @@ playLoop(Mode, Difficulty):-
                     Mode== 2
                 ),
                 once(playRound(1)),
-                once(playRoundMachine(1, Difficulty, CounterRet))
+                once(playRoundMachine(1, Difficulty, Value1, ListOfMoves1))
             ),
 
             printBoard,
-            once(computePossibleMoves(2, CounterRet1)),
+            once(valid_moves(2, ListOfMoves2)),
+            once(value(2, Value2)),
             
             if_then_else(
-                CounterRet1 == 0,
+                Value2 == 0,
                 write('\n Game Has Won , no more Possible Moves Available\n'),
                 (
                     if_then_else(
                         Mode == 1,
                         once(playRound(2)),
-                        once(playRoundMachine(2, Difficulty, CounterRet1))
+                        once(playRoundMachine(2, Difficulty, Value2, ListOfMoves2))
                     ),
                     printBoard,
 
@@ -94,9 +99,9 @@ playRound(Player) :-
     addPieceToWhatPlayer(Player, Color).
 
 %   Randomizes piece to remove and add's the removed piece to the player stash
-playRoundMachine(Player, Difficulty, CounterRet) :-
+playRoundMachine(Player, Difficulty, CounterRet, ListOfMoves) :-
     format('\nMachine ~w:\n\n', [Player]),
-    removePieceAskMachine(Color, Player, Difficulty, CounterRet), 
+    removePieceAskMachine(Color, Player, Difficulty, CounterRet, ListOfMoves), 
     addPieceToWhatPlayer(Player, Color).
 
 %   Asks for user input to decide piece to be removed and checks if it is a legal move
@@ -113,7 +118,7 @@ removePieceAsk(Color, Player) :-
     ).
 
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
-removePieceAskMachine(Color, Player, Difficulty, CounterRet):-        
+removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-        
     Difficulty == 0, !,
     random(1,11, Row),
     random(1,12, Column),
@@ -129,12 +134,14 @@ removePieceAskMachine(Color, Player, Difficulty, CounterRet):-
     ).
 
 %   Chooses first play of possible moves for AI level 1
-removePieceAskMachine(Color, Player, Difficulty, CounterRet):-
-    
+removePieceAskMachine(Color, Player, Difficulty, CounterRet, ListOfMoves):-
     Difficulty == 1, !,
-    choosePieceToRemove(Row, Column, CounterRet),
+    choosePieceToRemove(Row, Column, CounterRet, ListOfMoves),
     if_then_else(
+            (write('Consegui'),
             checkRules(Row, Column, Player, 1),
+            write('Consegui1')
+            ),
             (   
                 removePieceDo(Row, Column, Color), 
                 write('    > Removing piece...\n'),
