@@ -1,4 +1,4 @@
-:- [shared].
+
 :- [allBoards].
 
 :- (dynamic initialBoard/1).
@@ -39,7 +39,32 @@ printBoardLine([], 11):-
 %   To print the contents of a line 
 printBoardLine([], Line) :-
     Aux is Line mod 2,
-    if_then_else(Aux==0, write('|\n'), write('|_\n')).
+    if_then_else(Aux==0, write('|'), write('|_')),
+    if_then_else(
+        Line == 4,
+        write('             Player1             Player2'),
+        (
+            if_then_else(
+                Line == 5,
+                printPlayersScore(1, 'Red'),
+                (
+                    if_then_else(
+                        Line == 6,
+                        printPlayersScore(2, 'Yellow'),
+                        (
+                            if_then_else(
+                                Line == 7,
+                                printPlayersScore(3, 'Blue'),
+                                true
+                            )     
+                        )
+                    )
+                )
+            )
+        )
+    ),
+    write('\n').
+
 
 %   To print the contents of a line
 printBoardLine([H|T], Line) :-

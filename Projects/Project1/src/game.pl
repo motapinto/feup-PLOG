@@ -3,7 +3,6 @@
 :- [rules].
 :- [players].
 :- [machine].
-:- [shared].
 
 %   To convert the letter the user inputs for the colum to a number
 columnLetterToNumber('a', 1).
@@ -68,7 +67,7 @@ playLoop(Mode, Difficulty):-
             
             if_then_else(
                 CounterRet1 == 0,
-                write('Game Has Won , no more Possible Moves Available\n'),
+                write('Game Hassdasdasd Won , no more Possible Moves Available\n'),
                 (
                     if_then_else(
                         Mode == 1,
@@ -77,10 +76,9 @@ playLoop(Mode, Difficulty):-
                     ),
                     printBoard,
 
-                    once(printPlayersScore),
                     if_then_else(
                     once(checkIfPlayersHaveWon), 
-                        write('THE PLAYERS HAVE WON THE GAME'), 
+                        write('\nThe players have won\n'), 
                         fail
                 )
             )
@@ -97,6 +95,7 @@ playRound(Player) :-
 
 %   Randomizes piece to remove and add's the removed piece to the player stash
 playRoundMachine(Player, Difficulty, CounterRet) :-
+    format('\nMachine ~w:\n\n', [Player]),
     removePieceAskMachine(Color, Player, Difficulty, CounterRet), 
     addPieceToWhatPlayer(Player, Color).
 
@@ -127,7 +126,8 @@ removePieceAskMachine(Color, Player, Difficulty, CounterRet):-
     if_then_else(
             checkRules(Row, Column, Player, 1),
             (
-                removePieceDo(Row, Column, Color), 
+                removePieceDo(Row, Column, Color),
+
                 format('    > Row: ~d\n', Row),
                 format('    > Row: ~d\n', Column)
             ),
