@@ -60,7 +60,11 @@ menuInputHandler :-
                 readDifficulty(Level),
                 true
             ),
-            start(Input, Level)   
+            if_then_else(
+                start(Input, Level),
+                true,
+                play
+            )
         ),
             if_then_else(
                 Input == 4,

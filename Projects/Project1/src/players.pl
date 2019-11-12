@@ -11,30 +11,51 @@ colorPiece(y, 2).
 colorPiece(b, 3).
 
 %   Prints the score of both player by color
-printPlayersScoreLine([], 4).
-printPlayersScoreLine([H1|T1], [H2|T2], Column) :-
+printPlayersScoreLine(_,_,0,_).
+printPlayersScoreLine([H1|T1], [H2|T2], Column, Color) :-
     if_then_else(
-        Column == 1, 
-        (write('                > Red: '), write(H1), write('            > Red: '), write(H2)),
-        if_then_else(
-            Column == 2, 
-            (write('                > Yellow: '), write(H1), write('         > Yellow: '), write(H2)),
+        Column == 1,
+        (
             if_then_else(
-                Column == 3, 
-                (write('                > Blue: '), write(H1), write('           > Blue: '), write(H2)),
-                true)
-        )
+                Color == 'Yellow',
+                (
+                    format('             >~s:', [Color]), 
+                    write(H1),
+                    format('           >~s:', [Color]), 
+                    write(H2)
+                ),
+                (
+                    if_then_else(
+                        Color == 'Blue',
+                        (
+                            format('              >~s:', [Color]), 
+                            write(H1),
+                            format('             >~s:', [Color]), 
+                            write(H2)
+                        ),
+                        (
+                            format('              >~s:', [Color]), 
+                            write(H1),
+                            format('              >~s:', [Color]), 
+                            write(H2)
+                        )
+                    )    
+                    
+                    
+                    
+                )
+            )
+        ),
+        true
     ),
-    write('\n'),
-    ColumnN is Column + 1,
-    printPlayersScoreLine(T1, T2, ColumnN).
+    ColumnN is Column - 1,
+    printPlayersScoreLine(T1, T2, ColumnN, Color).
 
 %   Prints both players score
-printPlayersScore:-
+printPlayersScore(Column, Color):-
     player1(Player1Pieces),
     player2(Player2Pieces),
-    write('\n                Player1:            Player2:\n'),
-    printPlayersScoreLine(Player1Pieces, Player2Pieces, 1).
+    printPlayersScoreLine(Player1Pieces, Player2Pieces, Column, Color).
     
 %   Adds 1 piece of a certain color to a player's stash 
 addPieceToPlayer(1, [H | T], [Hout | T]):-
