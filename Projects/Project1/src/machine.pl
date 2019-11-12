@@ -1,5 +1,3 @@
-
-
 iterateThroughListOfMoves([], NumberOfMovesPossibleAux, NumberOfMovesPossible):-
     NumberOfMovesPossible = NumberOfMovesPossibleAux.
 
@@ -8,13 +6,13 @@ iterateThroughListOfMoves([_|T],  NumberOfMovesPossibleAux, NumberOfMovesPossibl
     iterateThroughListOfMoves(T, NumberOfMovesPossibleAux1, NumberOfMovesPossible).
 
 
-value(Player, Value):-
-    valid_moves(Player, ListOfMoves),
+value(Player, Value, ListOfMoves):-
     iterateThroughListOfMoves(ListOfMoves, 0, Value).
 
 
 valid_moves(Player, ListOfMoves) :-
-    checkAll(1, 1, Player, _, ListOfMoves, 0).
+    checkAll(1, 1, Player, _, ListOfMoves, 0),
+    write(ListOfMoves).
 
 
 choosePieceToRemove(Row, Column, CounterRet, ListOfMoves):-

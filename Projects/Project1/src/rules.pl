@@ -9,27 +9,37 @@ counterDif(0).
 
 checkRules(Row, Column, Player, IsMachine):-
     %   Detecting if the values in the input of the player are valid
+
+    write('Row: '),
+    write(Row),
+    write(' Column: '),
+    write(Column),
+    write('                  '),
+
+
+
     if_then_else(
-        checkRowAndColumn(Row, Column),
+        (write(' 1 -'),
+        checkRowAndColumn(Row, Column)),
         true,
         (
             if_then_else(
                 IsMachine == 0,
                 (
                     write('Tried to remove a piece that is out of bonds\n'),
-                    fail
+                    nl, fail  
                 ),
-                fail  
+               (nl, fail)  
             )
         )
-    ),
+    ), !,
 
     %   Determining id the spot chosen by the player is a null one or
     %   if it correspond to an actual piece
     returnColorPiece(Row, Column, Color),
 
     if_then_else(
-            Color \== n,
+            (write(' 2 -'),Color \== n),
             true,
             (
                 if_then_else(
@@ -37,45 +47,42 @@ checkRules(Row, Column, Player, IsMachine):-
                         (
                             write('Tried to remove a piece that doesnt exist\n'), 
                             !,
-                            fail  
+                            nl, fail    
                         ),
-                        fail  
+                        (nl, fail  )
                 )
             )
-    ),
+    ), !,
     
     %   Checking if the player already has the max amount of pieces with
     %   a certain Color
     if_then_else(
-        checkPieceLimit(Color, Player),
+        (write(' 3 -'),checkPieceLimit(Color, Player)),
         true,
         (
             if_then_else(
-                    IsMachine == 0,
-                    (
-                        write('Tried to remove a piece that has reached its type limit for the player\n'),
-                        !,
-                        fail  
-                    ),
-                    fail  
+                IsMachine == 0,
+                (
+                    write('Tried to remove a piece that has reached its type limit for the player\n'),
+                    !,
+                    nl, fail  
+                ),
+                (nl, fail  )
             )
 
         )
-    ),
+    ), !,
     % Checks if the piece is connected to six others
-    (
-        initialBoard(Init),
-        if_then_else(
-            checkIfBreaksTree(Row, Column),
-            fail,
-            true
-        )
-    ),
+    if_then_else(
+        (write(' 4 -'),checkIfBreaksTree(Row, Column)),
+        (nl, fail),  
+        true
+    ), !,
 
     %   Checking if removing the piece the player choose makes other pieces
     %   around it unsafe
     if_then_else(
-            checkIfPiecesAreSafe(Row, Column),
+            (write(' 5 -'),checkIfPiecesAreSafe(Row, Column)),
             true,
             (
                 if_then_else(
@@ -83,12 +90,15 @@ checkRules(Row, Column, Player, IsMachine):-
                         (
                             write('\n    > Tried to remove a piece that makes other pieces unprotected!\n\n'), 
                             !,
-                            fail  
+                         nl, fail  
                         ),
-                        fail  
+                    (  nl, fail  )
                 )
             )
-    ).
+    ), !,
+
+write(' 6 -'),
+    nl.
 
 checkRowAndColumn(Row, Column):-
     Row > 0, 
@@ -275,7 +285,7 @@ checkAdjacentPiece(Row, Column, Board, Color) :-
         true
     ).
 
-checkIfBreaksTree(RoW, Column) :-
+checkIfBreaksTree(Row, Column) :-
     PreviousRow is Row - 1,
     NextRow is Row + 1,
     PreviousColumn is Column - 1,
@@ -286,38 +296,38 @@ checkIfBreaksTree(RoW, Column) :-
             Aux == 0
         ),
         (
-            CheckIfAdjacentPositionIsPiece(PreviousRow, Column),!,
-            CheckIfAdjacentPositionIsPiece(PreviousRow, NextColumn),!
+             checkIfAdjacentPositionIsPiece(PreviousRow, Column),!,
+             checkIfAdjacentPositionIsPiece(PreviousRow, NextColumn),!
         ),
         (
-            CheckIfAdjacentPositionIsPiece(PreviousRow, PreviousColumn),!,
-            CheckIfAdjacentPositionIsPiece(PreviousRow, Column),!
+             checkIfAdjacentPositionIsPiece(PreviousRow, PreviousColumn),!,
+             checkIfAdjacentPositionIsPiece(PreviousRow, Column),!
         )
     ),
 
-    CheckIfAdjacentPositionIsPiece(Row, PreviousColumn),!,
-    CheckIfAdjacentPositionIsPiece(Row, NextColumn),!,
+     checkIfAdjacentPositionIsPiece(Row, PreviousColumn),!,
+     checkIfAdjacentPositionIsPiece(Row, NextColumn),!,
 
     if_then_else(
         (   Aux is Row mod 2,
             Aux == 0
         ),
         (
-                CheckIfAdjacentPositionIsPiece(NextRow, Column),!,
-                CheckIfAdjacentPositionIsPiece(NextRow, NextColumn),!
+                 checkIfAdjacentPositionIsPiece(NextRow, Column),!,
+                 checkIfAdjacentPositionIsPiece(NextRow, NextColumn),!
         ),
         (
-                CheckIfAdjacentPositionIsPiece(NextRow, PreviousColumn),!,
-                CheckIfAdjacentPositionIsPiece(NextRow, Column),!
+                 checkIfAdjacentPositionIsPiece(NextRow, PreviousColumn),!,
+                 checkIfAdjacentPositionIsPiece(NextRow, Column),!
         )
     ).
 
-checkIfAdjacentPositionIsPiece(Row, Column) :-
+ checkIfAdjacentPositionIsPiece(Row, Column) :-
     returnColorPiece(Row, Column, Color), !,
     if_then_else(
         Color == n,
-        true,
-        fail    
+        fail,
+        true    
     ).
 
 

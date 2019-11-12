@@ -55,4 +55,18 @@ board4([
     [n, n, n, y, b, b, y, y, r, y, n, n],  
     [n, n, n, n, n, b, r, y, r, r, n, n],  
     [n, n, n, n, n, r, r, b, n, n, n, n]
-    ]).
+]).
+
+board5([
+    [b, b, b, b, b, b, b, b, b, b, b, b], 
+    [b, b, b, b, b, b, b, b, b, b, b, b], 
+    [b, b, b, b, b, b, b, b, b, b, b, b], 
+    [b, b, b, b, b, b, b, b, b, b, b, b], 
+    [b, b, b, b, b, b, b, b, b, b, b, b], 
+    [b, b, b, b, b, b, b, b, b, b, b, b],  
+    [b, b, b, b, b, b, b, b, b, b, b, b],  
+    [b, b, b, b, b, b, b, b, b, b, b, b],  
+    [b, b, b, b, b, b, b, b, b, b, b, b],  
+    [b, b, b, b, b, b, b, b, b, b, b, b],  
+    [b, b, b, b, b, b, b, b, b, b, b, b]
+]).

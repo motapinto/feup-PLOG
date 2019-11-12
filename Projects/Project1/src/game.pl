@@ -51,7 +51,7 @@ playLoop(Mode, Difficulty):-
     repeat, 
     
     once(valid_moves(1, ListOfMoves1)),
-    once(value(1, Value1)),
+    once(value(1, Value1, ListOfMoves1)),
 
     if_then_else(
         Value1 == 0,
@@ -67,8 +67,8 @@ playLoop(Mode, Difficulty):-
             ),
 
             printBoard,
-            once(valid_moves(2, ListOfMoves2)),
-            once(value(2, Value2)),
+            once(valid_moves(1, ListOfMoves2)),
+            once(value(1, Value2, ListOfMoves2)),
             
             if_then_else(
                 Value2 == 0,
@@ -130,7 +130,7 @@ removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-
                 format('    > Row: ~d\n', Row),
                 format('    > Column: ~d\n', Column)
             ),
-            removePieceAskMachine(Color, Player, Difficulty, CounterRet)
+            removePieceAskMachine(Color, Player, Difficulty, CounterRet, _)
     ).
 
 %   Chooses first play of possible moves for AI level 1
