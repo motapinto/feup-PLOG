@@ -10,11 +10,16 @@ initPossibleMoves:-
     assert(possibleMoves([n])).
 
 computePossibleMoves(Player, CounterRet) :-
+    
     retract(possibleMoves(_)),
     checkAll(1, 1, Player, Moves, Moves1, 0, CounterRet),
     assert(possibleMoves(Moves1)), 
     write('Possible Moves: '),
-    write(Moves1),
+    if_then_else(
+        CounterRet > 0,
+        write(Moves1),
+        write('No moves \n')
+    ),
     write('\n').
 
 choosePieceToRemove(Row, Column, CounterRet):-
@@ -55,7 +60,16 @@ checkAll(Row, Column, Player, Moves, MovesRet, Counter, CounterRet) :-
         if_then_else(
                 nextPos(Row, Column, RowN, ColumnN),
                 checkAll(RowN, ColumnN, Player, Moves, MovesRet, Counter, CounterRet),
-                (MovesRet = Moves, CounterRet = Counter, true)
+                (
+                    if_then_else(
+                        Counter >= 1,
+                        (
+                            MovesRet = Moves, 
+                            CounterRet = Counter
+                        ),
+                        CounterRet = Counter
+                    )
+                )
         )
     ).
     %   Checks next position in the board -> when reaches the end of the board returns fail

@@ -47,57 +47,47 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
 %   Loop of play of all 3 modes
 playLoop(Mode, Difficulty):-
     repeat, 
+    
+    once(computePossibleMoves(1, CounterRet)),
+
     if_then_else(
-        Mode == 1,
-        (   
-            once(computePossibleMoves(1, CounterRet)),
-            once(playRound(1)),
-            printBoard,
-            once(computePossibleMoves(2, CounterRet)),
-            once(playRound(2)),
-            printBoard
-        ),
-        if_then_else(
-            Mode == 2,
-            (
-               % computePossibleMoves(1),
-                once(playRound(1, CounterRet)),
-                printBoard,
-                write('\nMachine :\n\n'),
-                write('    > Removing piece...\n'),
-                %sleep(3),
-                once(computePossibleMoves(2, CounterRet)),
-                once(playRoundMachine(2, Difficulty, CounterRet)),
-                printBoard
-            ),
+        CounterRet == 0,
+        write('Game Has Won , no more Possible Moves Available\n'),
+        (
             if_then_else(
-                Mode == 3,
                 (
-                    write('\nMachine 1:\n\n'),
-                    write('    > Removing piece...\n'),
-                   % sleep(3),
-                    once(computePossibleMoves(1, CounterRet)),
-                    once(playRoundMachine(1, Difficulty, CounterRet)),
-                    initPossibleMoves,
-                  %  printBoard,
-                    write('\nMachine 2:\n\n'),
-                    write('    > Removing piece...\n'),
-                  %  sleep(3),
-                    once(computePossibleMoves(2, CounterRet1)),
-                    once(playRoundMachine(2, Difficulty, CounterRet1)),
-                    initPossibleMoves
-                   % printBoard
+                    Mode==1; 
+                    Mode== 2
                 ),
-                fail
+                once(playRound(1)),
+                once(playRoundMachine(1, Difficulty, CounterRet))
+            ),
+
+            printBoard,
+            once(computePossibleMoves(2, CounterRet1)),
+            
+            if_then_else(
+                CounterRet1 == 0,
+                write('Game Has Won , no more Possible Moves Available\n'),
+                (
+                    if_then_else(
+                        Mode == 1,
+                        once(playRound(2)),
+                        once(playRoundMachine(2, Difficulty, CounterRet1))
+                    ),
+                    printBoard,
+
+                    once(printPlayersScore),
+                    if_then_else(
+                    once(checkIfPlayersHaveWon), 
+                        write('THE PLAYERS HAVE WON THE GAME'), 
+                        fail
+                )
             )
-        )     
-    ),
-    once(printPlayersScore),
-    if_then_else(
-       once(checkIfPlayersHaveWon), 
-        write('THE PLAYERS HAVE WON THE GAME'), 
-        fail
-    ).
+        )
+    )
+).
+    
 
 %   Asks for user input and add's the removed piece to the player stash
 playRound(Player) :-
@@ -155,7 +145,7 @@ removePieceAskMachine(Color, Player, Difficulty):-
                 removePieceDo(Row, Column, Color), 
                 write('    > Removing piece...\n'),
                 format('    > Row: ~d\n', Row),
-                format('    > Row: ~d\n', Column)
+                format('    > Column: ~d\n', Column)
             ),
             removePieceAskMachine(Color, Player, Difficulty)
     ).
