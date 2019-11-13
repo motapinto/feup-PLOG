@@ -20,12 +20,3 @@ incrementElemInList(PosToReplace, In, Out) :-
     nth0(PosToReplace, In, ElemToReplace),
     NewValue is ElemToReplace + 1,
     replace(In, PosToReplace, NewValue, Out).
-
-
-% substitute(+X, +Xlist, +Y, ?Ylist)
-% Xlist and Ylist are equal except for replacing identical occurrences of X by Y. Example:
-% | ?- substitute(1, [1,2,3,4], 5, X).
-
-% X = [5,2,3,4] ? 
-
-% yes

@@ -89,64 +89,6 @@ playLoop(Mode, Difficulty):-
     )
     ).
 
-%   Returns the number of valid moves
-value(Value, ListOfMoves):-
-    length(ListOfMoves, Value).
-
-%   Returns the list of valid moves  
-valid_moves(Player, ListOfMoves) :-
-    checkAll(1, 1, Player, _, ListOfMoves, 0),
-    write(ListOfMoves).
-
-%   Decides next possition to check
-nextPos(Row, Column, RowN, ColumnN) :-
-    if_then_else(
-        Column < 12, 
-        (
-            RowN = Row,
-            ColumnN is Column + 1
-        ),
-        (
-            ColumnN = 1,
-            RowN is Row + 1,
-            if_then_else(RowN > 11, fail, true)
-        )
-    ).
-
-%   Checks all possible moves for each player
-checkAll(Row, Column, Player, Moves, MovesRet, Counter):-
-    %   Checks if play is legal for Row and Column
-    if_then_else(
-        checkRules(Row, Column, Player, 1),
-        (
-            append(Moves, [[Row, Column]], MovesAux),
-            if_then_else(
-                nextPos(Row, Column, RowN, ColumnN),
-                (
-                    CounterAux is Counter + 1,
-                    checkAll(RowN, ColumnN, Player, MovesAux, MovesRet, CounterAux)
-                ),
-                MovesRet = Moves
-            )
-        ), 
-        if_then_else(
-                nextPos(Row, Column, RowN, ColumnN),
-                checkAll(RowN, ColumnN, Player, Moves, MovesRet, Counter),
-                (
-                    if_then_else(
-                        Counter >= 1,
-                        (
-                            MovesRet = Moves
-                        ),
-                        true
-                    )
-                )
-        )
-    ).
-    %   Checks next position in the board -> when reaches the end of the board returns fail
-    
-    
-
 %   Asks for user input and add's the removed piece to the player stash
 playRound(Player) :-
     format('\nPlayer ~w:\n\n', [Player]),
@@ -218,32 +160,41 @@ removePieceDo(Row, Column, Color):-
 %   so we don't have another predicate doing a similiar function  
 returnColorPiece(Row, Column, Color) :-
     initialBoard(Board),
-    removePiece(Board, _, Row, Column, Color).
+    RowIndex is Row - 1,
+    ColumnIndex is Column - 1,
+    nth0(RowIndex, Board, Element),
+    nth0(ColumnIndex, Element, Element2),
+    Color = Element2.
 
 %   Same Function has before, but reveives a certain board to search in
 returnColorPiece(Row, Column, Board, Color) :-
-    removePiece(Board, _, Row, Column, Color).
+    RowIndex is Row - 1,
+    ColumnIndex is Column - 1,
+    nth0(RowIndex, Board, Element),
+    nth0(ColumnIndex, Element, Element2),
+    Color = Element2.
 
 %   Removes the piece from BoardIn and updates in BoardOut
-removePiece(BoardIn, BoardOut, Row, Column, Color) :-
-    updateRow(Row, Column, BoardIn, BoardOut, Color).
+removePiece(BoardIn, BoardOut, Row, Column) :-
+    updateRow(Row, Column, BoardIn, BoardOut).
 
 %   Iterates through the columns of the board, return the Color of the Piece that was removed
-updateColumn(1, [H|T], [Hout|T], Color):-
-    Hout = n,
-    Color = H.
-updateColumn(Column, [H|T], [H|Tout], Color):-
+updateColumn(1, [H|T], [Hout|T]):-
+    Hout = n.
+
+updateColumn(Column, [H|T], [H|Tout]):-
     Column > 1,
     ColumnI is Column - 1, 
-    updateColumn(ColumnI, T, Tout, Color).
+    updateColumn(ColumnI, T, Tout).
 
 %   Iterate through the rows of the board 
-updateRow(1, Column, [H|T], [Hout|T], Color):-
-    updateColumn(Column, H, Hout, Color).    
-updateRow(Row, Column, [H|T], [H|Tout], Color):-
+updateRow(1, Column, [H|T], [Hout|T]):-
+    updateColumn(Column, H, Hout).    
+updateRow(Row, Column, [H|T], [H|Tout]):-
     Row > 1,
     RowNext is Row - 1, 
-    updateRow(RowNext, Column, T, Tout, Color).
+    updateRow(RowNext, Column, T, Tout).
+
 
 %   Returns the number of valid moves
 value(Value, ListOfMoves):-
@@ -258,7 +209,7 @@ validmoves(Player, ListOfMoves) :-
 iterateBoard(Board, Row, Column, Player):-
     iterateRows(Board, Row, Column, 1, 1, Player).
 
-iterateRows([], _, _, _, _):- fail.
+iterateRows([], _, _, _, _, _):- fail.
 iterateRows([H|T], Row, Column, Row1, Column1, Player):-
     (
         iterateRow(H, Row1, Column, Column1, Player),

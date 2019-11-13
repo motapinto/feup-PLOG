@@ -29,7 +29,7 @@ checkRules(Row, Column, Player, IsMachine):-
 
     %   Determining id the spot chosen by the player is a null one or
     %   if it correspond to an actual piece
-    returnColorPiece(Row, Column, Color),
+    returnColorPiece(Row, Column, Color), !,
 
     if_then_else(
             Color \== n,
@@ -101,7 +101,7 @@ checkRowAndColumn(Row, Column):-
 checkIfPiecesAreSafe(Row, Column):-
     
     retract(initialBoard(BoardIn)),
-    removePiece(BoardIn, BoardOut, Row, Column, _),
+    removePiece(BoardIn, BoardOut, Row, Column),
     assert(initialBoard(BoardIn)),
 
   %  printBoard(BoardOut).
@@ -256,7 +256,7 @@ checkAdjacentPiece(Row, Column, Board, Color) :-
     if_then_else(
         checkRowAndColumn(Row,Column),
         (
-            returnColorPiece(Row, Column, Board, ColorAdj),
+            returnColorPiece(Row, Column, Board, ColorAdj), !,
             if_then_else(
                 ColorAdj == n,
                 true,
