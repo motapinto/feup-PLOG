@@ -1,4 +1,3 @@
-
 :- [allBoards].
 
 :- (dynamic initialBoard/1).
@@ -36,7 +35,8 @@ printBoardUp :-
 printBoardLine([], 11):-
     write('|\n'), !.
 
-%   To print the contents of a line 
+
+%   To print the contents of a line and prints the score of the players on the side 
 printBoardLine([], Line) :-
     Aux is Line mod 2,
     if_then_else(Aux==0, write('|'), write('|_')),
@@ -56,28 +56,26 @@ printBoardLine([], Line) :-
                                 Line == 7,
                                 printPlayersScore(3, 'Blue'),
                                 true
-                            )     
-                        )
+                                )     
+                            )
                     )
                 )
             )
         )
-    ),
-    write('\n').
-
-
-%   To print the contents of a line
+        ),
+        write('\n').
+    
 printBoardLine([H|T], Line) :-
     write('|_'),
     piece(H, S),
     write(S),
     write('_'),
     printBoardLine(T, Line).
-
-%   Iterates through the rows of the board
-printBoardBody([], 12).
+    
+    %   To print the contents of a line
+    printBoardBody([], 12).
 printBoardBody([H|T], Line) :-
-
+    
     %   Because theres another digit after line 10 that we need to account for
     if_then_else(Line<10, write(' '), true),
     
@@ -98,6 +96,7 @@ printBoardBody([H|T], Line) :-
     printBoardLine(H, Line),
     LineI is Line+1,
     printBoardBody(T, LineI).
+    %   Iterates through the rows of the board
 
 
 %   Prints the current Board
@@ -106,28 +105,29 @@ printBoard:-
     printBoardTop,
     printBoardBody(Init, 1).
 
-
+%   Prints the board sent in variable X
 printBoard(X):-
     printBoardTop,
     printBoardBody(X, 1).
 
+
+%   Chooses a ramdom board for the game, out of those predefined in allboard.pl
 randomizeBoard :-
-   % random(1, 6, BoardNumber),
-    BoardNumber = 4,
+    random(1, 6, BoardNumber),
     if_then_else(
             BoardNumber == 1,
-        (retract(initialBoard(In)), board1(Out), assert(initialBoard(Out))),
-        if_then_else(
-            BoardNumber == 2,
-            (retract(initialBoard(In)), board2(Out), assert(initialBoard(Out))),
+            (retract(initialBoard(In)), board1(Out), assert(initialBoard(Out))),
             if_then_else(
-                BoardNumber == 3,
-                (retract(initialBoard(In)), board3(Out), assert(initialBoard(Out))),
+                BoardNumber == 2,
+                (retract(initialBoard(In)), board2(Out), assert(initialBoard(Out))),
                 if_then_else(
-                    BoardNumber == 4,
-                    (retract(initialBoard(In)), board4(Out), assert(initialBoard(Out))),
-                    (retract(initialBoard(In)), board5(Out), assert(initialBoard(Out)))
-                )     
+                    BoardNumber == 3,
+                    (retract(initialBoard(In)), board3(Out), assert(initialBoard(Out))),
+                    if_then_else(
+                        BoardNumber == 4,
+                        (retract(initialBoard(In)), board4(Out), assert(initialBoard(Out))),
+                        (retract(initialBoard(In)), board5(Out), assert(initialBoard(Out)))
+                    )     
             )               
         )
     ).

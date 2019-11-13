@@ -20,8 +20,6 @@ columnLetterToNumber('m', 12).
 
 %   Inicializes the all game parameters
 start(Mode, Difficulty):-
-    use_module(library(random)),
-    use_module(library(system)),
     randomizeBoard,
     initialBoard(Init),
     player1(InitStash1),
@@ -49,9 +47,8 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
 playLoop(Mode, Difficulty):-
    
     repeat, 
-    
     once(valid_moves(1, ListOfMoves1)),
-    once(value(1, Value1, ListOfMoves1)),
+    once(value(Value1, ListOfMoves1)),
 
     if_then_else(
         Value1 == 0,
@@ -68,7 +65,7 @@ playLoop(Mode, Difficulty):-
 
             printBoard,
             once(valid_moves(2, ListOfMoves2)),
-            once(value(2, Value2, ListOfMoves2)),
+            once(value(Value2, ListOfMoves2)),
             
             if_then_else(
                 Value2 == 0,
@@ -90,7 +87,64 @@ playLoop(Mode, Difficulty):-
             )
         )
     )
-).
+    ).
+
+%   Returns the number of valid moves
+value(Value, ListOfMoves):-
+    length(ListOfMoves, Value).
+
+%   Returns the list of valid moves  
+valid_moves(Player, ListOfMoves) :-
+    checkAll(1, 1, Player, _, ListOfMoves, 0),
+    write(ListOfMoves).
+
+%   Decides next possition to check
+nextPos(Row, Column, RowN, ColumnN) :-
+    if_then_else(
+        Column < 12, 
+        (
+            RowN = Row,
+            ColumnN is Column + 1
+        ),
+        (
+            ColumnN = 1,
+            RowN is Row + 1,
+            if_then_else(RowN > 11, fail, true)
+        )
+    ).
+
+%   Checks all possible moves for each player
+checkAll(Row, Column, Player, Moves, MovesRet, Counter):-
+    %   Checks if play is legal for Row and Column
+    if_then_else(
+        checkRules(Row, Column, Player, 1),
+        (
+            append(Moves, [[Row, Column]], MovesAux),
+            if_then_else(
+                nextPos(Row, Column, RowN, ColumnN),
+                (
+                    CounterAux is Counter + 1,
+                    checkAll(RowN, ColumnN, Player, MovesAux, MovesRet, CounterAux)
+                ),
+                MovesRet = Moves
+            )
+        ), 
+        if_then_else(
+                nextPos(Row, Column, RowN, ColumnN),
+                checkAll(RowN, ColumnN, Player, Moves, MovesRet, Counter),
+                (
+                    if_then_else(
+                        Counter >= 1,
+                        (
+                            MovesRet = Moves
+                        ),
+                        true
+                    )
+                )
+        )
+    ).
+    %   Checks next position in the board -> when reaches the end of the board returns fail
+    
     
 
 %   Asks for user input and add's the removed piece to the player stash
@@ -137,6 +191,7 @@ removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-
 %   Chooses first play of possible moves for AI level 1
 removePieceAskMachine(Color, Player, Difficulty, CounterRet, ListOfMoves):-
     Difficulty == 1, !,
+    write('asdasda\n\n1111\n'),
     choosePieceToRemove(Row, Column, CounterRet, ListOfMoves),
     if_then_else(
             (write('Consegui'),

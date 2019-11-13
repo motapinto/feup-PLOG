@@ -9,7 +9,6 @@ counterDif(0).
 
 checkRules(Row, Column, Player, IsMachine):-
     %   Detecting if the values in the input of the player are valid
-
     write('Row: '),
     write(Row),
     write(' Column: '),

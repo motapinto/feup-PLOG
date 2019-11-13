@@ -1,6 +1,7 @@
 :- [shared].
 :- [game].
 
+%   Prints de main menu of the game
 printMenu :-
     nl,
     nl,
@@ -42,11 +43,9 @@ printMenu :-
     nl,
     nl.
 
-selectOption :-
-    write('> Insert your option: '),
-    menuInputHandler.
-
+%   Handler of user input in the menu
 menuInputHandler :-
+    write('> Insert your option: '),
     read(Input),
     if_then_else(
         (
@@ -69,10 +68,14 @@ menuInputHandler :-
             if_then_else(
                 Input == 4,
                 true,
-                play
+                (
+                    write('Select a valid option!\n'),
+                    menuInputHandler
+                )
             )
     ). 
 
+%   Reads the level of difficulty of the machine user
 readDifficulty(Level) :-
     write('> (0) AI level 0\n'),
     write('> (1) AI level 1\n'),
@@ -88,6 +91,8 @@ readDifficulty(Level) :-
     ).
 
 
+%   Prints the menu and handles the user input
 play :-
+    includes,
     printMenu,
-    selectOption.
+    menuInputHandler.
