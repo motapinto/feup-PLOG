@@ -91,17 +91,17 @@ playLoop(Mode, Level1, Level2):-
 %   Asks for user input and add's the removed piece to the player stash
 playRound(Player) :-
     format('\nPlayer ~w:\n\n', [Player]),
-    removePieceAsk(Color, Player), 
+    removePieceAsk(Player, Color), 
     addPieceToWhatPlayer(Player, Color).
 
 %   Randomizes piece to remove and add's the removed piece to the player stash
 playRoundMachine(Player, Difficulty, ListOfMoves) :-
     format('\nMachine ~w:\n\n', [Player]),
-    removePieceAskMachine(Color, Player, Difficulty, ListOfMoves), 
+    removePieceAskMachine(Player, Difficulty, Color, ListOfMoves), 
     addPieceToWhatPlayer(Player, Color).
 
 %   Asks for user input to decide piece to be removed and checks if it is a legal move
-removePieceAsk(Color, Player) :-
+removePieceAsk(Player, Color) :-
     write('    > Select row: '),
     read(Row), 
     write('    > Select column: '),
@@ -109,11 +109,11 @@ removePieceAsk(Color, Player) :-
     if_then_else(
         checkRules(Row, Column, Player, 0),
         removePieceDo(Row, Column, Color), 
-        removePieceAsk(Color, Player)
+        removePieceAsk(Player, Color)
     ).
 
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
-removePieceAskMachine(Color, Player, Difficulty, _):-
+removePieceAskMachine(Player, Difficulty, Color, _):-
     Difficulty == 0, !,
     randomMove(Row, Column),
     if_then_else(
@@ -124,11 +124,11 @@ removePieceAskMachine(Color, Player, Difficulty, _):-
                 format('    > Row: ~d\n', Row),
                 format('    > Column: ~d\n', Column)
             ),
-            removePieceAskMachine(Color, Player, Difficulty, _)
+            removePieceAskMachine(Player, Difficulty, Color, _)
     ).
 
 %   Chooses first play of possible moves for AI level 1
-removePieceAskMachine(Color, _, Difficulty, ListOfMoves):-
+removePieceAskMachine(_, Difficulty, Color, ListOfMoves):-
     Difficulty == 1, !,
     choosePieceToRemove(Row, Column, ListOfMoves), 
     removePieceDo(Row, Column, Color), 
@@ -139,7 +139,7 @@ removePieceAskMachine(Color, _, Difficulty, ListOfMoves):-
 %   After checking if the move is legal, removes piece
 removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
-    removePiece(BoardIn, BoardOut, Row, Columm),
+    removePiece(BoardIn, BoardOut, Row, Column, Color),
     assert(initialBoard(BoardOut)).
 
 %   Return color from piece with Row and Column, uses removePiece
@@ -162,9 +162,10 @@ returnColorPiece(Row, Column, Board, Color) :-
     Color = Element2.
 
 %   Removes the piece from BoardIn and updates in BoardOut
-removePiece(In, Out, Row, Column) :-
+removePiece(In, Out, Row, Column, Color) :-
     RowIndex is Row - 1,
     ColumnIndex is Column - 1,
+    returnColorPiece(Row, Column, In, Color),
     %   Get's the Row in RowIndex of the Board
     nth0(RowIndex, In, RowElem),
     changeElemInList(ColumnIndex, RowElem, n, NewRowElem),
@@ -180,9 +181,11 @@ valid_moves(Player, ListOfMoves) :-
     findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
     write('Possibe Moves: '), write(ListOfMoves).
 
+%   COMMENT
 iterateBoard(Board, Row, Column, Player):-
     iterateRows(Board, Row, Column, 1, 1, Player).
 
+%   COMMENT
 iterateRows([], _, _, _, _, _):- fail.
 iterateRows([H|T], Row, Column, Row1, Column1, Player):-
     (
@@ -194,6 +197,7 @@ iterateRows([H|T], Row, Column, Row1, Column1, Player):-
         iterateRows(T, Row, Column, Row2, 1, Player)
     ).
 
+%   COMMENT
 iterateRow([], _, _, _, _) :- fail.
 iterateRow([H|T], Row1, Column, Column1, Player):-
     (
