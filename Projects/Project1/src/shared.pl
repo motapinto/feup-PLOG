@@ -13,9 +13,11 @@ replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
+%   Changes the value of a position in the list to NewValue
 changeElemInList(PosToReplace, In, NewValue, Out) :-
     replace(In, PosToReplace, NewValue, Out).
 
+%   Increment the previous value of a position in the list 
 incrementElemInList(PosToReplace, In, Out) :-
     nth0(PosToReplace, In, ElemToReplace),
     NewValue is ElemToReplace + 1,
