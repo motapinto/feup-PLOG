@@ -89,64 +89,6 @@ playLoop(Mode, Difficulty):-
     )
     ).
 
-%   Returns the number of valid moves
-value(Value, ListOfMoves):-
-    length(ListOfMoves, Value).
-
-%   Returns the list of valid moves  
-valid_moves(Player, ListOfMoves) :-
-    checkAll(1, 1, Player, _, ListOfMoves, 0),
-    write(ListOfMoves).
-
-%   Decides next possition to check
-nextPos(Row, Column, RowN, ColumnN) :-
-    if_then_else(
-        Column < 12, 
-        (
-            RowN = Row,
-            ColumnN is Column + 1
-        ),
-        (
-            ColumnN = 1,
-            RowN is Row + 1,
-            if_then_else(RowN > 11, fail, true)
-        )
-    ).
-
-%   Checks all possible moves for each player
-checkAll(Row, Column, Player, Moves, MovesRet, Counter):-
-    %   Checks if play is legal for Row and Column
-    if_then_else(
-        checkRules(Row, Column, Player, 1),
-        (
-            append(Moves, [[Row, Column]], MovesAux),
-            if_then_else(
-                nextPos(Row, Column, RowN, ColumnN),
-                (
-                    CounterAux is Counter + 1,
-                    checkAll(RowN, ColumnN, Player, MovesAux, MovesRet, CounterAux)
-                ),
-                MovesRet = Moves
-            )
-        ), 
-        if_then_else(
-                nextPos(Row, Column, RowN, ColumnN),
-                checkAll(RowN, ColumnN, Player, Moves, MovesRet, Counter),
-                (
-                    if_then_else(
-                        Counter >= 1,
-                        (
-                            MovesRet = Moves
-                        ),
-                        true
-                    )
-                )
-        )
-    ).
-    %   Checks next position in the board -> when reaches the end of the board returns fail
-    
-    
-
 %   Asks for user input and add's the removed piece to the player stash
 playRound(Player) :-
     format('\nPlayer ~w:\n\n', [Player]),
@@ -175,8 +117,7 @@ removePieceAsk(Color, Player) :-
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
 removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-        
     Difficulty == 0, !,
-    random(1,12, Row),
-    random(1,13, Column),
+    randomMove(Row, Column),
     if_then_else(
             checkRules(Row, Column, Player, 1),
             (
@@ -245,3 +186,40 @@ updateRow(Row, Column, [H|T], [H|Tout], Color):-
     Row > 1,
     RowNext is Row - 1, 
     updateRow(RowNext, Column, T, Tout, Color).
+
+
+%   Returns the number of valid moves
+value(Value, ListOfMoves):-
+    length(ListOfMoves, Value).
+
+%   Returns the list of valid moves
+validmoves(Player, ListOfMoves) :-
+    initialBoard(Board),
+    findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
+    write(ListOfMoves).
+
+iterateBoard(Board, Row, Column, Player):-
+    iterateRows(Board, Row, Column, 1, 1, Player).
+
+iterateRows([], _, _, _, _, _):- fail.
+iterateRows([H|T], Row, Column, Row1, Column1, Player):-
+    (
+        iterateRow(H, Row1, Column, Column1, Player),
+        Row is Row1
+    );
+    (
+        Row2 is Row1 + 1,
+        iterateRows(T, Row, Column, Row2, 1, Player)
+    ).
+
+iterateRow([], _, _, _, _) :- fail.
+iterateRow([H|T], Row1, Column, Column1, Player):-
+    (
+        checkRules(Row1, Column1, Player, 1),
+        Column is Column1
+    );
+    (
+        Column2 is Column1 + 1,
+        iterateRow(T, Row1, Column, Column2, Player)
+
+    ).

@@ -1,5 +1,4 @@
 :- [allBoards].
-
 :- (dynamic initialBoard/1).
 
 %   Initial Configuration of Board
@@ -17,7 +16,7 @@ initialBoard([
     [n, n, n, n, n, n, n, n, n, n, n, n]
 ]).
 
-%   Conversion between what is stored and whats is displayed     
+%   Conversion between what is stored and displayed     
 piece(n, -).
 piece(r, 'R').
 piece(y, 'Y').
@@ -31,40 +30,16 @@ printBoardTop :-
 printBoardUp :-
     write('| a | n | c | d | e | f | g | h | i | j | l | m |\n ').
 
-%   To print the contents of a line 
-printBoardLine([], 11):-
-    write('|\n'), !.
-
-
 %   To print the contents of a line and prints the score of the players on the side 
+printBoardLine([], 11):-
+    write('|\n').
+
 printBoardLine([], Line) :-
-    Aux is Line mod 2,
-    if_then_else(Aux==0, write('|'), write('|_')),
-    if_then_else(
-        Line == 4,
-        write('             Player1             Player2'),
-        (
-            if_then_else(
-                Line == 5,
-                printPlayersScore(1, 'Red'),
-                (
-                    if_then_else(
-                        Line == 6,
-                        printPlayersScore(2, 'Yellow'),
-                        (
-                            if_then_else(
-                                Line == 7,
-                                printPlayersScore(3, 'Blue'),
-                                true
-                                )     
-                            )
-                    )
-                )
-            )
-        )
-        ),
-        write('\n').
-    
+    PairLine is Line mod 2,
+    if_then_else(PairLine == 0, write('|'), write('|_')),
+    printPlayersScore(Line),
+    write('\n').
+
 printBoardLine([H|T], Line) :-
     write('|_'),
     piece(H, S),
@@ -72,8 +47,8 @@ printBoardLine([H|T], Line) :-
     write('_'),
     printBoardLine(T, Line).
     
-    %   To print the contents of a line
-    printBoardBody([], 12).
+%   To print the contents of a line
+printBoardBody([], 12).
 printBoardBody([H|T], Line) :-
     
     %   Because theres another digit after line 10 that we need to account for

@@ -9,26 +9,20 @@ counterDif(0).
 
 checkRules(Row, Column, Player, IsMachine):-
     %   Detecting if the values in the input of the player are valid
-    write('Row: '),
-    write(Row),
-    write(' Column: '),
-    write(Column),
-    write('                  '),
 
 
 
     if_then_else(
-        (write(' 1 -'),
-        checkRowAndColumn(Row, Column)),
+        checkRowAndColumn(Row, Column),
         true,
         (
             if_then_else(
                 IsMachine == 0,
                 (
                     write('Tried to remove a piece that is out of bonds\n'),
-                    nl, fail  
+                    fail  
                 ),
-               (nl, fail)  
+                fail
             )
         )
     ), !,
@@ -38,7 +32,7 @@ checkRules(Row, Column, Player, IsMachine):-
     returnColorPiece(Row, Column, Color),
 
     if_then_else(
-            (write(' 2 -'),Color \== n),
+            Color \== n,
             true,
             (
                 if_then_else(
@@ -46,9 +40,9 @@ checkRules(Row, Column, Player, IsMachine):-
                         (
                             write('Tried to remove a piece that doesnt exist\n'), 
                             !,
-                            nl, fail    
+                            fail    
                         ),
-                        (nl, fail  )
+                        fail
                 )
             )
     ), !,
@@ -56,7 +50,7 @@ checkRules(Row, Column, Player, IsMachine):-
     %   Checking if the player already has the max amount of pieces with
     %   a certain Color
     if_then_else(
-        (write(' 3 -'),checkPieceLimit(Color, Player)),
+        checkPieceLimit(Color, Player),
         true,
         (
             if_then_else(
@@ -64,24 +58,24 @@ checkRules(Row, Column, Player, IsMachine):-
                 (
                     write('Tried to remove a piece that has reached its type limit for the player\n'),
                     !,
-                    nl, fail  
+                    fail
                 ),
-                (nl, fail  )
+                fail
             )
 
         )
     ), !,
     % Checks if the piece is connected to six others
     if_then_else(
-        (write(' 4 -'),checkIfBreaksTree(Row, Column)),
-        (nl, fail),  
+        checkIfBreaksTree(Row, Column),
+        fail,
         true
     ), !,
 
     %   Checking if removing the piece the player choose makes other pieces
     %   around it unsafe
     if_then_else(
-            (write(' 5 -'),checkIfPiecesAreSafe(Row, Column)),
+            checkIfPiecesAreSafe(Row, Column),
             true,
             (
                 if_then_else(
@@ -89,15 +83,12 @@ checkRules(Row, Column, Player, IsMachine):-
                         (
                             write('\n    > Tried to remove a piece that makes other pieces unprotected!\n\n'), 
                             !,
-                         nl, fail  
+                            fail  
                         ),
-                    (  nl, fail  )
+                    fail  
                 )
             )
-    ), !,
-
-write(' 6 -'),
-    nl.
+    ), !.
 
 checkRowAndColumn(Row, Column):-
     Row > 0, 

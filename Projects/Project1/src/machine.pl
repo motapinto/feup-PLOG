@@ -1,3 +1,7 @@
+%   Generate random move
+randomMove(Row, Column) :-
+    random(1, 12, Row),
+    random(1, 13, Column).
 
 %   Randomizes a position to remove from the list of possible moves
 choosePieceToRemove(Row, Column, CounterRet, ListOfMoves):-
