@@ -42,29 +42,21 @@ printPlayersScore(Line):-
         true
     ).
     
-%   Adds 1 piece of a certain color to a player's stash 
-addPieceToPlayer(1, [H | T], [Hout | T]):-
-    Hout is H + 1.
-addPieceToPlayer(Column , [H|T], [H | Tout]):-
-    Column > 1,
-    ColumnN is Column - 1, 
-    addPieceToPlayer(ColumnN, T, Tout).
 
 %   Adds 1 piece of PieceColor color to the player PlayerNumber stash 
 addPieceToWhatPlayer(PlayerNumber, PieceColor):-
     colorPiece(PieceColor, Index),
-    Aux is Index + 1,
 
     if_then_else(
         PlayerNumber == 1, 
         (
             retract(player1(Player1Pieces)),
-            addPieceToPlayer(Aux, Player1Pieces, Player1PiecesOut),
+            incrementElemInList(Index, Player1Pieces, Player1PiecesOut),
             assert(player1(Player1PiecesOut))
         ), 
         (
             retract(player2(Player2Pieces)),
-            addPieceToPlayer(Aux, Player2Pieces, Player2PiecesOut),
+            incrementElemInList(Index, Player2Pieces, Player2PiecesOut),
             assert(player2(Player2PiecesOut))
         )
     ).

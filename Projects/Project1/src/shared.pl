@@ -8,19 +8,18 @@ includes:-
 if_then_else(P,Q,_):- P, !, Q.
 if_then_else(_,_,R):- R.
 
+% replace(+list, +Index, +Value, -NewList)
+replace([_|T], 0, X, [X|T]).
+replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
+replace(L, _, _, L).
 
-replace(_, _, [], []).
-replace(O, R, [O|T], [R|T2]) :- replace(O, R, T, T2).
-replace(O, R, [H|T], [H|T2]) :- H \= O, replace(O, R, T, T2).
+changeElemInList(PosToReplace, In, NewValue, Out) :-
+    replace(In, PosToReplace, NewValue, Out).
 
-addElemInList(PosToReplace, In, NewValue, Out) :-
-    nth0(PosToReplace, In, ElemToReplace),
-    replace(ElemToReplace, In, NewValue, Out).
-
-iterateElemInList(PosToReplace, In, Out) :-
+incrementElemInList(PosToReplace, In, Out) :-
     nth0(PosToReplace, In, ElemToReplace),
     NewValue is ElemToReplace + 1,
-    replace(ElemToReplace, In, NewValue, Out).
+    replace(In, PosToReplace, NewValue, Out).
 
 
 % substitute(+X, +Xlist, +Y, ?Ylist)
