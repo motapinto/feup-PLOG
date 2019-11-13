@@ -89,6 +89,7 @@ printBoard(X):-
 %   Chooses a ramdom board for the game, out of those predefined in allboard.pl
 randomizeBoard :-
     random(1, 6, BoardNumber),
+    write(BoardNumber), nl,
     if_then_else(
             BoardNumber == 1,
             (retract(initialBoard(In)), board1(Out), assert(initialBoard(Out))),

@@ -45,7 +45,6 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
 
 %   Loop of play of all 3 modes
 playLoop(Mode, Difficulty):-
-   
     repeat, 
     once(valid_moves(1, ListOfMoves1)),
     once(value(Value1, ListOfMoves1)),
@@ -133,27 +132,17 @@ removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-
 removePieceAskMachine(Color, Player, Difficulty, CounterRet, ListOfMoves):-
     Difficulty == 1, !,
     write('asdasda\n\n1111\n'),
-    choosePieceToRemove(Row, Column, CounterRet, ListOfMoves),
-    if_then_else(
-            (write('Consegui'),
-            checkRules(Row, Column, Player, 1),
-            write('Consegui1')
-            ),
-            (   
-                removePieceDo(Row, Column, Color), 
-                write('    > Removing piece...\n'),
-                format('    > Row: ~d\n', Row),
-                format('    > Column: ~d\n', Column)
-            ),
-            removePieceAskMachine(Color, Player, Difficulty, CounterRet)
-    ).
+    choosePieceToRemove(Row, Column, CounterRet, ListOfMoves), 
+    removePieceDo(Row, Column, Color), 
+    write('    > Removing piece...\n'),
+    format('    > Row: ~d\n', Row),
+    format('    > Column: ~d\n', Column).
 
 %   After checking if the move is legal, removes piece
 removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column, Color),
     assert(initialBoard(BoardOut)).
-
 
 %   Return color from piece with Row and Column, uses removePiece
 %   but doesn't return no board without that piece, doing this
@@ -175,40 +164,29 @@ returnColorPiece(Row, Column, Board, Color) :-
     Color = Element2.
 
 %   Removes the piece from BoardIn and updates in BoardOut
-removePiece(BoardIn, BoardOut, Row, Column) :-
-    updateRow(Row, Column, BoardIn, BoardOut).
-
-%   Iterates through the columns of the board, return the Color of the Piece that was removed
-updateColumn(1, [H|T], [Hout|T]):-
-    Hout = n.
-
-updateColumn(Column, [H|T], [H|Tout]):-
-    Column > 1,
-    ColumnI is Column - 1, 
-    updateColumn(ColumnI, T, Tout).
-
-%   Iterate through the rows of the board 
-updateRow(1, Column, [H|T], [Hout|T]):-
-    updateColumn(Column, H, Hout).    
-updateRow(Row, Column, [H|T], [H|Tout]):-
-    Row > 1,
-    RowNext is Row - 1, 
-    updateRow(RowNext, Column, T, Tout).
-
+removePiece(In, Out, Row, Column) :-
+    RowIndex is Row - 1,
+    ColumnIndex is Column - 1,
+    %   Get's the Row in RowIndex of the Board
+    nth0(RowIndex, In, RowElem),
+    changeElemInList(ColumnIndex, RowElem, n, NewRowElem),
+    changeElemInList(RowIndex, In, NewRowElem, Out).
 
 %   Returns the number of valid moves
 value(Value, ListOfMoves):-
     length(ListOfMoves, Value).
 
 %   Returns the list of valid moves
-validmoves(Player, ListOfMoves) :-
+valid_moves(Player, ListOfMoves) :-
     initialBoard(Board),
     findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
     write(ListOfMoves).
 
+%   Use to find the next row and column for the findall predicate
 iterateBoard(Board, Row, Column, Player):-
     iterateRows(Board, Row, Column, 1, 1, Player).
 
+%   Use to find the next row for the findall predicate
 iterateRows([], _, _, _, _, _):- fail.
 iterateRows([H|T], Row, Column, Row1, Column1, Player):-
     (
@@ -220,8 +198,9 @@ iterateRows([H|T], Row, Column, Row1, Column1, Player):-
         iterateRows(T, Row, Column, Row2, 1, Player)
     ).
 
+%   Use to find the next column for the findall predicate
 iterateRow([], _, _, _, _) :- fail.
-iterateRow([H|T], Row1, Column, Column1, Player):-
+terateRow([H|T], Row1, Column, Column1, Player):-
     (
         checkRules(Row1, Column1, Player, 1),
         Column is Column1
