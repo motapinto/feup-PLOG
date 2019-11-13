@@ -322,13 +322,20 @@ checkIfBreaksTree(Row, Column) :-
         )
     ).
 
- checkIfAdjacentPositionIsPiece(Row, Column) :-
-    returnColorPiece(Row, Column, Color), !,
+checkIfAdjacentPositionIsPiece(Row, Column) :-
     if_then_else(
-        Color == n,
-        fail,
-        true    
+        checkRowAndColumn(Row,Column),
+        (
+            returnColorPiece(Row, Column, Color), !,
+            if_then_else(
+                Color == n,
+                fail,
+                true  
+            )  
+        ),
+        fail
     ).
+
 
 
 initCounters :-

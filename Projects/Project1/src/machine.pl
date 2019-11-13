@@ -16,11 +16,8 @@ valid_moves(Player, ListOfMoves) :-
 
 
 choosePieceToRemove(Row, Column, CounterRet, ListOfMoves):-
-    if_then_else(
-        CounterRet == 1,
-        Value = 1,
-        random(1, CounterRet, Value)
-    ),
+    RandomAux is CounterRet + 1,
+    random(1, RandomAux, Value),
     iteratePossibleMoves(Row, Column, Value, ListOfMoves).
 
 iterateColumn(Column, [H|_]):-

@@ -112,7 +112,7 @@ printBoard(X):-
     printBoardBody(X, 1).
 
 randomizeBoard :-
-    %random(1, 4, BoardNumber),
+   % random(1, 6, BoardNumber),
     BoardNumber = 4,
     if_then_else(
             BoardNumber == 1,

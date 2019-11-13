@@ -60,13 +60,13 @@ board4([
 board5([
     [b, b, b, b, b, b, b, b, b, b, b, b], 
     [b, b, b, b, b, b, b, b, b, b, b, b], 
-    [b, b, b, b, b, b, b, b, b, b, b, b], 
-    [b, b, b, b, b, b, b, b, b, b, b, b], 
-    [b, b, b, b, b, b, b, b, b, b, b, b], 
-    [b, b, b, b, b, b, b, b, b, b, b, b],  
-    [b, b, b, b, b, b, b, b, b, b, b, b],  
-    [b, b, b, b, b, b, b, b, b, b, b, b],  
-    [b, b, b, b, b, b, b, b, b, b, b, b],  
-    [b, b, b, b, b, b, b, b, b, b, b, b],  
-    [b, b, b, b, b, b, b, b, b, b, b, b]
+    [b, b, r, r, r, r, r, r, r, r, r, b], 
+    [y, y, y, y, y, y, y, y, y, y, y, y], 
+    [r, r, r, r, r, r, r, r, r, r, r, r], 
+    [r, r, r, r, r, r, r, r, r, r, r, r],  
+    [r, r, r, r, r, r, r, r, r, r, r, r],  
+    [r, r, r, r, r, r, r, r, r, r, r, r],  
+    [r, y, y, y, y, y, y, y, y, y, y, y],  
+    [y, y, y, y, y, y, y, y, y, y, y, y],  
+    [y, y, y, y, y, y, y, y, y, y, y, y]
 ]).

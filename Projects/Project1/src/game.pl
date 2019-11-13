@@ -67,8 +67,8 @@ playLoop(Mode, Difficulty):-
             ),
 
             printBoard,
-            once(valid_moves(1, ListOfMoves2)),
-            once(value(1, Value2, ListOfMoves2)),
+            once(valid_moves(2, ListOfMoves2)),
+            once(value(2, Value2, ListOfMoves2)),
             
             if_then_else(
                 Value2 == 0,
@@ -79,6 +79,7 @@ playLoop(Mode, Difficulty):-
                         once(playRound(2)),
                         once(playRoundMachine(2, Difficulty, Value2, ListOfMoves2))
                     ),
+                    
                     printBoard,
 
                     if_then_else(
@@ -120,8 +121,8 @@ removePieceAsk(Color, Player) :-
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
 removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-        
     Difficulty == 0, !,
-    random(1,11, Row),
-    random(1,12, Column),
+    random(1,12, Row),
+    random(1,13, Column),
     if_then_else(
             checkRules(Row, Column, Player, 1),
             (
