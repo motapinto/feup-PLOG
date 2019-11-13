@@ -175,6 +175,30 @@ removePiece(In, Out, Row, Column, Color) :-
 value(Value, ListOfMoves):-
     length(ListOfMoves, Value).
 
+value2(ListOfMoves, Player, Row, Column):-
+    initialBoard(Board),
+    
+    iterateListOfMoves(ListOfMoves, Board, Player),
+    write(ListOfMoves).
+
+
+iterateListOfMoves([], _, _).
+iterateListOfMoves([H|T], Board, Player):-
+    nth0(0, H, RowA),
+    nth0(1, H, ColumnA),
+    removePiece(Board, BoardOut, RowA, ColumnA, _),
+    valid_moves(Player, ListOfMoves, BoardOut),
+    value(NewNumberOfPossibleMoves, ListOfMoves),
+
+    iterateListOfMoves(T, Board, Player).
+
+
+%   Returns the list of valid moves of a certain board
+valid_moves(Player, ListOfMoves, Board) :-
+    findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
+    write('Possibe Moves: '), write(ListOfMoves).
+
+
 %   Returns the list of valid moves
 valid_moves(Player, ListOfMoves) :-
     initialBoard(Board),
