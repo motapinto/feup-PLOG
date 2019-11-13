@@ -69,8 +69,6 @@ addPieceToWhatPlayer(PlayerNumber, PieceColor):-
         )
     ).
 
-
-
 %   Checks if a specific position in the player stash has reached it's limit
 iterateStashElem(Column, List):-
     nth0(Column, List, Elem),

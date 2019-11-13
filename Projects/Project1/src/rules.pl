@@ -20,9 +20,9 @@ checkRules(Row, Column, Player, IsMachine):-
                 IsMachine == 0,
                 (
                     write('Tried to remove a piece that is out of bonds\n'),
-                    fail  
+                    (!, fail)   
                 ),
-                fail
+                (!, fail)  
             )
         )
     ), !,
@@ -40,9 +40,9 @@ checkRules(Row, Column, Player, IsMachine):-
                         (
                             write('Tried to remove a piece that doesnt exist\n'), 
                             !,
-                            fail    
+                            (!, fail)     
                         ),
-                        fail
+                        (!, fail)  
                 )
             )
     ), !,
@@ -58,9 +58,9 @@ checkRules(Row, Column, Player, IsMachine):-
                 (
                     write('Tried to remove a piece that has reached its type limit for the player\n'),
                     !,
-                    fail
+                    (!, fail)  
                 ),
-                fail
+                (!, fail)  
             )
 
         )
@@ -68,7 +68,7 @@ checkRules(Row, Column, Player, IsMachine):-
     % Checks if the piece is connected to six others
     if_then_else(
         checkIfBreaksTree(Row, Column),
-        fail,
+        (!, fail),
         true
     ), !,
 
@@ -83,9 +83,9 @@ checkRules(Row, Column, Player, IsMachine):-
                         (
                             write('\n    > Tried to remove a piece that makes other pieces unprotected!\n\n'), 
                             !,
-                            fail  
+                            (!, fail)  
                         ),
-                    fail  
+                        (!, fail)  
                 )
             )
     ), !.
@@ -234,7 +234,7 @@ checkIfPieceIsSafe(Row, Column, Board):-
                                                             PiecesDif3 == 3
                                                         ),
                                                         true,
-                                                        fail
+                                                        (!, fail)  
                                                     ) 
                                                     
                                                 )
@@ -319,11 +319,11 @@ checkIfAdjacentPositionIsPiece(Row, Column) :-
             returnColorPiece(Row, Column, Color), !,
             if_then_else(
                 Color == n,
-                fail,
+                (!, fail),  
                 true  
             )  
         ),
-        fail
+        (!, fail)  
     ).
 
 

@@ -78,7 +78,7 @@ printBoardBody([H|T], Line) :-
 printBoard:-
     initialBoard(Init),
     printBoardTop,
-    printBoardBody(Init, 1).
+    printBoardBody(Init, 1), !.
 
 %   Prints the board sent in variable X
 printBoard(X):-
