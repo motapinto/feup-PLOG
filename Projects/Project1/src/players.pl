@@ -11,7 +11,7 @@ colorPiece(y, 1).
 colorPiece(b, 2).
 
 %   Switch to print player's score alongside the board
-switchPlayerScore(4, Player1, Player2) :-
+switchPlayerScore(4, _, _) :-
     write('            Player1             Player2').
 
 switchPlayerScore(5, Player1, Player2) :-
@@ -93,8 +93,8 @@ checkIfPlayersHaveWon:-
             if_then_else(
                 iteratePlayerPieces(Player2Pieces),
                 true,
-                fail       
+                (!, fail)       
             )
         ),
-        fail
+        (!, fail)
     ).

@@ -56,11 +56,16 @@ menuInputHandler :-
         (
             if_then_else(
                 (Input == 2 ; Input == 3),   
-                readDifficulty(Level),
+                readDifficulty(Level1, 1),
                 true
             ),
             if_then_else(
-                start(Input, Level),
+                    (Input == 3),   
+                    readDifficulty(Level2, 2),
+                    true
+                ),
+            if_then_else(
+                start(Input, Level1, Level2),
                 true,
                 play
             )
@@ -76,10 +81,10 @@ menuInputHandler :-
     ). 
 
 %   Reads the level of difficulty of the machine user
-readDifficulty(Level) :-
-    write('> (0) AI level 0\n'),
+readDifficulty(Level, I) :-
+    write('\n> (0) AI level 0\n'),
     write('> (1) AI level 1\n'),
-    write('Chose difficulty: '), 
+    format('Chose Level for machine ~d: ', I), 
     read(LevelAux),
     if_then_else(
         (

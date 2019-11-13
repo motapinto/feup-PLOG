@@ -18,18 +18,17 @@ columnLetterToNumber('j', 10).
 columnLetterToNumber('l', 11).
 columnLetterToNumber('m', 12).
 
-%   Inicializes the all game parameters
-start(Mode, Difficulty):-
+%   Inicializes all the game parameters
+start(Mode, Level1, Level2):-
     randomizeBoard,
     initialBoard(Init),
     player1(InitStash1),
     player2(InitStash2),
     printBoard, 
     %sleep(3),
-    playLoop(Mode, Difficulty),
+    playLoop(Mode, Level1, Level2),
     initGame(Init, InitStash1, InitStash2),
-    !,
-    fail.
+    !, fail.
 
 %   Restart the game parameters so that a new game can be played
 initGame(InitBoard, Player1Stash, Player2Stash):-
@@ -44,7 +43,7 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
     assert(player2(Player2Stash)).
 
 %   Loop of play of all 3 modes
-playLoop(Mode, Difficulty):-
+playLoop(Mode, Level1, Level2):-
     repeat, 
     once(valid_moves(1, ListOfMoves1)),
     once(value(Value1, ListOfMoves1)),
@@ -55,14 +54,15 @@ playLoop(Mode, Difficulty):-
         (
             if_then_else(
                 (
-                    Mode==1; 
-                    Mode== 2
+                    Mode == 1; 
+                    Mode == 2
                 ),
                 once(playRound(1)),
-                once(playRoundMachine(1, Difficulty, Value1, ListOfMoves1))
+                once(playRoundMachine(1, Level1, ListOfMoves1))
             ),
 
             printBoard,
+            %sleep(3),
             once(valid_moves(2, ListOfMoves2)),
             once(value(Value2, ListOfMoves2)),
             
@@ -73,15 +73,15 @@ playLoop(Mode, Difficulty):-
                     if_then_else(
                         Mode == 1,
                         once(playRound(2)),
-                        once(playRoundMachine(2, Difficulty, Value2, ListOfMoves2))
+                        once(playRoundMachine(2, Level2, ListOfMoves2))
                     ),
                     
                     printBoard,
-
+                    %sleep(3),
                     if_then_else(
                     once(checkIfPlayersHaveWon), 
                         write('\n The Players have won the game \n'), 
-                        fail
+                        (!, fail)
                 )
             )
         )
@@ -95,9 +95,9 @@ playRound(Player) :-
     addPieceToWhatPlayer(Player, Color).
 
 %   Randomizes piece to remove and add's the removed piece to the player stash
-playRoundMachine(Player, Difficulty, CounterRet, ListOfMoves) :-
+playRoundMachine(Player, Difficulty, ListOfMoves) :-
     format('\nMachine ~w:\n\n', [Player]),
-    removePieceAskMachine(Color, Player, Difficulty, CounterRet, ListOfMoves), 
+    removePieceAskMachine(Color, Player, Difficulty, ListOfMoves), 
     addPieceToWhatPlayer(Player, Color).
 
 %   Asks for user input to decide piece to be removed and checks if it is a legal move
@@ -106,7 +106,6 @@ removePieceAsk(Color, Player) :-
     read(Row), 
     write('    > Select column: '),
     read(Column),
-    %columnLetterToNumber(ColumnAux, Column),
     if_then_else(
         checkRules(Row, Column, Player, 0),
         removePieceDo(Row, Column, Color), 
@@ -114,7 +113,7 @@ removePieceAsk(Color, Player) :-
     ).
 
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
-removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-        
+removePieceAskMachine(Color, Player, Difficulty, _):-
     Difficulty == 0, !,
     randomMove(Row, Column),
     if_then_else(
@@ -125,14 +124,13 @@ removePieceAskMachine(Color, Player, Difficulty, CounterRet, _):-
                 format('    > Row: ~d\n', Row),
                 format('    > Column: ~d\n', Column)
             ),
-            removePieceAskMachine(Color, Player, Difficulty, CounterRet, _)
+            removePieceAskMachine(Color, Player, Difficulty, _)
     ).
 
 %   Chooses first play of possible moves for AI level 1
-removePieceAskMachine(Color, Player, Difficulty, CounterRet, ListOfMoves):-
+removePieceAskMachine(Color, _, Difficulty, ListOfMoves):-
     Difficulty == 1, !,
-    write('asdasda\n\n1111\n'),
-    choosePieceToRemove(Row, Column, CounterRet, ListOfMoves), 
+    choosePieceToRemove(Row, Column, ListOfMoves), 
     removePieceDo(Row, Column, Color), 
     write('    > Removing piece...\n'),
     format('    > Row: ~d\n', Row),
@@ -141,7 +139,7 @@ removePieceAskMachine(Color, Player, Difficulty, CounterRet, ListOfMoves):-
 %   After checking if the move is legal, removes piece
 removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
-    removePiece(BoardIn, BoardOut, Row, Column, Color),
+    removePiece(BoardIn, BoardOut, Row, Columm),
     assert(initialBoard(BoardOut)).
 
 %   Return color from piece with Row and Column, uses removePiece
@@ -180,13 +178,11 @@ value(Value, ListOfMoves):-
 valid_moves(Player, ListOfMoves) :-
     initialBoard(Board),
     findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
-    write(ListOfMoves).
+    write('Possibe Moves: '), write(ListOfMoves).
 
-%   Use to find the next row and column for the findall predicate
 iterateBoard(Board, Row, Column, Player):-
     iterateRows(Board, Row, Column, 1, 1, Player).
 
-%   Use to find the next row for the findall predicate
 iterateRows([], _, _, _, _, _):- fail.
 iterateRows([H|T], Row, Column, Row1, Column1, Player):-
     (
@@ -198,9 +194,8 @@ iterateRows([H|T], Row, Column, Row1, Column1, Player):-
         iterateRows(T, Row, Column, Row2, 1, Player)
     ).
 
-%   Use to find the next column for the findall predicate
 iterateRow([], _, _, _, _) :- fail.
-terateRow([H|T], Row1, Column, Column1, Player):-
+iterateRow([H|T], Row1, Column, Column1, Player):-
     (
         checkRules(Row1, Column1, Player, 1),
         Column is Column1

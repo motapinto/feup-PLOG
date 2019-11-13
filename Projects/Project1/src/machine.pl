@@ -4,7 +4,7 @@ randomMove(Row, Column) :-
     random(1, 13, Column).
 
 %   Randomizes a position to remove from the list of possible moves
-choosePieceToRemove(Row, Column, CounterRet, ListOfMoves):-
+choosePieceToRemove(Row, Column, ListOfMoves):-
     value(NumberOfValidMoves, ListOfMoves),
     random(0, NumberOfValidMoves, Pos),
     selectElement(Row, Column, Pos, ListOfMoves).

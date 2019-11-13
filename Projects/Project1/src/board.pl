@@ -50,7 +50,6 @@ printBoardLine([H|T], Line) :-
 %   To print the contents of a line
 printBoardBody([], 12).
 printBoardBody([H|T], Line) :-
-    
     %   Because theres another digit after line 10 that we need to account for
     if_then_else(Line<10, write(' '), true),
     
@@ -68,11 +67,10 @@ printBoardBody([H|T], Line) :-
     %   Prints the last _ if the row number is even
     if_then_else(Mod==0, write(' _'), true),
 
+    %   Iterates through the rows of the board
     printBoardLine(H, Line),
     LineI is Line+1,
     printBoardBody(T, LineI).
-    %   Iterates through the rows of the board
-
 
 %   Prints the current Board
 printBoard:-
@@ -85,11 +83,9 @@ printBoard(X):-
     printBoardTop,
     printBoardBody(X, 1).
 
-
 %   Chooses a ramdom board for the game, out of those predefined in allboard.pl
 randomizeBoard :-
     random(1, 6, BoardNumber),
-    write(BoardNumber), nl,
     if_then_else(
             BoardNumber == 1,
             (retract(initialBoard(In)), board1(Out), assert(initialBoard(Out))),

@@ -38,14 +38,13 @@ checkRules(Row, Column, Player, IsMachine):-
                 if_then_else(
                         IsMachine == 0,
                         (
-                            write('Tried to remove a piece that doesnt exist\n'), 
-                            !,
+                            write('Tried to remove a piece that doesnt exist\n'),
                             (!, fail)     
                         ),
                         (!, fail)  
                 )
             )
-    ), !,
+    ),
     
     %   Checking if the player already has the max amount of pieces with
     %   a certain Color
@@ -57,20 +56,19 @@ checkRules(Row, Column, Player, IsMachine):-
                 IsMachine == 0,
                 (
                     write('Tried to remove a piece that has reached its type limit for the player\n'),
-                    !,
                     (!, fail)  
                 ),
                 (!, fail)  
             )
 
         )
-    ), !,
+    ),
     % Checks if the piece is connected to six others
     if_then_else(
         checkIfBreaksTree(Row, Column),
         (!, fail),
         true
-    ), !,
+    ),
 
     %   Checking if removing the piece the player choose makes other pieces
     %   around it unsafe
@@ -82,13 +80,12 @@ checkRules(Row, Column, Player, IsMachine):-
                         IsMachine == 0,
                         (
                             write('\n    > Tried to remove a piece that makes other pieces unprotected!\n\n'), 
-                            !,
                             (!, fail)  
                         ),
                         (!, fail)  
                 )
             )
-    ), !.
+    ).
 
 checkRowAndColumn(Row, Column):-
     Row > 0, 
@@ -103,8 +100,6 @@ checkIfPiecesAreSafe(Row, Column):-
     retract(initialBoard(BoardIn)),
     removePiece(BoardIn, BoardOut, Row, Column),
     assert(initialBoard(BoardIn)),
-
-  %  printBoard(BoardOut).
 
     PreviousRow is Row - 1,
     NextRow is Row + 1,
