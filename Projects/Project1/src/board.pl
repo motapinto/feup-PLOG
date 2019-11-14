@@ -60,6 +60,7 @@ printBoard(X) :-
     printBoardTop,
     printBoardBody(X, 1).
 
+<<<<<<< Updated upstream
 print :-
     initialBoard(Init),
     printBoard(Init).
@@ -104,3 +105,26 @@ updateRowRandom(Row, Column, [H|T], [H|Tout], Color):-
     Row > 1,
     RowNext is Row - 1, 
     updateRowRandom(RowNext, Column, T, Tout, Color).
+=======
+%   Chooses a ramdom board for the game, out of those predefined in allboard.pl
+randomizeBoard :-
+    %random(1, 6, BoardNumber),
+    BoardNumber = 1,
+    if_then_else(
+            BoardNumber == 1,
+            (retract(initialBoard(In)), board1(Out), assert(initialBoard(Out))),
+            if_then_else(
+                BoardNumber == 2,
+                (retract(initialBoard(In)), board2(Out), assert(initialBoard(Out))),
+                if_then_else(
+                    BoardNumber == 3,
+                    (retract(initialBoard(In)), board3(Out), assert(initialBoard(Out))),
+                    if_then_else(
+                        BoardNumber == 4,
+                        (retract(initialBoard(In)), board4(Out), assert(initialBoard(Out))),
+                        (retract(initialBoard(In)), board5(Out), assert(initialBoard(Out)))
+                    )     
+            )               
+        )
+    ).
+>>>>>>> Stashed changes
