@@ -1,17 +1,14 @@
 :- (dynamic counterEq/1).
 :- (dynamic counterDif/1).
 
-%   Counter for the number of Pieces with the same color and Pieces in
-%   in general
+%   Number of  adjacent pieces with the same color for the specific piece
 counterEq(0).
+%   Number of all adjacent pieces for the specific pieces
 counterDif(0).
 
-
+%   Checks all in game rules and if the piece in the position with Row and Column can be removed
 checkRules(Row, Column, Player, IsMachine):-
-    %   Detecting if the values in the input of the player are valid
-
-
-
+    %   Detecting if the input values of the player are valid
     if_then_else(
         checkRowAndColumn(Row, Column),
         true,
@@ -27,10 +24,8 @@ checkRules(Row, Column, Player, IsMachine):-
         )
     ), !,
 
-    %   Determining id the spot chosen by the player is a null one or
-    %   if it correspond to an actual piece
+    %   Determining if the piece in position chosen by the player is empty
     returnColorPiece(Row, Column, Color), !,
-
     if_then_else(
             Color \== n,
             true,
@@ -46,7 +41,7 @@ checkRules(Row, Column, Player, IsMachine):-
             )
     ),
     
-    %   Checking if the player already has the max amount of pieces with
+    %   Checking if the player already has the max amount of pieces for
     %   a certain Color
     if_then_else(
         checkPieceLimit(Color, Player),
@@ -70,7 +65,7 @@ checkRules(Row, Column, Player, IsMachine):-
         true
     ),
 
-    %   Checking if removing the piece the player choose makes other pieces
+    %   Checking if removing the piece the player has choosen, makes other pieces
     %   around it unsafe
     if_then_else(
             checkIfPiecesAreSafe(Row, Column),
@@ -87,18 +82,17 @@ checkRules(Row, Column, Player, IsMachine):-
             )
     ).
 
+%   Checks if the Row and Column are inside the board of play
 checkRowAndColumn(Row, Column):-
     Row > 0, 
     Row < 12, 
     Column > 0, 
     Column < 13.
 
-
-
-checkIfPiecesAreSafe(Row, Column):-
-    
+%   Checks if all 6 adjacent pieces are safe after simulation removing the piece
+checkIfPiecesAreSafe(Row, Column):- 
     retract(initialBoard(BoardIn)),
-    removePiece(BoardIn, BoardOut, Row, Column),
+    removePiece(BoardIn, BoardOut, Row, Column, _),
     assert(initialBoard(BoardIn)),
 
     PreviousRow is Row - 1,
@@ -135,9 +129,8 @@ checkIfPiecesAreSafe(Row, Column):-
                 )
             )
     ).
-
     
-
+%   Checks if each of the 6 adjacent pieces are safe (connected to 3 or 2 of the same color)
 checkIfPieceIsSafe(Row, Column, Board):-
    
     %   Index for the surrounding pieces
@@ -246,8 +239,9 @@ checkIfPieceIsSafe(Row, Column, Board):-
         true
     ).                   
 
+% Updates number of pieces connected to the calle of this predicate
 checkAdjacentPiece(Row, Column, Board, Color) :-
-    %verifica se a peça está fora do bord
+    %Cehcks if the piece is inside the board
     if_then_else(
         checkRowAndColumn(Row,Column),
         (
@@ -270,6 +264,7 @@ checkAdjacentPiece(Row, Column, Board, Color) :-
         true
     ).
 
+%   Checks if the breaks tree (if there is 1 path that connect all pieces)
 checkIfBreaksTree(Row, Column) :-
     PreviousRow is Row - 1,
     NextRow is Row + 1,
@@ -307,6 +302,7 @@ checkIfBreaksTree(Row, Column) :-
         )
     ).
 
+%   Checks if adjacent piece is null
 checkIfAdjacentPositionIsPiece(Row, Column) :-
     if_then_else(
         checkRowAndColumn(Row,Column),
@@ -322,7 +318,7 @@ checkIfAdjacentPositionIsPiece(Row, Column) :-
     ).
 
 
-
+%   Inicializes the counter for counterEq and counterDif
 initCounters :-
     retract(counterEq(_)),
     PiecesEq1 = 0,
@@ -332,11 +328,13 @@ initCounters :-
     PiecesDif1 = 0,
     assert(counterDif(PiecesDif1)).
 
+%   Increments the number of equal adjacent pieces
 addEq :-
     retract(counterEq(PiecesEq)),
     PiecesEq1 is PiecesEq + 1,
     assert(counterEq(PiecesEq1)).
 
+%   Increments the number of all adjacent pieces
 addDif :-
     retract(counterDif(PiecesDif)),
     PiecesDif1 is PiecesDif + 1,

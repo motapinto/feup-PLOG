@@ -25,7 +25,7 @@ start(Mode, Level1, Level2):-
     player1(InitStash1),
     player2(InitStash2),
     printBoard, 
-    %sleep(3),
+    sleep(3),
     playLoop(Mode, Level1, Level2),
     initGame(Init, InitStash1, InitStash2),
     !, fail.
@@ -40,7 +40,10 @@ initGame(InitBoard, Player1Stash, Player2Stash):-
     assert(player1(Player1Stash)),
     %   returning the player2 stash  to its initial state , ready for another round
     retract(player2(_)),
-    assert(player2(Player2Stash)).
+    assert(player2(Player2Stash)),
+    
+    %Inicializes the randomBoard
+    randomizeBoard.
 
 %   Loop of play of all 3 modes
 playLoop(Mode, Level1, Level2):-
@@ -50,7 +53,7 @@ playLoop(Mode, Level1, Level2):-
 
     if_then_else(
         Value1 == 0,
-        write('\n Game Has Won , no more Possible Moves Available\n'),
+        write('\nGame Has Won , no more Possible Moves Available\n'),
         (
             if_then_else(
                 (
@@ -62,7 +65,7 @@ playLoop(Mode, Level1, Level2):-
             ),
 
             printBoard,
-            %sleep(3),
+            sleep(3),
             once(valid_moves(2, ListOfMoves2)),
             once(value(Value2, ListOfMoves2)),
             
@@ -77,7 +80,7 @@ playLoop(Mode, Level1, Level2):-
                     ),
                     
                     printBoard,
-                    %sleep(3),
+                    sleep(3),
                     if_then_else(
                     once(checkIfPlayersHaveWon), 
                         write('\n The Players have won the game \n'), 
@@ -175,23 +178,6 @@ removePiece(In, Out, Row, Column, Color) :-
 value(Value, ListOfMoves):-
     length(ListOfMoves, Value).
 
-value2(ListOfMoves, Player, Row, Column):-
-    initialBoard(Board),
-    
-    iterateListOfMoves(ListOfMoves, Board, Player),
-    write(ListOfMoves).
-
-
-iterateListOfMoves([], _, _).
-iterateListOfMoves([H|T], Board, Player):-
-    nth0(0, H, RowA),
-    nth0(1, H, ColumnA),
-    removePiece(Board, BoardOut, RowA, ColumnA, _),
-    valid_moves(Player, ListOfMoves, BoardOut),
-    value(NewNumberOfPossibleMoves, ListOfMoves),
-
-    iterateListOfMoves(T, Board, Player).
-
 
 %   Returns the list of valid moves of a certain board
 valid_moves(Player, ListOfMoves, Board) :-
@@ -205,11 +191,11 @@ valid_moves(Player, ListOfMoves) :-
     findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
     write('Possibe Moves: '), write(ListOfMoves).
 
-%   COMMENT
+%   Iterates through the board
 iterateBoard(Board, Row, Column, Player):-
     iterateRows(Board, Row, Column, 1, 1, Player).
 
-%   COMMENT
+%   Iterates through the Rows
 iterateRows([], _, _, _, _, _):- fail.
 iterateRows([H|T], Row, Column, Row1, Column1, Player):-
     (
@@ -221,9 +207,9 @@ iterateRows([H|T], Row, Column, Row1, Column1, Player):-
         iterateRows(T, Row, Column, Row2, 1, Player)
     ).
 
-%   COMMENT
+%   Iterates through each row, by column
 iterateRow([], _, _, _, _) :- fail.
-iterateRow([H|T], Row1, Column, Column1, Player):-
+iterateRow([_|T], Row1, Column, Column1, Player):-
     (
         checkRules(Row1, Column1, Player, 1),
         Column is Column1
