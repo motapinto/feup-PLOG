@@ -28,7 +28,7 @@ printBoardTop :-
 
 %   To print the columns headers
 printBoardUp :-
-    write('| a | n | c | d | e | f | g | h | i | j | l | m |\n ').
+    write('| a | b | c | d | e | f | g | h | i | j | l | m |\n ').
 
 %   To print the contents of a line and prints the score of the players on the side 
 printBoardLine([], 11):-

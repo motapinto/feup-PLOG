@@ -25,7 +25,7 @@ start(Mode, Level1, Level2):-
     player1(InitStash1),
     player2(InitStash2),
     printBoard, 
-    sleep(3),
+    sleep(1),
     playLoop(Mode, Level1, Level2),
     initGame(Init, InitStash1, InitStash2),
     !, fail.
@@ -61,11 +61,10 @@ playLoop(Mode, Level1, Level2):-
                     Mode == 2
                 ),
                 once(playRound(1)),
-                once(playRoundMachine(1, Level1, ListOfMoves1))
+                (once(playRoundMachine(1, Level1, ListOfMoves1)), sleep(1))
             ),
 
             printBoard,
-            sleep(3),
             once(valid_moves(2, ListOfMoves2)),
             once(value(Value2, ListOfMoves2)),
             
@@ -76,11 +75,10 @@ playLoop(Mode, Level1, Level2):-
                     if_then_else(
                         Mode == 1,
                         once(playRound(2)),
-                        once(playRoundMachine(2, Level2, ListOfMoves2))
+                        (once(playRoundMachine(2, Level2, ListOfMoves2)), sleep(1))
                     ),
                     
                     printBoard,
-                    sleep(3),
                     if_then_else(
                     once(checkIfPlayersHaveWon), 
                         write('\n The Players have won the game \n'), 
@@ -99,7 +97,7 @@ playRound(Player) :-
 
 %   Randomizes piece to remove and add's the removed piece to the player stash
 playRoundMachine(Player, Difficulty, ListOfMoves) :-
-    format('\nMachine ~w:\n\n', [Player]),
+    format('\nPlayer ~w (Machine):\n\n', [Player]),
     removePieceAskMachine(Player, Difficulty, Color, ListOfMoves), 
     addPieceToWhatPlayer(Player, Color).
 
@@ -110,9 +108,18 @@ removePieceAsk(Player, Color) :-
     write('    > Select column: '),
     read(Column),
     if_then_else(
-        checkRules(Row, Column, Player, 0),
-        removePieceDo(Row, Column, Color), 
-        removePieceAsk(Player, Color)
+        columnLetterToNumber(Column, ColumnNumber),
+        (
+            if_then_else(
+            checkRules(Row, ColumnNumber, Player, 0),
+            removePieceDo(Row, ColumnNumber, Color), 
+            removePieceAsk(Player, Color)
+            )
+        ),
+        (
+            write('\n    >Tried to remove a piece that is out of bonds\n'),
+            removePieceAsk(Player, Color)
+        )
     ).
 
 %   Randomizes piece to remove and checks if it is a legal move for AI level 0
@@ -123,9 +130,10 @@ removePieceAskMachine(Player, Difficulty, Color, _):-
             checkRules(Row, Column, Player, 1),
             (
                 removePieceDo(Row, Column, Color),
-
+                write('    > Removing piece...\n'),
                 format('    > Row: ~d\n', Row),
-                format('    > Column: ~d\n', Column)
+                columnLetterToNumber(ColumnLetter, Column),
+                format('    > Column: ~s\n', ColumnLetter)
             ),
             removePieceAskMachine(Player, Difficulty, Color, _)
     ).
@@ -137,12 +145,13 @@ removePieceAskMachine(_, Difficulty, Color, ListOfMoves):-
     removePieceDo(Row, Column, Color), 
     write('    > Removing piece...\n'),
     format('    > Row: ~d\n', Row),
-    format('    > Column: ~d\n', Column).
+    columnLetterToNumber(ColumnLetter, Column),
+    format('    > Column: ~s\n', ColumnLetter).
 
 %   After checking if the move is legal, removes piece
 removePieceDo(Row, Column, Color):-
     retract(initialBoard(BoardIn)),
-    removePiece(BoardIn, BoardOut, Row, Column, Color),
+    once(removePiece(BoardIn, BoardOut, Row, Column, Color)),
     assert(initialBoard(BoardOut)).
 
 %   Return color from piece with Row and Column, uses removePiece
@@ -165,7 +174,7 @@ returnColorPiece(Row, Column, Board, Color) :-
     Color = Element2.
 
 %   Removes the piece from BoardIn and updates in BoardOut
-removePiece(In, Out, Row, Column, Color) :-
+removePiece(In, Out, Row, Column, Color):-
     RowIndex is Row - 1,
     ColumnIndex is Column - 1,
     returnColorPiece(Row, Column, In, Color),
@@ -181,15 +190,13 @@ value(Value, ListOfMoves):-
 
 %   Returns the list of valid moves of a certain board
 valid_moves(Player, ListOfMoves, Board) :-
-    findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
-    write('Possibe Moves: '), write(ListOfMoves).
+    findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves).
 
 
 %   Returns the list of valid moves
 valid_moves(Player, ListOfMoves) :-
     initialBoard(Board),
-    findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves),
-    write('Possibe Moves: '), write(ListOfMoves).
+    findall([Row,Column], iterateBoard(Board, Row, Column, Player), ListOfMoves).
 
 %   Iterates through the board
 iterateBoard(Board, Row, Column, Player):-

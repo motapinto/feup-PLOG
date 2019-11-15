@@ -62,7 +62,7 @@ menuInputHandler :-
             if_then_else(
                     (Input == 3),   
                     readDifficulty(Level2, 2),
-                    true
+                    Level2 = Level1
                 ),
             if_then_else(
                 start(Input, Level1, Level2),

@@ -16,13 +16,13 @@ checkRules(Row, Column, Player, IsMachine):-
             if_then_else(
                 IsMachine == 0,
                 (
-                    write('Tried to remove a piece that is out of bonds\n'),
+                    write('\n    > Tried to remove a piece that is out of bonds\n'),
                     (!, fail)   
                 ),
                 (!, fail)  
             )
         )
-    ), !,
+    ),
 
     %   Determining if the piece in position chosen by the player is empty
     returnColorPiece(Row, Column, Color), !,
@@ -33,7 +33,7 @@ checkRules(Row, Column, Player, IsMachine):-
                 if_then_else(
                         IsMachine == 0,
                         (
-                            write('Tried to remove a piece that doesnt exist\n'),
+                            write('\n    > Tried to remove a piece that doesnt exist\n'),
                             (!, fail)     
                         ),
                         (!, fail)  
@@ -50,7 +50,7 @@ checkRules(Row, Column, Player, IsMachine):-
             if_then_else(
                 IsMachine == 0,
                 (
-                    write('Tried to remove a piece that has reached its type limit for the player\n'),
+                    write('\n    > Tried to remove a piece that has reached its type limit for the player\n'),
                     (!, fail)  
                 ),
                 (!, fail)  
@@ -61,7 +61,14 @@ checkRules(Row, Column, Player, IsMachine):-
     % Checks if the piece is connected to six others
     if_then_else(
         checkIfBreaksTree(Row, Column),
-        (!, fail),
+        if_then_else(
+                IsMachine == 0,
+                (
+                    write('\n    > Tried to remove a piece that is conected to 6 other pieces, increases the chance of breaking the tree later in the game\n'),
+                    (!, fail)  
+                ),
+                (!, fail)  
+        ),
         true
     ),
 
@@ -91,9 +98,8 @@ checkRowAndColumn(Row, Column):-
 
 %   Checks if all 6 adjacent pieces are safe after simulation removing the piece
 checkIfPiecesAreSafe(Row, Column):- 
-    retract(initialBoard(BoardIn)),
-    removePiece(BoardIn, BoardOut, Row, Column, _),
-    assert(initialBoard(BoardIn)),
+    initialBoard(BoardIn),
+    once(removePiece(BoardIn, BoardOut, Row, Column, _)),
 
     PreviousRow is Row - 1,
     NextRow is Row + 1,
@@ -154,7 +160,7 @@ checkIfPieceIsSafe(Row, Column, Board):-
                             Aux == 0
                         ),
                         (
-                            checkAdjacentPiece(PreviousRow, Column, Board, Color),
+                            checkAdjacentPiece(PreviousRow, Column, Board, Color),  
                             checkAdjacentPiece(PreviousRow, NextColumn, Board, Color)
                         ),
                         (
