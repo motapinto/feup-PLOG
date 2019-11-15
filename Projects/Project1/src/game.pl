@@ -108,7 +108,7 @@ removePieceAsk(Player, Color) :-
     write('    > Select column: '),
     read(Column),
     if_then_else(
-        columnLetterToNumber(Column, ColumnNumber),
+        (columnLetterToNumber(Column, ColumnNumber), checkRowAndColumn(Row, Column)),
         (
             if_then_else(
             checkRules(Row, ColumnNumber, Player, 0),
@@ -127,6 +127,8 @@ removePieceAskMachine(Player, Difficulty, Color, _):-
     Difficulty == 0, !,
     randomMove(Row, Column),
     if_then_else(
+        checkRowAndColumn(Row, Column),
+        if_then_else(
             checkRules(Row, Column, Player, 1),
             (
                 removePieceDo(Row, Column, Color),
@@ -136,6 +138,8 @@ removePieceAskMachine(Player, Difficulty, Color, _):-
                 format('    > Column: ~s\n', ColumnLetter)
             ),
             removePieceAskMachine(Player, Difficulty, Color, _)
+        ),
+        removePieceAskMachine(Player, Difficulty, Color, _)
     ).
 
 %   Chooses first play of possible moves for AI level 1

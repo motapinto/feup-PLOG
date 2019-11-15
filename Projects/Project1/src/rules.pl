@@ -8,22 +8,7 @@ counterDif(0).
 
 %   Checks all in game rules and if the piece in the position with Row and Column can be removed
 checkRules(Row, Column, Player, IsMachine):-
-    %   Detecting if the input values of the player are valid
-    if_then_else(
-        checkRowAndColumn(Row, Column),
-        true,
-        (
-            if_then_else(
-                IsMachine == 0,
-                (
-                    write('\n    > Tried to remove a piece that is out of bonds\n'),
-                    (!, fail)   
-                ),
-                (!, fail)  
-            )
-        )
-    ),
-
+    
     %   Determining if the piece in position chosen by the player is empty
     returnColorPiece(Row, Column, Color), !,
     if_then_else(
