@@ -10,6 +10,7 @@ game('5 ATG', [action, adventure, open-world, multiplayer], 18).
 game('Carrier Shift: Game Over', [action, fps, multiplayer, shooter], 16).
 game('Duas Botas', [action, free, strategy, moba], 12).
 
+:- (dynamic played/4).
 %played(Player, Game, HoursPlayed, PercentUnlocked)
 played('Best Player Ever', '5 ATG', 3, 83).
 played('Worst Player Ever', '5 ATG', 52, 9).
@@ -46,28 +47,22 @@ listGamesOfCategory(Cat):-
         fail    
     );true.
 
-% esta mallll
-:- (dynamic hours/1).
-:- (dynamic percentage/1).
-hours(0).
-percentage(0).
-
 updatePlayer(Player, Game, Hours, Percentage) :-
-    retract(hours(TimeBefore)),
-    retract(percentage(PercentageBefore)),
-    played(Player, Game, TimeBefore, PercentageBefore),
+    retract(played(Player, Game, TimeBefore, PercentageBefore)),
     TimeNow is TimeBefore + Hours,
     PercentageNow is PercentageBefore + Percentage,
-    assert(hours(TimeNow)),
-    assert(percentage(PercentageNow)).
+    assert(played(Player, Game, TimeNow, PercentageNow)).
 
-% esta mallll
+% ESTA MAL--------------------------------------
 littleAchivement(Player, Games) :-
     played(Player, Game, _, Percentage),
     \+member(Game, Games),
     Percentage < 20,
     littleAchivement(Player, [Game | Games]).
 littleAchivement(Player, []).
+
+% Já se pode utilizar bib
+:-use_module(library(lists)).
 
 ageRange(MinAge, MaxAge, Players) :-
     findall(
@@ -87,7 +82,7 @@ averageAge(Game, AverageAge) :-
     length(AgePlayers, Size),
     AverageAge is Value / Size.
 
-%Esta mal
+% ESTA MAL--------------------------------------
 % sortByEfficency([H|T], Out) :-
 % mostEffective(Game, Players) :-
 %     findall(P, played(Player, Game, _, _), PlayersList),
@@ -110,12 +105,29 @@ whatDoesItDo(UserName) :-
 % para o sexmeplo de cima seria algo assim:
 % [[0,8,8,7,7],[0,2,4,4],[0,3,3],[0,1],[0]]
 
+% ESTA MAL--------------------------------------
+initialBoard([
+    [0,8,8,7,7],
+    [8,0,2,4,4],
+    [8,2,0,3,3],
+    [7,4,3,0,1],
+    [7,4,3,1,0]
+]).
+
 elemHasDist(MatDis, Row, Column, Dist):-
+    nth1(Row, MatDis, ColumnList),
+    nth1(Column, ColumnList, Elem), !,
+    Elem >= Dist.
+
+nextPos(4,5,5,5).
+nextPos(Row, Column, RowNext, ColumnNext) :-
+    (Row < 5, RowNext is Row + 1);
+    ColumnNext is Column + 1.
 
 areFar(Dist, MatDis, Pares):-
-    findall([Row/Column], elemHasDist(MatDis, Row, Column, Dist), List):-
-    \+member([Column/Row], List).    
+    initialBoard(MatDis),
+    findall([Row/Column], elemHasDist(MatDis, Row, Column, Dist), Pares),
+    \+member([Column/Row], Pares).
 
-%player(Name, UserName, Age).
-%played(Player, Game, HoursPlayed, PercentUnlocked)
-%game(Name, Categories, MinAge).
+%PERGUNTA 13
+%PERGUNTA 14
