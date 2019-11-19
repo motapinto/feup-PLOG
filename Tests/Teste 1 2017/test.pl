@@ -109,11 +109,12 @@ mostEffectivePlayers(Game, Players) :-
 %   O cut serve para apos ir buscar o player correspondente ao username
 %   e executar o resto dos passos abaixo, se der fail nao fazer redo de player e terminar
 
+%   Pergunta 11
 % Uma lista de listas dinamica ou seja
-% para o sexmeplo de cima seria algo assim:
+% para o exemplo de cima seria algo assim:
 % [[0,8,8,7,7],[0,2,4,4],[0,3,3],[0,1],[0]]
 
-% ESTA MAL--------------------------------------
+% ESTA MAL tudo para baixo --------------------
 initialBoard([
     [0,8,8,7,7],
     [8,0,2,4,4],
