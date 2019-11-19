@@ -16,9 +16,7 @@ played('Best Player Ever', '5 ATG', 3, 83).
 played('Worst Player Ever', '5 ATG', 52, 9).
 played('The Player', 'Carrier Shift: Game Over', 44, 22).
 played('A Player', 'Carrier Shift: Game Over', 48, 24).
-played('A-Star Player', 'Carrier Shift: Game Over', 37, 16).
-played('A-Star Player', 'Duas Botas', 55, 55).
-played('A-Star Player', '5 ATG', 66, 100).
+played('A-Star Player', 'Duas Botas', 37, 16).
 played('Best Player Ever', 'Duas Botas', 33, 22).
 
 achivedLittle(Player) :-
@@ -61,11 +59,9 @@ littleAchivement(Player, GamesSearched, [Game | Games]) :-
     Percentage < 20, 
     append(GamesSearched, Game, NewSearch),
     littleAchivement(Player, NewSearch, Games).
-
 littleAchivement(Player, _, []).
 littleAchivement(Player, List) :-
     littleAchivement(Player, [], List).
-    
 
 % Já se pode utilizar bib
 :-use_module(library(lists)).
@@ -83,19 +79,30 @@ averageAge(Game, AverageAge) :-
     length(AgePlayers, Size),
     AverageAge is Value / Size.
 
-% ESTA MAL--------------------------------------
-% sortByEfficency([H|T], Out) :-
-% mostEffective(Game, Players) :-
-%     findall(P, played(Player, Game, _, _), PlayersList),
-
-whatDoesItDo(UserName) :-
-    player(_, UserName, Age),!,
-    \+(
-        played(UserName, Game, _, _),
-        game(Game,_,MinAge),
-        MinAge>Age
+mostEffectivePlayers(Game, Players) :-
+    findall(
+        Ratio, 
+        (
+            played(Player, Game, Hour, Percentage),
+            Ratio is Percentage / Hour
+        ), 
+        RatiosList
+    ),
+    max_member(Max, RatiosList),
+    findall(
+        Player2, 
+        (
+            played(Player2, Game, Hour2, Percentage2),
+            \+member(Player2, Players), 
+            Ratio2 is Percentage2 / Hour2, Ratio2 == Max
+        ), 
+        Players
     ).
 
+
+
+
+%   Pergunta 10
 %   Vê se para um username o jogador jogou um jogo
 %   em que nao tinha idade suficiente para jogar visto
 %   que tinha idade inferior a idade minima
