@@ -16,7 +16,9 @@ played('Best Player Ever', '5 ATG', 3, 83).
 played('Worst Player Ever', '5 ATG', 52, 9).
 played('The Player', 'Carrier Shift: Game Over', 44, 22).
 played('A Player', 'Carrier Shift: Game Over', 48, 24).
-played('A-Star Player', 'Duas Botas', 37, 16).
+played('A-Star Player', 'Carrier Shift: Game Over', 37, 16).
+played('A-Star Player', 'Duas Botas', 55, 55).
+played('A-Star Player', '5 ATG', 66, 100).
 played('Best Player Ever', 'Duas Botas', 33, 22).
 
 achivedLittle(Player) :-
@@ -53,13 +55,17 @@ updatePlayer(Player, Game, Hours, Percentage) :-
     PercentageNow is PercentageBefore + Percentage,
     assert(played(Player, Game, TimeNow, PercentageNow)).
 
-% ESTA MAL--------------------------------------
-littleAchivement(Player, Games) :-
+littleAchivement(Player, GamesSearched, [Game | Games]) :-
     played(Player, Game, _, Percentage),
-    \+member(Game, Games),
-    Percentage < 20,
-    littleAchivement(Player, [Game | Games]).
-littleAchivement(Player, []).
+    \+member(Game, GamesSearched),
+    Percentage < 20, 
+    append(GamesSearched, Game, NewSearch),
+    littleAchivement(Player, NewSearch, Games).
+
+littleAchivement(Player, _, []).
+littleAchivement(Player, List) :-
+    littleAchivement(Player, [], List).
+    
 
 % Já se pode utilizar bib
 :-use_module(library(lists)).
@@ -71,14 +77,9 @@ ageRange(MinAge, MaxAge, Players) :-
         Players
     ).
 
-sumList([], 0).
-sumList([H|T], Sum):-
-    sumList(T, SumN),
-    Sum is H + SumN.
-
 averageAge(Game, AverageAge) :-
     findall(Age, (played(Player, Game, _, _), player(_, Player, Age)), AgePlayers),
-    sumList(AgePlayers, Value),
+    sumlist(AgePlayers, Value),
     length(AgePlayers, Size),
     AverageAge is Value / Size.
 
