@@ -1,3 +1,6 @@
+:-use_module(library(lists)).
+:- (dynamic played/4).
+
 %player(Name, UserName, Age).
 player('Danny', 'Best Player Ever', 27).
 player('Annie', 'Worst Player Ever', 24).
@@ -10,7 +13,6 @@ game('5 ATG', [action, adventure, open-world, multiplayer], 18).
 game('Carrier Shift: Game Over', [action, fps, multiplayer, shooter], 16).
 game('Duas Botas', [action, free, strategy, moba], 12).
 
-:- (dynamic played/4).
 %played(Player, Game, HoursPlayed, PercentUnlocked)
 played('Best Player Ever', '5 ATG', 3, 83).
 played('Worst Player Ever', '5 ATG', 52, 9).
@@ -62,9 +64,6 @@ littleAchivement(Player, GamesSearched, [Game | Games]) :-
 littleAchivement(Player, _, []).
 littleAchivement(Player, List) :-
     littleAchivement(Player, [], List).
-
-% Já se pode utilizar bib
-:-use_module(library(lists)).
 
 ageRange(MinAge, MaxAge, Players) :-
     findall(
