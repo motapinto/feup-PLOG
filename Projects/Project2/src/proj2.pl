@@ -85,33 +85,32 @@ Os materiais e trabalhadores podem ter custos diferentes dependendo di dia.
 
 %   constructionOperation(Id, Description, speacialty, listOfWorkers, listOfMaterials)
 
-%   Worker(Id, Name, ListOfSpeacialty)
-worker(0, 'Oliver', ['Data Analist']).
-worker(1, 'Jack', ['Project Managment']).
-worker(2, 'Charlie', ['Architect']).
-worker(3, 'Oscar', ['Designer']).
-worker(4, 'James', ['Aproval']).
-worker(5, 'William', ['Technician']).
+%   Worker(Id, Name, ListOfSpeacialty, Salary)
+worker(0, 'Oliver', ['Electrician'], 300).
+worker(1, 'Jack', ['Carpenter'], 150).
+worker(2, 'Charlie', ['Mason'], 150).
+worker(3, 'Oscar', ['Engineer'], 500).
+worker(4, 'James', ['Plumber'], 150).
+worker(5, 'William', ['Tiler'], 150).
 worker(6, 'Thomas', ['Technician']).
-worker(7, 'Harry', ['Technician', 'Designer', 'Project Managment']).
-worker(8, 'Emily', ['Project Managment']).
-worker(9, 'Olivia', ['Technician']).
+worker(7, 'Harry', ['Engineer']).
+worker(8, 'Emily', ['Painter'], 150).
+worker(9, 'Olivia', ['Engineer']).
 worker(10, 'Jessica', ['Project Managment']).
-worker(11, 'Ava', ['Project Managment']).
-worker(12, 'Isabella', ['Project Managment']).
+worker(11, 'Ava', ['Technician']).
+worker(12, 'Isabella', ['Project Manager']).
 
 %   materialAndEquipment(Id, Name, Cost)
 materialAndEquipment(0, 'Measuring Tape', 15).
 materialAndEquipment(1, 'Eletrical Wiring', 15).
 materialAndEquipment(2, 'Steel', 15).
-materialAndEquipment(3, 'Concrete', 15).
 materialAndEquipment(4, 'Wood', 15).
-materialAndEquipment(5, 'Measuring Tape', 15).
-materialAndEquipment(6, 'Measuring Tape', 15).
-materialAndEquipment(7, 'Measuring Tape', 15).
-materialAndEquipment(8, 'Measuring Tape', 15).
-materialAndEquipment(9, 'Measuring Tape', 15).
-materialAndEquipment(10, 'Measuring Tape', 15).
+materialAndEquipment(5, 'Glass', 15).
+materialAndEquipment(6, 'Stone', 15).
+materialAndEquipment(7, 'Cement', 15).
+materialAndEquipment(8, 'Safety Helment', 15).
+materialAndEquipment(9, 'Safety Vest', 15).
+materialAndEquipment(10, 'Gloves', 15).
 materialAndEquipment(11, 'Measuring Tape', 15).
 materialAndEquipment(12, 'Measuring Tape', 15).
 materialAndEquipment(13, 'Measuring Tape', 15).
