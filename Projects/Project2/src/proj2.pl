@@ -1,61 +1,58 @@
 :-use_module(library(clpfd)).
 
 map_coloring(L) :-
-    L = [WA, NT, SA, Q, NSW, V, T].
+    L = [WA, NT, SA, Q, NSW, V, T],
     domain(L, 0, 2), % equivalente a fazer L in 0..2
     WA #\= NT, WA#\=SA,
-    NT #\=NT, NT#\=Q
-    SQ #\=Q, SA#\=
-    Q,
-    NSW,
-    write('.') %ver quantas vezes faz p backtracking -> so imprime uma vez o '.'
+    NT #\=NT, NT#\=Q,
+    write('.'), %ver quantas vezes faz p backtracking -> so imprime uma vez o '.'
     labeling([], L).
 
-% se fizermos primeiro o labelling o programa fica menos eficiente
-%e sao impressos muitos mais pontos pq havera muito backtracking
-% mal haja uma restricao que falhe faz backtrcking
+% % se fizermos primeiro o labelling o programa fica menos eficiente
+% %e sao impressos muitos mais pontos pq havera muito backtracking
+% % mal haja uma restricao que falhe faz backtrcking
 
-%fazendo este metodo se pedir outra solucao o numero de pontos impressos
-% vai variar devido ao backtracking
+% %fazendo este metodo se pedir outra solucao o numero de pontos impressos
+% % vai variar devido ao backtracking
 
-%terceira solucao -> prolog de teste 1
+% %terceira solucao -> prolog de teste 1
 
-map_coloring(WA, NT, SA, Q, NSW, V, T):-
-    MEMBER(...),...
+% % map_coloring(WA, NT, SA, Q, NSW, V, T):-
+% %     MEMBER(...)
 
-%esta solucao tambem faz muito backtracking e e parecido com a segunda solucao(extamanete igual)
-%isto é fazer primeiro o labelling e dps as restricoes
+% %esta solucao tambem faz muito backtracking e e parecido com a segunda solucao(extamanete igual)
+% %isto é fazer primeiro o labelling e dps as restricoes
 
-%POR ISSO E IMPORTNATE FAZER PRIMEIRO RESTRICOES E DPS LABELLING -> nao ha backtracking
-
-
+% %POR ISSO E IMPORTNATE FAZER PRIMEIRO RESTRICOES E DPS LABELLING -> nao ha backtracking
 
 
-% se fizermos n ele faz backtracking ate ao labelling
 
 
-%podemosfazer A in(2,8) \/ (15..20)
-%A in {4,8,14,24,28}
-
-in_set()% conjunto de valores posssiveis
-Numbers = [5, 6, 7, 19, 25, 56]
-list_to_fdset(Numbers, FDS_Numbers),
-?
-
-domain(List, Min, Max)
-
-fd_batch?
-
-reified: restricao nao colocada e variavel a 0
-restricao colocada ou variavel a 1
-constraint #<=> B
-B pode ter valor 0 ou 1
-
-restricoes globais a maior parte delas nao pode ser materializadas
-as restricoes simples podem ser materializadas
+% % se fizermos n ele faz backtracking ate ao labelling
 
 
-exactly(X,L,N). % numero de vezes que X aparce em L
+% %podemosfazer A in(2,8) \/ (15..20)
+% %A in {4,8,14,24,28}
+
+% in_set()% conjunto de valores posssiveis
+% Numbers = [5, 6, 7, 19, 25, 56]
+% list_to_fdset(Numbers, FDS_Numbers),
+% ?
+
+% domain(List, Min, Max)
+
+% fd_batch?
+
+% reified: restricao nao colocada e variavel a 0
+% restricao colocada ou variavel a 1
+% constraint #<=> B
+% B pode ter valor 0 ou 1
+
+% restricoes globais a maior parte delas nao pode ser materializadas
+% as restricoes simples podem ser materializadas
+
+
+% exactly(X,L,N). % numero de vezes que X aparce em L
 
 exactly(_, [], 0).
 exactly(X, [Y|L], N) :-
@@ -84,6 +81,7 @@ Os materiais e trabalhadores podem ter custos diferentes dependendo di dia.
 %   constructionWork()
 
 %   constructionOperation(Id, Description, speacialty, listOfWorkers, listOfMaterials)
+    constructionOperation(0, 'Glazing', '', listOfWorkers, listOfMaterials).
 
 %   worker(Id, Name, ListOfSpeacialty, Salary)
 worker(0, 'Oliver', ['Electrician'], 300).
@@ -101,19 +99,25 @@ worker(11, 'Ava', ['Technician'], 250).
 worker(12, 'Isabella', ['Project Manager'], 700).
 
 %   materialAndEquipment(Id, Name, Cost)
-materialAndEquipment(0, 'Measuring Tape', 15).
-materialAndEquipment(1, 'Eletrical Wiring', 15).
-materialAndEquipment(2, 'Steel', 15).
-materialAndEquipment(4, 'Wood', 15).
-materialAndEquipment(5, 'Glass', 15).
-materialAndEquipment(6, 'Stone', 15).
-materialAndEquipment(7, 'Cement', 15).
-materialAndEquipment(8, 'Safety Helment', 15).
-materialAndEquipment(9, 'Safety Vest', 15).
-materialAndEquipment(10, 'Gloves', 15).
-materialAndEquipment(11, 'Measuring Tape', 15).
-materialAndEquipment(12, 'Measuring Tape', 15).
-materialAndEquipment(13, 'Measuring Tape', 15).
+materialAndEquipment(0, 'Measuring Tape', 5).
+materialAndEquipment(1, 'Eletrical Wiring', 200).
+materialAndEquipment(2, 'Steel', 100).
+materialAndEquipment(4, 'Wood', 50).
+materialAndEquipment(5, 'Glass', 45).
+materialAndEquipment(6, 'Stone', 70).
+materialAndEquipment(7, 'Cement', 150).
+materialAndEquipment(8, 'Safety Helment', 40).
+materialAndEquipment(9, 'Safety Vest', 50).
+materialAndEquipment(10, 'Gloves', 10).
+materialAndEquipment(11, 'Elevator', 2000).
+materialAndEquipment(12, 'Escalator', 10000).
+materialAndEquipment(13, 'Switches', 200).
+materialAndEquipment(14, 'Pickaxe', 40).
+materialAndEquipment(15, 'Shovel', 13).
+materialAndEquipment(16, 'Crane', 7000).
+materialAndEquipment(17, 'Excavator', 13000).
+materialAndEquipment(18, 'Bulldozers', 15000).
+materialAndEquipment(19, 'Trucks', 9000).
 
 
 
