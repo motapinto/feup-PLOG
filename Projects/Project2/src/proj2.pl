@@ -78,10 +78,20 @@ Dependendo do numero de pessoas alocadas para um fase de especialidade, esta pod
 Todos os materiais e trabalhadores estao sempre disponiveis a serem utilizados.
 Os materiais e trabalhadores podem ter custos diferentes dependendo di dia.
 
-%   constructionWork()
 
-%   constructionOperation(Id, Description, speacialty, listOfWorkers, listOfMaterials)
-    constructionOperation(0, 'Glazing', '', listOfWorkers, listOfMaterials).
+%   constructionOperation(Id, Name, speacialty, listOfWorkers, listOfMaterials)
+constructionOperation(0, 'Paintwork', '', [], listOfMaterials).
+constructionOperation(1, 'Plumbing & Drainage', '', [], listOfMaterials).
+constructionOperation(2, 'Masonary', '', [], listOfMaterials).
+constructionOperation(3, 'Waterproofing', '', [], listOfMaterials).
+constructionOperation(4, 'EarthWorks', '', [], listOfMaterials).
+constructionOperation(5, 'Plumbing ', '', [], listOfMaterials).
+constructionOperation(6, 'Ceilings', '', [], listOfMaterials).
+constructionOperation(7, 'Glazing', '', [], listOfMaterials).
+constructionOperation(8, 'Pre-Cast Concrete', '', [], listOfMaterials).
+constructionOperation(9, 'Tiling', '', [], listOfMaterials).
+constructionOperation(10, 'External Work', '', [], listOfMaterials).
+constructionOperation(11, 'Eletrical Wiring', '', [], listOfMaterials).
 
 %   worker(Id, Name, ListOfSpeacialty, Salary)
 worker(0, 'Oliver', ['Electrician'], 300).
@@ -97,6 +107,10 @@ worker(9, 'Olivia', ['Engineer'], 500).
 worker(10, 'Jessica', ['Director'], 900).
 worker(11, 'Ava', ['Technician'], 250).
 worker(12, 'Isabella', ['Project Manager'], 700).
+worker(13, 'Mia', [], 100).
+worker(14, 'Charlotte', [], 100).
+worker(15, 'Richard', [], 100).
+worker(16, 'Robert', [], 100).
 
 %   materialAndEquipment(Id, Name, Cost)
 materialAndEquipment(0, 'Measuring Tape', 5).
@@ -118,12 +132,3 @@ materialAndEquipment(16, 'Crane', 7000).
 materialAndEquipment(17, 'Excavator', 13000).
 materialAndEquipment(18, 'Bulldozers', 15000).
 materialAndEquipment(19, 'Trucks', 9000).
-
-
-
-
-
-
-%Resource
-
-%
