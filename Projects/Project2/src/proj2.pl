@@ -85,20 +85,20 @@ Os materiais e trabalhadores podem ter custos diferentes dependendo di dia.
 
 %   constructionOperation(Id, Description, speacialty, listOfWorkers, listOfMaterials)
 
-%   Worker(Id, Name, ListOfSpeacialty, Salary)
+%   worker(Id, Name, ListOfSpeacialty, Salary)
 worker(0, 'Oliver', ['Electrician'], 300).
 worker(1, 'Jack', ['Carpenter'], 150).
 worker(2, 'Charlie', ['Mason'], 150).
-worker(3, 'Oscar', ['Engineer'], 500).
-worker(4, 'James', ['Plumber'], 150).
+worker(3, 'Oscar', ['Engineer', 'Electrician', 'Technician'], 1050).
+worker(4, 'James', ['Plumber', 'Carpenter'], 300).
 worker(5, 'William', ['Tiler'], 150).
-worker(6, 'Thomas', ['Technician']).
-worker(7, 'Harry', ['Engineer']).
-worker(8, 'Emily', ['Painter'], 150).
-worker(9, 'Olivia', ['Engineer']).
-worker(10, 'Jessica', ['Project Managment']).
-worker(11, 'Ava', ['Technician']).
-worker(12, 'Isabella', ['Project Manager']).
+worker(6, 'Thomas', ['Technician'], 250).
+worker(7, 'Harry', ['Engineer', 'Technician'], 750).
+worker(8, 'Emily', ['Painter', 'Carpenter'], 300).
+worker(9, 'Olivia', ['Engineer'], 500).
+worker(10, 'Jessica', ['Director'], 900).
+worker(11, 'Ava', ['Technician'], 250).
+worker(12, 'Isabella', ['Project Manager'], 700).
 
 %   materialAndEquipment(Id, Name, Cost)
 materialAndEquipment(0, 'Measuring Tape', 15).
