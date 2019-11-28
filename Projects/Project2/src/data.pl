@@ -14,19 +14,18 @@
 % Todos os materiais e trabalhadores estao sempre disponiveis a serem utilizados.
 % Os materiais e trabalhadores podem ter custos diferentes dependendo di dia.
 
-%   constructionOperation(Id, Name, speacialty, listOfWorkers, listOfMaterials)
-constructionOperation(0, 'Paintwork', '', [], listOfMaterials).
-constructionOperation(1, 'Plumbing & Drainage', '', [], listOfMaterials).
-constructionOperation(2, 'Masonary', '', [], listOfMaterials).
-constructionOperation(3, 'Waterproofing', '', [], listOfMaterials).
-constructionOperation(4, 'EarthWorks', '', [], listOfMaterials).
-constructionOperation(5, 'Plumbing ', '', [], listOfMaterials).
-constructionOperation(6, 'Ceilings', '', [], listOfMaterials).
-constructionOperation(7, 'Glazing', '', [], listOfMaterials).
-constructionOperation(8, 'Pre-Cast Concrete', '', [], listOfMaterials).
-constructionOperation(9, 'Tiling', '', [], listOfMaterials).
-constructionOperation(10, 'External Work', '', [], listOfMaterials).
-constructionOperation(11, 'Eletrical Wiring', '', [], listOfMaterials).
+%   constructionOperation(Id, Name, Speacialty, Duration, DependecyList)
+constructionOperation(0, 'Paintwork', ['Painter'], 2, []).
+constructionOperation(1, 'Plumbing & Drainage', ['Plumber'], 3, []).
+constructionOperation(2, 'Masonary', ['Mason'], 6, []).
+constructionOperation(3, 'Waterproofing', ['Plumber'], 5, [0, 1]).
+constructionOperation(4, 'EarthWorks', ['Carpenter'], 6, [2]).
+constructionOperation(5, 'Ceilings', ['Technician'], 8, [3, 4]).
+constructionOperation(6, 'Glazing', ['Engineer'], 5, [5]).
+constructionOperation(7, 'Pre-Cast Concrete', ['Engineer'], 10, [6]).
+constructionOperation(8, 'Tiling', ['Technician'], 10, [5]).
+constructionOperation(9, 'External Work', ['Technician'], 20, [8]).
+constructionOperation(10, 'Eletrical Wiring', ['Electrician'], 2, [7, 9]).
 
 %   worker(Id, Name, ListOfSpeacialty, Salary)
 worker(0, 'Oliver', ['Electrician'], 300).
