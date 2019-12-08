@@ -78,3 +78,63 @@ Dependendo do numero de pessoas alocadas para um fase de especialidade, esta pod
 Todos os materiais e trabalhadores estao sempre disponiveis a serem utilizados.
 Os materiais e trabalhadores podem ter custos diferentes dependendo di dia.
 
+%   constructionWork(id, Name, DateLimit, Value, ListOfOperations)
+
+    constructionWork(0, 'Bridge', 500000, [0, 1, 2, 3, 4, 5]).
+    constructionWork(1, 'Federal building', 1000000, [2, 3, 4]).
+    constructionWork(2, 'House', 200000, [0, 2, 4]).
+    constructionWork(2, 'Apartament', 300000, [1, 4, 5]).
+    constructionWork(2, 'Gas station', 400000, [2, 5, 9]).
+    constructionWork(2, 'School building', 250000[3, 4, 10]).
+    constructionWork(2, 'Hospital', 1000000, [5, 2, 7, 9, 10]).
+    constructionWork(2, 'Police station', 400000, [3, 4, 5, 1]).
+    constructionWork(2, 'Shopping', 560000, [10, 2, 1, 3]).
+    constructionWork(2, 'Gym', 340000, [0, 2, 3, 5, 9, 10]).
+
+%   constructionOperation(Id, Description, speacialty, listOfWorkers, listOfMaterials)
+    constructionOperation(0, 'Glazing', ).
+
+%   worker(Id, Name, ListOfSpeacialty, Salary)
+worker(0, 'Oliver', ['Electrician'], 300).
+worker(1, 'Jack', ['Carpenter'], 150).
+worker(2, 'Charlie', ['Mason'], 150).
+worker(3, 'Oscar', ['Engineer', 'Electrician', 'Technician'], 1050).
+worker(4, 'James', ['Plumber', 'Carpenter'], 300).
+worker(5, 'William', ['Tiler'], 150).
+worker(6, 'Thomas', ['Technician'], 250).
+worker(7, 'Harry', ['Engineer', 'Technician'], 750).
+worker(8, 'Emily', ['Painter', 'Carpenter'], 300).
+worker(9, 'Olivia', ['Engineer'], 500).
+worker(10, 'Jessica', ['Director'], 900).
+worker(11, 'Ava', ['Technician'], 250).
+worker(12, 'Isabella', ['Project Manager'], 700).
+
+%   materialAndEquipment(Id, Name, Cost)
+materialAndEquipment(0, 'Measuring Tape', 5).
+materialAndEquipment(1, 'Eletrical Wiring', 200).
+materialAndEquipment(2, 'Steel', 100).
+materialAndEquipment(4, 'Wood', 50).
+materialAndEquipment(5, 'Glass', 45).
+materialAndEquipment(6, 'Stone', 70).
+materialAndEquipment(7, 'Cement', 150).
+materialAndEquipment(8, 'Safety Helment', 40).
+materialAndEquipment(9, 'Safety Vest', 50).
+materialAndEquipment(10, 'Gloves', 10).
+materialAndEquipment(11, 'Elevator', 2000).
+materialAndEquipment(12, 'Escalator', 10000).
+materialAndEquipment(13, 'Switches', 200).
+materialAndEquipment(14, 'Pickaxe', 40).
+materialAndEquipment(15, 'Shovel', 13).
+materialAndEquipment(16, 'Crane', 7000).
+materialAndEquipment(17, 'Excavator', 13000).
+materialAndEquipment(18, 'Bulldozers', 15000).
+materialAndEquipment(19, 'Trucks', 9000).
+
+
+
+
+
+
+%Resource
+
+%
