@@ -5,54 +5,43 @@ if_then_else(R, P, Q) :-
 if_then_else(R, P, Q) :-
     Q.
 
-%   Initial Configuration of Board
-initialBoard([
-    [ n, n, n, n, n],
-    [ n, n, n, n, n],
-    [ n, n, n, n, n], 
-    [ n, n, n, n, n], 
-    [ n, n, n, n, n]
-]).
 
 %   Conversion between what is stored and displayed     
-piece(n, -).
-piece(r, 'R').
-piece(y, 'Y').
-piece(b, 'B').
+piece(0, ' ').
+piece(1, 'O').
+piece(2, 'M').
+piece(3, 'N').
+piece(4, '*').
 
 %   To print the top part of the board
 printBoardTop :-
-    write('_____________________\n'),
-    write('|   |   |   |   |   |\n').
+    write(' _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n').
 
-%   To print the contents of a line and prints the score of the players on the side 
-printBoardLine([], 5):-
-    write('|\n').
+printBoardDown :-
+    write('|_ _ _|_ _ _|_ _ _|_ _ _|_ _ _|\n').
 
-printBoardLine([], Line) :-
-    write('|'), write('\n').
 
+printBoardLine([], _):-
+    write('\n').
 printBoardLine([H|T], Line) :-
-    write('|_'),
     piece(H, S),
     write(S),
-    write('_'),
+    write('  |  '),
     printBoardLine(T, Line).
     
 %   To print the contents of a line
 printBoardBody([], 5).
 printBoardBody([H|T], Line) :-    
-
+   
     %   Iterates through the rows of the board
+    write('|     |     |     |     |     |\n'),
+    write('|  '),
     printBoardLine(H, Line),
+    printBoardDown,
+
     LineI is Line+1,
     printBoardBody(T, LineI).
 
-%   Prints the current Board
-printBoard:-
-    initialBoard(Init),
-    printBoardTop,
-    printBoardBody(Init, 1), !.
 
 %   Prints the board sent in variable X
 printBoard(X):-
