@@ -92,3 +92,65 @@
         % X = 1, Y = 3, Z = 3
 
 % assignment/2 assignment/3 (atribui valores a uma lista) ?
+
+% sorting/3 ? 
+
+% keysorting/2 keysorting/3
+
+% lex_chain/1 lex_chain/2
+
+% element/3
+
+%relation/3
+
+% table/2 table/3
+
+% case/3 case/4
+
+% circuit/1 circuit/2
+
+% cumulative/1 cumulative/2
+
+% cumulatives/2 cumulatives/3
+
+% multi_cumulative/2 multi_cumulative/3
+
+% bin_packing/2
+
+% disjoint1/1 disjoint1/2
+
+% disjoint2/1 disjoint2/2
+
+% geost/2 geost/2 geost/3
+
+% value_precede_chain/2 value_precede_chain/3
+
+% automaton/3 automaton/8 automaton/9
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enumeração
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% indomain/1
+
+% labeling/2
+
+% solve/2
+
+% variable/1
+
+% value/1
+
+% time_out/2
+
+% minimize/2 minimize/3
+
+% maximize/2 maximize/3
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Estatisticas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% fd_statistics/0 fd_statistics/2
+
+% statistics/0 statistics/2
