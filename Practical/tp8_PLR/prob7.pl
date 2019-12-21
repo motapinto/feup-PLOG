@@ -1,11 +1,17 @@
-:-use_module(library(clpfd)).
+  :-use_module(library(clpfd)).
 
-peru(PUni, PTot):-
-    PTot in 670..9679,
-    Max in 0..9,
-    Min in 0..9,
-    PUni in 1..9679,
-    PTot #= PUni * 72,
-    PTot #= 1000 * Max + 670 + Min,
-    labeling([],[PTot, PUni]).
-
+roastedTurkey(Price):-
+    Price = [P1, P2, P3, P4, PricePerTurkey],
+    NumberOfTurkeys = 72,
+    % thousands
+    P1 in 1..9,
+    % hundreds
+    P2 #= 6,
+    % tens 
+    P3 #= 7,
+    % ones
+    P4 in 1..9,
+    % price per turkey
+    PricePerTurkey * NumberOfTurkeys #= (P1 * 1000 + P2 * 100 + P3 * 10 + P4),
+    % find solution
+    labeling([], Price).
