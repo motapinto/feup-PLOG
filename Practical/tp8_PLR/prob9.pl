@@ -1,17 +1,21 @@
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
 
-zeros(Numbers):-
-    Numbers = [A, B],
-    domain(Numbers, 0, 1000000000),
+zero(Vars):-
+    Vars=[A, B],
+    domain(Vars, 1, 100000000),
     A * B #= 1000000000,
-    B #> A
-    labeling([], Numbers).
-    %restrictions(A, B).
+    A #>= B,
+    nozeros(A), 
+    nozeros(B), !,
+    labeling([], Vars).
 
-restrictions(0, 0).
-restrictions(A, B) :-
-    Aaux is A mod 10,
-    Baux is B mod 10,
-    Aaux > 0, Baux > 0,
-    restrictions(Aaux, Baux).
+
+nozeros(X):-
+    X #< 10; 
+    (   
+        Aux #= X mod 10,
+        Aux #\= 0,
+        Aux1 #= X//10,
+        nozeros(Aux1)
+    ).
