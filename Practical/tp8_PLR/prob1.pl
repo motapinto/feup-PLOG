@@ -85,6 +85,3 @@ sumDiagonal2(Vars, DiagonalSize, Counter, TotalSum):-
     Index is (DiagonalSize - 1) * (Counter + 1),
     nth0(Index, Vars, Elem),
     TotalSum #= TotalSumAux + Elem.
-
-
-
