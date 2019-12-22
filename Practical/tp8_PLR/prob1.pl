@@ -18,11 +18,14 @@ magic(Vars) :-
     A3 + A5 + A7 #= Soma, 
     
     % Eliminar simetrias
-    A1 #< A2, 
-    A1 #< A3,  
-    A1 #< A4,  
-    A2 #< A4,
+    % A1 #< A2, 
+    % A1 #< A3,  
+    % A1 #< A4,  
+    % A2 #< A4,
 
+    value_precede_chain([A1, A2, A4], Vars),
+    value_precede_chain([A1, A3], Vars),
+    
     labeling([], Vars).
 
 % N by N version
