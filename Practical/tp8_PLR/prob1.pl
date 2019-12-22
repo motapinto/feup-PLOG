@@ -3,7 +3,7 @@
 
 % 3 by 3 version
 magic(Vars) :-
-    Vars=[A1, A2, A3, A4, A5, A6, A7, A8, A9], 
+    Vars = [A1, A2, A3, A4, A5, A6, A7, A8, A9], 
     domain(Vars,  1,  9), 
 
     all_distinct(Vars), 
@@ -37,5 +37,7 @@ magic(N, Vars) :-
 
 restrictions([]).
 restrictions([H|T]) :-
-    aux(),
+    checkLine(H),
     restrictions(T).
+
+checkLine([H|T])
