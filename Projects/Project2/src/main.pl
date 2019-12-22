@@ -3,24 +3,26 @@
 :-[board].
 
 
-initialBoard1(
-    [   
+
+
+main(N, L):- 
+    L =  [   
         A, B, C, D, E, 
-        E, F, G, G, H, 
+        Z, F, Y, G, H, 
         I, X, J, L, M,  
         N, O, P, Q, R,  
         S, T, U, V, W
-    ]
-).
-
-main(N, L):- 
+    ],
     Limit is N*N,
     %reset_timer,
-    %initialBoard1(L),
-    length(L, Limit),
+    E #= 1,
+    T #= 4, 
+    N #= 0,
+    %length(L, Limit),
     domain(L, 0, 4), 
 
     sumLines(L, N, 0), 
+    sumColumns(L, N, 0),
 
     labeling([], L), write(L).
     % print_time,
@@ -35,11 +37,6 @@ sumLines(Vars, LineSize, Line):-
     TotalSumLetters #= 1,
     LineAux is Line + 1,
     sumLines(Vars, LineSize, LineAux).
-
-
-if_then_else(P, Q, R): P , ! , Q.
-if_then_else(P, Q, R): R.
-
 
 sumLineDots(_, LineSize,  LineSize, _ , 0).
 sumLineDots(Vars, LineSize, Counter, Line, TotalSum):-
@@ -60,11 +57,14 @@ sumLineLetters(Vars, LineSize, Counter, Line, TotalSum):-
     TotalSum #= TotalSumAux + B.
 
 
-sumColumns(_, ColumnSize, ColumnSize, _).
-sumColumns(Vars, ColumnSize, Column, TotalSum):-
-    sumColumn(Vars, ColumnSize, 0, Column, TotalSum),
+sumColumns(_, ColumnSize, ColumnSize).
+sumColumns(Vars, ColumnSize, Column):-
+    sumColumnDots(Vars, ColumnSize, 0, Column, TotalSumDots),
+    TotalSumDots #= 2,
+    sumColumnLetters(Vars, ColumnSize, 0, Column, TotalSumLetters),
+    TotalSumLetters #= 1,
     ColumnAux is Column + 1,
-    sumColumns(Vars, ColumnSize, ColumnAux, TotalSum).
+    sumColumns(Vars, ColumnSize, ColumnAux).
 
 
 sumColumnDots(_, ColumnSize,  ColumnSize, _ , 0).
@@ -73,7 +73,17 @@ sumColumnDots(Vars, ColumnSize, Counter, Column, TotalSum):-
     sumColumnDots(Vars, ColumnSize, CounterAux, Column, TotalSumAux),
     Index is ColumnSize * Counter + Column,
     nth0(Index, Vars, Elem),
-    Elem #= 4 -> TotalSum #= TotalSumAux + 1 ; TotalSum #= TotalSumAux.
+    Elem #= 4 #<=> B,
+    TotalSum #= TotalSumAux + B.
+
+sumColumnLetters(_, ColumnSize,  ColumnSize, _ , 0).
+sumColumnLetters(Vars, ColumnSize, Counter, Column, TotalSum):-
+    CounterAux is Counter + 1,
+    sumColumnLetters(Vars, ColumnSize, CounterAux, Column, TotalSumAux),
+    Index is ColumnSize * Counter + Column,
+    nth0(Index, Vars, Elem),
+    (Elem #> 0 #/\  Elem #< 4) #<=> B,
+    TotalSum #= TotalSumAux + B.
 
 
 
