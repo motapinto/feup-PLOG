@@ -10,18 +10,18 @@ kid(Products) :-
     % potatoes is more expensive than tuna
     Potatoes #> Tuna,
     % tuna is more expensive than rice
-    Tune #> Rice,
+    Tuna #> Rice,
     % spaghetti is the chepeast product
     Spaghetti #< Rice,
     % two of the products are multiples of 10 cents
     (
-        (A #= Rice mod 10, B #= Potatoes mod 10, A == 0, B == 0) ; 
-        (A #= Rice mod 10, B #= Spaghetti mod 10, A == 0, B == 0) ; 
-        (A #= Rice mod 10, B #= Tuna mod 10, A == 0, B == 0) ; 
+        (A #= Rice mod 10, B #= Potatoes mod 10, A #= 0, B #= 0) ; 
+        (A #= Rice mod 10, B #= Spaghetti mod 10, A #= 0, B #= 0) ; 
+        (A #= Rice mod 10, B #= Tuna mod 10, A #= 0, B #= 0) ; 
 
-        (A #= Potatoes mod 10, B #= Spaghetti mod 10, A == 0, B == 0) ; 
-        (A #= Potatoes mod 10, B #= Tuna mod 10, A == 0, B == 0) ; 
+        (A #= Potatoes mod 10, B #= Spaghetti mod 10, A #= 0, B #= 0) ; 
+        (A #= Potatoes mod 10, B #= Tuna mod 10, A #= 0, B #= 0) ; 
 
-        (A #= Spaghetti mod 10, B #= Tuna mod 10, A == 0, B == 0)
+        (A #= Spaghetti mod 10, B #= Tuna mod 10, A #= 0, B #= 0)
     ),
     labeling([], Products).

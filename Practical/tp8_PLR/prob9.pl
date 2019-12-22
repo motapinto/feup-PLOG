@@ -10,7 +10,6 @@ zero(Vars):-
     nozeros(B), !,
     labeling([], Vars).
 
-
 nozeros(X):-
     X #< 10; 
     (   
