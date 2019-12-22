@@ -1,12 +1,17 @@
 :-use_module(library(clpfd)).
+:-use_module(library(lists)).
 
-zeros(A, B):-
-    A = [A1, A2, A3, A4, A5],
-    B = [B1, B1, B3, B4, B5],
-    domain(A, 1, 9),
-    domain(B, 1, 9),
-    NA #= (A1*10000 + A2*1000 + A3*100 + A4*10 + A5),  
-    NB #= (B1*10000 + B2*1000 + B3*100 + B4*10 + B5),
-    NA * NB #= 1000000000,
-    labeling([], A),
-    labeling([], B).
+zeros(Numbers):-
+    Numbers = [A, B],
+    domain(Numbers, 0, 1000000000),
+    A * B #= 1000000000,
+    B #> A
+    labeling([], Numbers).
+    %restrictions(A, B).
+
+restrictions(0, 0).
+restrictions(A, B) :-
+    Aaux is A mod 10,
+    Baux is B mod 10,
+    Aaux > 0, Baux > 0,
+    restrictions(Aaux, Baux).

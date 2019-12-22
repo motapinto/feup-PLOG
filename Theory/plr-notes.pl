@@ -44,12 +44,11 @@
 
 % maximum/2 -> nao pode ser materializada
 % minimum/2 -> nao pode ser materializada
-    % domain([A,B], 1, 10), ´
+    % domain([A,B], 1, 10),
     % C in 5..15,minimum(C, [A,B]).
     % A in 5..10,B in 5..10,C in 5..10
 
 % scalar_product/3 scalar_product/4 scalar_product/5 scalar_product/6 ?
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Preposicional [X #= 4 #\/ Y #= 6]
