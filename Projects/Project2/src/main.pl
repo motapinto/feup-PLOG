@@ -13,6 +13,7 @@ main(N, Vars):-
     sumColumns(Vars, N, 0),
     A2 #= A3 + 3,
     print(Vars), nl, 
+    print('Cheguei ao labelling'),
     labeling([], Vars), 
     once(printBoard(Vars, N)).
 
@@ -30,7 +31,7 @@ sumLineDots(Vars, LineSize, Counter, Line, TotalSum):-
     CounterAux is Counter + 1,
     sumLineDots(Vars, LineSize, CounterAux, Line, TotalSumAux),
     Index is LineSize * Line + Counter,
-    %\isMidpoint(Vars, Index, LineSize),
+    isMidpoint(Vars, Index, LineSize),
     nth0(Index, Vars, Elem),
     Elem #= 4 #<=> B,
     TotalSum #= TotalSumAux + B.
@@ -95,12 +96,11 @@ isMidpoint(Vars, Index, N) :-
             % Checks if all 4 are dots
             piece(Dot, '*'),
             piece(Mid, 'M'),
-            (Left #= Dot #/\ Right #= Dot #/\ Up #= Dot #/\ Down #= Dot) #<=> B,
-            B #= 1,
-            Elem #= Mid
+            (Left #= Dot #/\ Right #= Dot #/\ Up #= Dot #/\ Down #= Dot) #<=> Elem #= Mid
+    
         );
         ( 
-            true
+           true
         ).
 
 
