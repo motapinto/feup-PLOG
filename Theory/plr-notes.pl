@@ -90,25 +90,56 @@
     % X#\=Y, X#=1.
         % X = 1, Y = 3, Z = 3
 
-% assignment/2 assignment/3 (atribui valores a uma lista) ?
+% ????????????????????????????????????????????????????????????
+% assignment/2 assignment/3 (Xi=j sse Yj=i) -> o valor na pos 4 é 1 o valor na pos 1 é 2 o valor na pos 5 é 3, ...
+    % assignment([4,1,5,2,3], Ys).
+    % Ys = [2,4,5,1,3]
 
-% sorting/3 ? 
+% sorting/3 [sorting(+Xs, +Ps, +Ys)]
+    % length(Ys, 5), 
+    % length(Ps, 5), 
+    % sorting([2,7,9,1,3], Ps, Ys).
+    % Ps= [2,4,5,1,3], -> corresponde a posicao de cada elemento da lista inicial
+    % Ys= [1,2,3,7,9]
 
-% keysorting/2 keysorting/3
+% keysorting/2 keysorting/3 -> [[key, value],...] -> ordena por key
+    % _List = [[1,5], [6,5], [4,3], [7,9], [4,5], [7,8], [3,3]],
+    % length(_List, _Len), length(Sorted, _Len), 
+    % maplist(ln2, Sorted), length(P, _Len), 
+    % keysorting(_List, Sorted, [permutation(P)] ). ou keysorting(_List, Sorted)
+        % Sorted = [[1,5],[3,3],[4,3],[4,5],[6,5],[7,9],[7,8]]
+        % P = [1,7,3,5,2,4,6] ? ;
 
-% lex_chain/1 lex_chain/2
+% ????????????????????????????????????????????????????????????
+% lex_chain/1 lex_chain/2 [lex_chain(+Vectors, +Options)]
 
-% element/3
+% element/3 [element(?X, +List, ?Y)] (Corresponde a nth1/3da library(lists))
+    % element(X, [10,20,30], Y),
+    % labeling([],[Y]).
+        % X = 1, Y = 10 ? ;
+        % X = 2, Y = 20 ? ;
+        % X = 3, Y = 30 ? ;
 
-%relation/3
+%relation/3 -> deprecated
 
-% table/2 table/3
+% table/2 table/3 [table(+Tuples, +Extension, +Options)]- arranja tuplos que verifquem a condicao (faz combinacoes com tuplos iguais caso C=1)
+    % table([[A,B],[B,C]],[[1,1],[1,2],[2,10],[2,20]]).
+        % A = 1, 
+        % B in 1..2, 
+        % C in (1..2)\/{10}\/{20}
 
-% case/3 case/4
+% case/3 case/4 -> maquina de estados -> ver slides
 
-% circuit/1 circuit/2
-
-% cumulative/1 cumulative/2
+% circuit/1 circuit/2 -> circuito Hamiltoniano caminho que passa em todos os nos e volta a origem sem repetir
+% circuit(+Succ, +Pred) -> se Pred = [5,1,2,3,4] quer dizer que o elem1 recebe uma setinha do elem5, ..
+    % length(L,5), 
+    % domain(L,1,5), 
+    % circuit(L), 
+    % labeling([],L).
+        % L = [2,3,4,5,1] ? ; -> 1->2 2->3 3->4 4->5 5->1
+        % L = [2,3,5,1,4] ? ; -> 1->2 2->3 3->5 4->1 5->4
+ 
+% cumulative/1 cumulative/2 -> ver exemplo slide
 
 % cumulatives/2 cumulatives/3
 
@@ -116,13 +147,16 @@
 
 % bin_packing/2
 
-% disjoint1/1 disjoint1/2
+% disjoint1/1 disjoint1/2 -> exemplo esquerda do slide:
+    % line(A,5) -> A é o valor de x num referencial 1d em x e 5 é o tamanho da linha
+    % A tem de vir antes que C
+    % As linhas nao se podem sobrepor
 
-% disjoint2/1 disjoint2/2
+% disjoint2/1 disjoint2/2 -> igual mas em vez de ser com linhas e com retangulos
 
 % geost/2 geost/2 geost/3
 
-% value_precede_chain/2 value_precede_chain/3
+% value_precede_chain/2 value_precede_chain/3 -> remove simetrias
 
 % automaton/3 automaton/8 automaton/9
 
@@ -130,7 +164,7 @@
 % Enumeração
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% indomain/1
+% in domain/1
 
 % labeling/2
 
