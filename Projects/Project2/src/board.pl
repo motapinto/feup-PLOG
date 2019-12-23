@@ -21,29 +21,30 @@ printBoardDown :-
     write('|_ _ _|_ _ _|_ _ _|_ _ _|_ _ _|\n').
 
 
-printBoardLine([], _):-
+printBoardLine(_, N, _, N):-
     write('\n').
-printBoardLine([H|T], Line) :-
-    piece(H, S),
+printBoardLine(Vars, N, Line, Counter) :-
+    Index is N * Line + Counter,
+    nth0(Index, Vars, Element),
+    piece(Element, S),
     write(S),
     write('  |  '),
-    printBoardLine(T, Line).
+    CounterAux is Counter + 1,
+    printBoardLine(Vars, N,  Line, CounterAux).
     
 %   To print the contents of a line
-printBoardBody([], 5).
-printBoardBody([H|T], Line) :-    
-   
+printBoardBody(_, N, N).
+printBoardBody(Vars, N, Line) :-    
     %   Iterates through the rows of the board
     write('|     |     |     |     |     |\n'),
     write('|  '),
-    printBoardLine(H, Line),
+    printBoardLine(Vars, N, Line, 0),
     printBoardDown,
-
     LineI is Line+1,
-    printBoardBody(T, LineI).
+    printBoardBody(Vars, N, LineI).
 
 
 %   Prints the board sent in variable X
-printBoard(X):-
+printBoard(X , N):-
     printBoardTop,
-    printBoardBody(X, 1).
+    printBoardBody(X, N, 0).
