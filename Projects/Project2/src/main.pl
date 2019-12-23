@@ -11,7 +11,8 @@ main(N, Vars):-
     domain(Vars,  0,  4),
     sumLines(Vars, N, 0), 
     sumColumns(Vars, N, 0),
-    print(Vars),
+    A2 #= A3 + 3,
+    print(Vars), nl, 
     labeling([], Vars), 
     once(printBoard(Vars, N)).
 
@@ -29,7 +30,7 @@ sumLineDots(Vars, LineSize, Counter, Line, TotalSum):-
     CounterAux is Counter + 1,
     sumLineDots(Vars, LineSize, CounterAux, Line, TotalSumAux),
     Index is LineSize * Line + Counter,
-    isMidpoint(Vars, Index, LineSize),
+    %\isMidpoint(Vars, Index, LineSize),
     nth0(Index, Vars, Elem),
     Elem #= 4 #<=> B,
     TotalSum #= TotalSumAux + B.
@@ -78,33 +79,29 @@ sumColumnLetters(Vars, ColumnSize, Counter, Column, TotalSum):-
 % N     -> Size of board (N*N)
 isMidpoint(Vars, Index, N) :-
 
-
-    piece(Mid, 'M'),
-    nth0(Index, Vars, Elem),
-    Elem #= Mid.
-    
-    % checkLimits(Index, N) ->
-    %     % Get's all 4 adjacent positions
-    %     (
-    %         % RightPos is Index + 1,
-    %         % LeftPos is Index - 1, 
-    %         % UpPos is Index - N,
-    %         % DownPos is Index + N,
-    %         % % Get's all 4 adjacent elements
-    %         % nth0(RightPos, Vars, Right),
-    %         % nth0(LeftPos, Vars, Left),
-    %         % nth0(UpPos, Vars, Up),
-    %         % nth0(DownPos, Vars, Down),
-    %         % % Checks if all 4 are dots
-    %         % piece(Dot, '*'),
-    %         % %B #= Left #= Dot #/\ Right #= Dot #/\ Up #= Dot #/\ Down #= Dot,
-    %         piece(Mid, 'M'),
-    %         nth0(Index, Vars, Elem),
-    %         Elem #= Mid
-    %     );
-    %     ( 
-    %         true
-    %     ).
+    checkLimits(Index, N) ->
+        % Get's all 4 adjacent positions
+        (
+            RightPos is Index + 1,
+            LeftPos is Index - 1, 
+            UpPos is Index - N,
+            DownPos is Index + N,
+            % Get's all 4 adjacent elements
+            nth0(RightPos, Vars, Right),
+            nth0(LeftPos, Vars, Left),
+            nth0(UpPos, Vars, Up),
+            nth0(DownPos, Vars, Down),
+            nth0(Index, Vars, Elem),
+            % Checks if all 4 are dots
+            piece(Dot, '*'),
+            piece(Mid, 'M'),
+            (Left #= Dot #/\ Right #= Dot #/\ Up #= Dot #/\ Down #= Dot) #<=> B,
+            B #= 1,
+            Elem #= Mid
+        );
+        ( 
+            true
+        ).
 
 
 checkLimits(Index, N):-
