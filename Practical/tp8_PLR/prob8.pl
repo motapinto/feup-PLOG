@@ -1,11 +1,14 @@
 :-use_module(library(clpfd)).
 
 kid(Products) :-
-    Products = [Rice, Potatoes, Spaghetti, Tuna],
-    domain(Products, 0, 711),
+    ProductsI = [RiceI, PotatoesI, SpaghettiI, TunaI, RiceD, PotatoesD, SpaghettiD, TunaD],
+    
+
+
+    domain(ProductsI, 0, 711),
     % the sum of all products is the same as the multiplication of all products
     Rice * Potatoes * Spaghetti * Tuna #= 711,
-    % the sum of all products is 7.11€
+    % % the sum of all products is 7.11€
     Rice + Potatoes + Spaghetti + Tuna #= 711,
     % potatoes is more expensive than tuna
     Potatoes #> Tuna,
