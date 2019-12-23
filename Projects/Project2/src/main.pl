@@ -11,6 +11,7 @@ main(N, Vars):-
     domain(Vars,  0,  4),
     sumLines(Vars, N, 0), 
     sumColumns(Vars, N, 0),
+    print(Vars),
     labeling([], Vars), 
     once(printBoard(Vars, N)).
 
