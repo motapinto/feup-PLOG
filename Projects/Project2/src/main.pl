@@ -100,7 +100,8 @@ isMidpoint(Vars, Index, N) :-
     
         );
         ( 
-           true
+            nth0(Index, Vars, Elem),
+            (Elem #= 0 #\/ Elem #= 1 #\/ Elem #= 3 #\/ Elem #= 4) #<=> 1
         ).
 
 
