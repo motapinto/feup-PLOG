@@ -16,22 +16,76 @@ clear_console(N):-
 	N1 is N-1,
 	clear_console(N1).
 
-hasNoLeftDot(Index, Vars, N) :-
-	% Left index cannot be a dot
+if_then_else(P, Q, R):- P, !, Q.
+if_then_else(P, Q, R):- R.
+
+
+
+hasLeftDot(Index, Vars, N) :-
+	
 	IndexN is Index - 1,
+	
+	IndexN >= 0,
+	Col is IndexN mod N,
+	Col >= 0,
+	
 	piece(Dot, '*'),
 	nth0(IndexN, Vars, Elem),
-	Elem \= Dot,
-	% Checks if has reached end of column
-	Col is Index mod N,
-	End is N - 1;
-	Index == End -> true ; hasLeftDot(IndexN, Vars).
+	if_then_else(
+		Elem #\ Dot,
+		hasLeftDot(IndexN, Vars, N),
+		true
+	).
+	
 
-hasNoRightDot(Index, Vars) :-
-	limitCol(Index, Vars),
-	nth0(Index, Vars, Elem),
+
+hasRightDot(Index, Vars, N) :-
+	
 	IndexN is Index + 1,
-	hasLeftDot(IndexN, Vars).
+
+	LineNumber is Index // N,
+	LastColumn is N * LineNumber + N - 1,
+	IndexN =< LastColumn,
+
+	piece(Dot, '*'),
+	nth0(IndexN, Vars, Elem),
+	if_then_else(
+		Elem #\ Dot,
+		hasRightDot(IndexN, Vars, N),
+		true
+	).
+
+
+hasTopDot(Index, Vars, N) :-
+
+	IndexN is Index - N,
+	
+	IndexN >= 0,
+	
+	piece(Dot, '*'),
+	nth0(IndexN, Vars, Elem),
+	
+	if_then_else(
+		Elem #\ Dot,
+		hasTopDot(IndexN, Vars, N),
+		true
+	).
+
+hasBottomDot(Index, Vars, N) :-
+	
+	IndexN is Index + N,
+	
+	Limit is N*N,
+	IndexN =<  Limit,
+	
+	piece(Dot, '*'),
+	nth0(IndexN, Vars, Elem),
+	
+	if_then_else(
+		Elem \= Dot,
+		hasBottomDot(IndexN, Vars, N),
+		true
+	).
 
 checkLimits(Index, N):-
 	limitLine(Index, N),
