@@ -12,8 +12,6 @@ main(N, Vars):-
     sumLines(Vars, N, 0), 
     sumColumns(Vars, N, 0),
     A2 #= A3 + 3,
-    print(Vars), nl, 
-    print('Cheguei ao labelling'),
     labeling([], Vars), 
     once(printBoard(Vars, N)).
 
@@ -46,7 +44,6 @@ sumLineLetters(Vars, LineSize, Counter, Line, TotalSum):-
     (Elem #> 0 #/\  Elem #< 4) #<=> B,
     TotalSum #= TotalSumAux + B.
 
-
 sumColumns(_, ColumnSize, ColumnSize).
 sumColumns(Vars, ColumnSize, Column):-
     sumColumnDots(Vars, ColumnSize, 0, Column, TotalSumDots),
@@ -55,7 +52,6 @@ sumColumns(Vars, ColumnSize, Column):-
     TotalSumLetters #= 1,
     ColumnAux is Column + 1,
     sumColumns(Vars, ColumnSize, ColumnAux).
-
 
 sumColumnDots(_, ColumnSize,  ColumnSize, _ , 0).
 sumColumnDots(Vars, ColumnSize, Counter, Column, TotalSum):-
@@ -79,7 +75,6 @@ sumColumnLetters(Vars, ColumnSize, Counter, Column, TotalSum):-
 % Index -> checks if index is midpoint
 % N     -> Size of board (N*N)
 isMidpoint(Vars, Index, N) :-
-
     checkLimits(Index, N) ->
         % Get's all 4 adjacent positions
         (
@@ -104,21 +99,29 @@ isMidpoint(Vars, Index, N) :-
             (Elem #= 0 #\/ Elem #= 1 #\/ Elem #= 3 #\/ Elem #= 4) #<=> 1
         ).
 
-
-checkLimits(Index, N):-
-
-       % checking if index on the first line
-       Index >= N,
-
-       % checking if index is on the last line
-       Limit is N*N,
-       Index <  Limit - N,
-   
-       % checking if index is on the first column
-       FirstColumnn is Index mod N,
-       FirstColumnn \= 0,
-   
-       % checking if index is on the last column
-       LineNumber is Index // N,
-       LastColumn is N * LineNumber + N - 1,
-       Index \= LastColumn.
+% Vars  -> Board
+% Index -> checks if index is midpoint
+% N     -> Size of board (N*N)
+isNpoint(Vars, Index, N) :-
+    checkLimits(Index, N) ->
+        (
+            % Get's all 4 adjacent positions
+            RightPos is Index + 1,
+            LeftPos is Index - 1, 
+            UpPos is Index - N,
+            DownPos is Index + N,
+            % Get's all 4 adjacent elements
+            nth0(RightPos, Vars, Right),
+            nth0(LeftPos, Vars, Left),
+            nth0(UpPos, Vars, Up),
+            nth0(DownPos, Vars, Down),
+            nth0(Index, Vars, Elem),
+            % Checks if all 4 are dots
+            piece(Dot, '*'),
+            piece(Mid, 'M'),
+            (Left #= Dot #/\ Right #= Dot #/\ Up #= Dot #/\ Down #= Dot) #<=> Elem #= Mid
+        );
+        ( 
+            nth0(Index, Vars, Elem),
+            (Elem #= 0 #\/ Elem #= 1 #\/ Elem #= 2 #\/ Elem #= 4) #<=> 1
+        ).
