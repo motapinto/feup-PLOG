@@ -71,26 +71,13 @@ sumColumnLetters(Vars, ColumnSize, Counter, Column, TotalSum):-
     (Elem #> 0 #/\  Elem #< 4) #<=> B,
     TotalSum #= TotalSumAux + B.
 
-
+% Vars  -> Board
+% Index -> index of element
+% N     -> Size of board (N*N)
 checkingLetter(Vars, Index, N):-
-    nth0(Index, Vars, Elem),
-    if_then_else(
-        (
-            hasTopDot(Index, Vars, N),
-            hasBottomDot(Index, Vars, N),
-            hasLeftDot(Index, Vars, N),
-            hasRightDot(Index, Vars, N)
-        ),
-        (
-            piece(Mid, 'M'),
-            piece(LettN, 'N'),
-            (Elem #= Mid #\/ Elem #= LettN) #<=> 1   
-        ),
-        (
-            piece(LettO, 'O'),
-            Elem #= LettO
-        )  
-    ).
+    isMidpoint(Vars, Index, N).
+    % isNpoint(Vars, Index, N),
+    % isOpoint(Vars, Index, N).
 
 % Vars  -> Board
 % Index -> checks if index is midpoint
@@ -109,11 +96,12 @@ isMidpoint(Vars, Index, N) :-
             nth0(UpPos, Vars, Up),
             nth0(DownPos, Vars, Down),
             nth0(Index, Vars, Elem),
-            % Checks if all 4 are dots
-            piece(Dot, '*'),
-            piece(Mid, 'M'),
-            (Left #= Dot #/\ Right #= Dot #/\ Up #= Dot #/\ Down #= Dot) #<=> Elem #= Mid
-    
+
+            hasTopDot(Index, Vars, N, Btop),
+            hasBottomDot(Index, Vars, N, Bbottom),
+            hasRightDot(Index, Vars, N, Bright),
+            hasLeftDot(Index, Vars, N, Bleft),
+            (Btop #= 1 #/\ Bbottom #= 1 #/\ Bright #= 1 #/\ Bleft #= 1) #<=> Elem #= Mid
         );
         ( 
             nth0(Index, Vars, Elem),

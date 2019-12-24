@@ -7,21 +7,19 @@ print_time :-
 	TS is ((T // 10) * 10) / 1000,
     nl, write('Solution Time: '), write(TS), write('s'), nl, nl.
 
-clear:- 
+clear :-
     clear_console(100), !.
 
 clear_console(0).
-clear_console(N):-
+clear_console(N) :-
 	nl,
 	N1 is N-1,
 	clear_console(N1).
 
-if_then_else(P, Q, R):- P, !, Q.
-if_then_else(P, Q, R):- R.
+if_then_else(P, Q, R) :- P, !, Q.
+if_then_else(P, Q, R) :- R.
 
-
-
-hasLeftDot(Index, Vars, N) :-
+hasLeftDot(Index, Vars, N, B) :-
 	
 	IndexN is Index - 1,
 	
@@ -31,12 +29,13 @@ hasLeftDot(Index, Vars, N) :-
 	
 	piece(Dot, '*'),
 	nth0(IndexN, Vars, Elem),
-	
-	Elem #\ Dot #=> hasLeftDot(IndexN, Vars, N).
-	
 
+	(
+		Elem #= Dot #=> B #= 1 ; B #= 0
+		hasLeftDot(IndexN, Vars, N, B)
+	).
 
-hasRightDot(Index, Vars, N) :-
+hasRightDot(Index, Vars, N, B) :-
 	
 	IndexN is Index + 1,
 
@@ -49,19 +48,14 @@ hasRightDot(Index, Vars, N) :-
 
 	Elem #\ Dot #=> hasRightDot(IndexN, Vars, N).
 
-
-hasTopDot(Index, Vars, N) :-
-
+hasTopDot(Index, Vars, N, B) :-
 	IndexN is Index - N,
-	
 	IndexN >= 0,
-	
 	piece(Dot, '*'),
 	nth0(IndexN, Vars, Elem),
-	
 	Elem #\ Dot #=> hasTopDot(IndexN, Vars, N).
 
-hasBottomDot(Index, Vars, N) :-
+hasBottomDot(Index, Vars, N, B) :-
 	
 	IndexN is Index + N,
 	
