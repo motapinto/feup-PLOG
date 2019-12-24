@@ -29,7 +29,7 @@ sumLineDots(Vars, LineSize, Counter, Line, TotalSum):-
     CounterAux is Counter + 1,
     sumLineDots(Vars, LineSize, CounterAux, Line, TotalSumAux),
     Index is LineSize * Line + Counter,
-    checkingLetter(Vars, Index, N),
+    checkingLetter(Vars, Index, LineSize),
     nth0(Index, Vars, Elem),
     Elem #= 4 #<=> B,
     TotalSum #= TotalSumAux + B.
@@ -79,20 +79,18 @@ checkingLetter(Vars, Index, N):-
             hasTopDot(Index, Vars, N),
             hasBottomDot(Index, Vars, N),
             hasLeftDot(Index, Vars, N),
-            hasBottomDot(Index, Vars, N)
+            hasRightDot(Index, Vars, N)
         ),
         (
-            Piece(Mid, 'M'),
-            Piece(LettN, 'N'),
+            piece(Mid, 'M'),
+            piece(LettN, 'N'),
             (Elem #= Mid #\/ Elem #= LettN) #<=> 1   
-        )
+        ),
         (
-            Piece(LettO, 'O'),
+            piece(LettO, 'O'),
             Elem #= LettO
-        )
-
-        
-    )
+        )  
+    ).
 
 % Vars  -> Board
 % Index -> checks if index is midpoint

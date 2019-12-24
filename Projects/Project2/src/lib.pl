@@ -31,11 +31,8 @@ hasLeftDot(Index, Vars, N) :-
 	
 	piece(Dot, '*'),
 	nth0(IndexN, Vars, Elem),
-	if_then_else(
-		Elem #\ Dot,
-		hasLeftDot(IndexN, Vars, N),
-		true
-	).
+	
+	Elem #\ Dot #=> hasLeftDot(IndexN, Vars, N).
 	
 
 
@@ -49,11 +46,8 @@ hasRightDot(Index, Vars, N) :-
 
 	piece(Dot, '*'),
 	nth0(IndexN, Vars, Elem),
-	if_then_else(
-		Elem #\ Dot,
-		hasRightDot(IndexN, Vars, N),
-		true
-	).
+
+	Elem #\ Dot #=> hasRightDot(IndexN, Vars, N).
 
 
 hasTopDot(Index, Vars, N) :-
@@ -65,11 +59,7 @@ hasTopDot(Index, Vars, N) :-
 	piece(Dot, '*'),
 	nth0(IndexN, Vars, Elem),
 	
-	if_then_else(
-		Elem #\ Dot,
-		hasTopDot(IndexN, Vars, N),
-		true
-	).
+	Elem #\ Dot #=> hasTopDot(IndexN, Vars, N).
 
 hasBottomDot(Index, Vars, N) :-
 	
@@ -81,11 +71,7 @@ hasBottomDot(Index, Vars, N) :-
 	piece(Dot, '*'),
 	nth0(IndexN, Vars, Elem),
 	
-	if_then_else(
-		Elem \= Dot,
-		hasBottomDot(IndexN, Vars, N),
-		true
-	).
+	Elem #\ Dot #=> hasBottomDot(IndexN, Vars, N).
 
 checkLimits(Index, N):-
 	limitLine(Index, N),
