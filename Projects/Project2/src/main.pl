@@ -4,7 +4,13 @@
 :-[lib].
 
 main(N, Vars):- 
-    Vars = [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25], 
+    Vars = [
+        A0, 4, A2, A3, A4, 
+        4, A6, 4, A8, A9, 
+        A10, 4, A12, A13, A14, 
+        A15, A16, A17, A18, A19, 
+        A20, A21, A22, A23, A24
+    ], 
     % %reset_timer,
     % Limit is N*N,
     % length(Vars, Limit),
@@ -96,12 +102,18 @@ isMidpoint(Vars, Index, N) :-
             nth0(UpPos, Vars, Up),
             nth0(DownPos, Vars, Down),
             nth0(Index, Vars, Elem),
+            piece(Mid, 'M'),
+            Line is Index // N,
+            LengthLeft is Index - Line * N, 
+            LengthTop = Line,
+            LengthBottom is N - LengthTop - 1,
+            LengthRight is N - LengthLeft - 1,
 
-            hasTopDot(Index, Vars, N, Btop),
-            hasBottomDot(Index, Vars, N, Bbottom),
-            hasRightDot(Index, Vars, N, Bright),
-            hasLeftDot(Index, Vars, N, Bleft),
-            (Btop #= 1 #/\ Bbottom #= 1 #/\ Bright #= 1 #/\ Bleft #= 1) #<=> Elem #= Mid
+            hasTopDot(UpPos, Vars, N, 0, LengthTop, DotSumTop),
+            hasBottomDot(DownPos, Vars, N, 0,  LengthBottom, DotSumBottom),
+            hasRightDot(RightPos, Vars, N,  0, LengthRight, DotSumRight),
+            hasLeftDot(LeftPos, Vars, N,  0, LengthLeft, DotSumLeft),
+            (DotSumTop #= 1 #/\ DotSumBottom #= 1 #/\ DotSumRight #= 1 #/\ DotSumLeft #= 1) #<=> Elem #= Mid
         );
         ( 
             nth0(Index, Vars, Elem),

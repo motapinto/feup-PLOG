@@ -19,54 +19,66 @@ clear_console(N) :-
 if_then_else(P, Q, R) :- P, !, Q.
 if_then_else(P, Q, R) :- R.
 
-hasLeftDot(Index, Vars, N, B) :-
+
+hasLeftDot(Index, Vars, N, Lenght, Lenght, 0).
+hasLeftDot(Index, Vars, N, Counter, Lenght, DotSum) :-
+
+	ConterAux is Counter + 1,
+	hasLeftDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
 	
-	IndexN is Index - 1,
-	
-	IndexN >= 0,
-	Col is IndexN mod N,
-	Col >= 0,
-	
-	piece(Dot, '*'),
+	IndexN is Index - Counter,
+
+	IndexN is Index + N * Counter,
 	nth0(IndexN, Vars, Elem),
-
-	(
-		Elem #= Dot #=> B #= 1 ; B #= 0
-		hasLeftDot(IndexN, Vars, N, B)
-	).
-
-hasRightDot(Index, Vars, N, B) :-
-	
-	IndexN is Index + 1,
-
-	LineNumber is Index // N,
-	LastColumn is N * LineNumber + N - 1,
-	IndexN =< LastColumn,
-
 	piece(Dot, '*'),
+	Elem #= Dot #<=> B,
+	DotSum #= DotSumAux + B.
+
+hasRightDot(Index, Vars, N, Lenght, Lenght, 0).
+hasRightDot(Index, Vars, N, Counter, Lenght, DotSum) :-
+
+	ConterAux is Counter + 1,
+	hasRightDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
+	
+	IndexN is Index + Counter,
+
+	IndexN is Index + N * Counter,
 	nth0(IndexN, Vars, Elem),
-
-	Elem #\ Dot #=> hasRightDot(IndexN, Vars, N).
-
-hasTopDot(Index, Vars, N, B) :-
-	IndexN is Index - N,
-	IndexN >= 0,
 	piece(Dot, '*'),
-	nth0(IndexN, Vars, Elem),
-	Elem #\ Dot #=> hasTopDot(IndexN, Vars, N).
+	Elem #= Dot #<=> B,
+	DotSum #= DotSumAux + B.	
+	
 
-hasBottomDot(Index, Vars, N, B) :-
+hasTopDot(Index, Vars, N, Lenght, Lenght, 0, -1).
+hasTopDot(Index, Vars, N, Counter, Lenght, DotSum, Pos) :-
+
+	ConterAux is Counter + 1,
+	hasTopDot(Index, Vars, N, CounterAux, Lenght, DotSumAux, PosAux),
 	
-	IndexN is Index + N,
-	
-	Limit is N*N,
-	IndexN =<  Limit,
-	
+	IndexN is Index - N * Counter,
+	nth0(IndexN, Vars, Elem),
 	piece(Dot, '*'),
-	nth0(IndexN, Vars, Elem),
-	
-	Elem #\ Dot #=> hasBottomDot(IndexN, Vars, N).
+	Elem #= Dot #<=> B,
+	DotSum #= DotSumAux + B, 
+	PosAux #= -1 #=> 
+		(
+			B #= 1 #=> Pos #= Index,
+			B #= 0 #=> Pos #= PosAux 
+		)
 
+
+hasBottomDot(Index, Vars, N, Lenght, Lenght, 0).
+hasBottomDot(Index, Vars, N, Counter, Lenght, DotSum) :-
+
+	ConterAux is Counter + 1,
+	hasBottomDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
+	
+	IndexN is Index + N * Counter,
+	nth0(IndexN, Vars, Elem),
+	piece(Dot, '*'),
+	Elem #= Dot #<=> B,
+	DotSum #= DotSumAux + B.	
+	
 checkLimits(Index, N):-
 	limitLine(Index, N),
 	limitCol(Index, N).
