@@ -113,6 +113,12 @@ isMidpoint(Vars, Index, N) :-
             hasBottomDot(DownPos, Vars, N, 0,  LengthBottom, DotSumBottom),
             hasRightDot(RightPos, Vars, N,  0, LengthRight, DotSumRight),
             hasLeftDot(LeftPos, Vars, N,  0, LengthLeft, DotSumLeft),
+
+
+        distanceTopDot(UpPos, Vars, N, 0, LengthTop, Distance),
+            
+
+
             (DotSumTop #= 1 #/\ DotSumBottom #= 1 #/\ DotSumRight #= 1 #/\ DotSumLeft #= 1) #<=> Elem #= Mid
         );
         ( 

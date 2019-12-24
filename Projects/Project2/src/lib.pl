@@ -49,22 +49,17 @@ hasRightDot(Index, Vars, N, Counter, Lenght, DotSum) :-
 	DotSum #= DotSumAux + B.	
 	
 
-hasTopDot(Index, Vars, N, Lenght, Lenght, 0, -1).
-hasTopDot(Index, Vars, N, Counter, Lenght, DotSum, Pos) :-
+hasTopDot(Index, Vars, N, Lenght, Lenght, 0).
+hasTopDot(Index, Vars, N, Counter, Lenght, DotSum) :-
 
 	ConterAux is Counter + 1,
-	hasTopDot(Index, Vars, N, CounterAux, Lenght, DotSumAux, PosAux),
+	hasTopDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
 	
 	IndexN is Index - N * Counter,
 	nth0(IndexN, Vars, Elem),
 	piece(Dot, '*'),
 	Elem #= Dot #<=> B,
-	DotSum #= DotSumAux + B, 
-	PosAux #= -1 #=> 
-		(
-			B #= 1 #=> Pos #= Index,
-			B #= 0 #=> Pos #= PosAux 
-		)
+	DotSum #= DotSumAux + B.
 
 
 hasBottomDot(Index, Vars, N, Lenght, Lenght, 0).
@@ -98,3 +93,20 @@ limitLine(Index, N) :-
 	% checking if index is on the last line
 	Limit is N*N,
 	Index <  Limit - N.
+
+
+distanceTopDot(Index, Vars, N, Lenght, Lenght, Distance):-
+	Distance #= -1.
+
+distanceTopDot(Index, Vars, N, Counter, Lenght, Distance) :-
+
+	
+	IndexN is Index - N * Counter,
+	nth0(IndexN, Vars, Elem),
+	piece(Dot, '*'),
+
+	DistanceAux is Index - IndexN,
+
+	Elem #= Dot #=> Distance #= DistanceAux,
+	Elem #\ Dot #=> distanceTopDot(Index, Vars, N, CounterAux, Lenght, Distance).
+
