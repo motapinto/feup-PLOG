@@ -1,14 +1,14 @@
 :-use_module(library(clpfd)).
 
-reset_timer :- statistics(walltime, _).
-
+reset_timer :- 
+	statistics(walltime, _).
 print_time :-
 	statistics(walltime,[_,T]),
 	TS is ((T // 10) * 10) / 1000,
     nl, write('Solution Time: '), write(TS), write('s'), nl, nl.
 
-clear :-
-    clear_console(100), !.
+clear :- 
+	clear_console(100), !.
 
 clear_console(0).
 clear_console(N) :-
@@ -16,6 +16,9 @@ clear_console(N) :-
 	N1 is N-1,
 	clear_console(N1).
 
+generate_board(N, Board) :-
+    length(Row, N),
+    findall(Row, between(1, N, _), Board).
 
 hasLeftDot(Index, Vars, N, Lenght, Lenght, 0).
 hasLeftDot(Index, Vars, N, Counter, Lenght, DotSum) :-
@@ -117,7 +120,14 @@ iterateColumnMidPoint(Index, IndexLeft, IndexRight, N, Vars, CounterVertical, Ve
 
 
 	
-	
+printMatrixes(Board, TransposeBoard, OneListBoard):-
+    print('Board normal -->'), nl,
+    print(Board),
+    print('Board transposto -->'), nl,
+    print(TransposeBoard), nl,
+    print('Board one List -->'), nl,
+    print(OneListBoard), nl.
+
 	
 	
 
