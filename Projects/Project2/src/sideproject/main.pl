@@ -20,14 +20,15 @@ printMatrixes(Board, TransposeBoard, OneListBoard):-
 
 main(N, Board):- 
 
-    generate_board(N, Board),
-    % Board = [
-    %     [A0, A1, A2, A3, A4], 
-    %     [A5, 4, A7, A8, A9], 
-    %     [A10, A11, A12, A13, A14], 
-    %     [A15, A16, A17, A18, A19], 
-    %     [A20, A21, A22, A23, A24]
-    % ], 
+    %generate_board(N, Board),
+    
+    Board = [
+        [A0, 4, A2, A3, A4], 
+        [4, A6, 4, A8, A9], 
+        [A10, 4, A12, A13, A14], 
+        [A15, A16, A17, A18, A19], 
+        [A20, A21, A22, A23, A24]
+    ], 
     % a passar tudo só para uma lista
     append(Board, OneListBoard),
     transpose(Board, TransposeBoard),
@@ -59,7 +60,7 @@ restrictBorders(OneListBoard, Index, Limit, N):-
     nth0(Index, OneListBoard, Elem),
     if_then_else(
         checkLimits(Index, N),
-        true,
+        isMidpoint(Vars, Index, N),
         Elem #= 4 #\/ Elem #= 1 #\/ Elem #= 0
     ),
     IndexAux is Index + 1,
@@ -138,26 +139,18 @@ isOpoint(Vars, Index, N):-
 % Index -> checks if index is midpoint
 % N     -> Size of board (N*N)
 isMidpoint(Vars, Index, N) :-
-    checkLimits(Index, N) ->
-        % Get's all 4 adjacent positions
-        (
-            
-            Line is Index // N,
-            LengthLeft is Index - Line * N + 1, 
-            LengthTop is Line + 1,
-            LengthBottom is N - LengthTop + 1,
-            LengthRight is N - LengthLeft + 1,
 
+    Line is Index // N,
+    LengthLeft is Index - Line * N + 1, 
+    LengthTop is Line + 1,
+    LengthBottom is N - LengthTop + 1,
+    LengthRight is N - LengthLeft + 1,
+    LengthHorizontal = [LengthLeft, LengthRight],
+    LengthVertical =  [LengthTop, LengthBottom],
 
-            LengthHorizontal = [LengthLeft, LengthRight],
-            LengthVertical =  [LengthTop, LengthBottom],
+    minimum(MinHorizontal, LengthHorizontal),
+    minimum(MinVertical, LengthVertical),
+    checkMidPoint(Index, N, Vars, 1, MinHorizontal, MinVertical).
 
-            minimum(MinHorizontal, LengthHorizontal),
-            minimum(MinVertical, LengthVertical),
-            checkMidPoint(Index, N, Vars, 1, MinHorizontal, MinVertical)
-        );
-        ( 
-            nth0(Index, Vars, Elem),
-            (Elem #= 0 #\/ Elem #= 1 #\/ Elem #= 3 #\/ Elem #= 4) #<=> 1
-        ).
+       
 
