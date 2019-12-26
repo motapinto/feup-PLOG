@@ -1,9 +1,3 @@
-
-if_then_else(P, Q, R):- P, !, Q.
-if_then_else(P, Q, R):- R.
-
-
-
 %   Conversion between what is stored and displayed     
 piece(0, ' ').
 piece(1, 'O').
@@ -12,8 +6,7 @@ piece(3, 'N').
 piece(4, '*').
 piece(_, ' ').
 
-%   To print the top part of the board
-
+%   Prints the top part of the board
 printBoardTop(0):-
     write('\n').
 printBoardTop(Counter) :-
@@ -21,7 +14,7 @@ printBoardTop(Counter) :-
     CounterAux is Counter - 1,
     printBoardTop(CounterAux).
 
-
+%   Prints the down part of the board
 printBoardDown(0):-
     write('|\n').
 printBoardDown(Counter) :-
@@ -29,6 +22,7 @@ printBoardDown(Counter) :-
     CounterAux is Counter - 1,
     printBoardDown(CounterAux).
 
+%  Prints the rows of the board
 printBarsRows(0):-
     write('|\n').
 printBarsRows(Counter):-    
@@ -36,6 +30,7 @@ printBarsRows(Counter):-
     CounterAux is Counter - 1,
     printBarsRows(CounterAux).
 
+%  Prints each line of the board line content
 printBoardLine([], _):-
     write('\n').
 printBoardLine([H|T], Line) :-
@@ -44,7 +39,7 @@ printBoardLine([H|T], Line) :-
     write('  |  '),
     printBoardLine(T, Line).
     
-%   To print the contents of a line
+%   Prints the contents of a line
 printBoardBody([], N, N).
 printBoardBody([H|T], N, Line) :-    
    
@@ -56,7 +51,6 @@ printBoardBody([H|T], N, Line) :-
 
     LineI is Line+1,
     printBoardBody(T, N, LineI).
-
 
 %   Prints the board sent in variable X
 printBoard(X, N):-

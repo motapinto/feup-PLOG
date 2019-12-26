@@ -1,4 +1,3 @@
-:-use_module(library(clpfd)).
 :-use_module(library(lists)).
 :-use_module(library(between)).
 :-[board].
@@ -52,13 +51,13 @@ main(N, Board):-
     % dar print do board, Atenção da print de uma lista de listas
     once(printBoard(Board, N)).
 
-restrictionsPos(_, _, _, Limit, Limit, N).
+restrictionsPos(_, _, _, Limit, Limit, _).
 restrictionsPos(OneListBoard, Board, TransposeBoard, Index, Limit, N):-
     nth0(Index, OneListBoard, Elem),
     
-    %restrictMidpoint(OneListBoard, Index, N, Elem),
-    %restrictNpoint()
     restrictOpoint(Board, TransposeBoard, Index, N, Elem),
+    % restrictNpoint(Board, TransposeBoard, Index, N, Elem),
+    restrictMpoint(Board, TransposeBoard, Index, N, Elem),
     
     IndexAux is Index + 1,
     restrictionsPos(OneListBoard,  Board, TransposeBoard, IndexAux, Limit, N).
@@ -99,11 +98,61 @@ iterateListOfListsForDomain([H | T]):-
     iterateListOfListsForDomain(T).
 
 
+% All restrictions aplied to M point
+restrictMpoint(Board, TransposeBoard, Index, N, Elem):-
+    Line is Index // N,
+    Column is Index - Line * N,
+    ColumnNext is Column + 1,
+    LineNext is Line + 1,
+    nth0(Line, Board, LineList),
+    nth0(Column, TransposeBoard, ColumnList),
+    
+    LengthLeft is Index - Line * N, 
+    LengthTop is Line,
+    LengthBottom is N - LengthTop - 1,
+    LengthRight is N - LengthLeft - 1,
 
+    getSublist(LineList, LineListLeft, 0, 0, LengthLeft),
+    getSublist(LineList, LineListRight, ColumnNext, 0, LengthRight),
+    getSublist(ColumnList, ColumnListTop, 0, 0, LengthTop),
+    getSublist(ColumnList, ColumnListBottom, LineNext, 0, LengthBottom),
+    
+    countingNumberDots(LineListLeft, LineLeftCounterDots),
+    countingNumberDots(LineListRight, LineRightCounterDots),
+    countingNumberDots(ColumnListTop, ColumnTopCounterDots),
+    countingNumberDots(ColumnListBottom, ColumnBottomCounterDots),
+    
+    piece(LetterM, 'M'),
+    (LineRightCounterDots #= 1 #/\ LineLeftCounterDots #= 1 #/\ ColumnTopCounterDots #= 1 #/\ ColumnBottomCounterDots #= 1) #<=> Elem #= LetterM.
 
-printCounter(A, B) :-
-    print(A), nl, nl, print(B), nl, nl.
+% All restrictions aplied to N point
+restrictNpoint(Board, TransposeBoard, Index, N, Elem):-
+    Line is Index // N,
+    Column is Index - Line * N,
+    ColumnNext is Column + 1,
+    LineNext is Line + 1,
+    nth0(Line, Board, LineList),
+    nth0(Column, TransposeBoard, ColumnList),
+    
+    LengthLeft is Index - Line * N, 
+    LengthTop is Line,
+    LengthBottom is N - LengthTop - 1,
+    LengthRight is N - LengthLeft - 1,
 
+    getSublist(LineList, LineListLeft, 0, 0, LengthLeft),
+    getSublist(LineList, LineListRight, ColumnNext, 0, LengthRight),
+    getSublist(ColumnList, ColumnListTop, 0, 0, LengthTop),
+    getSublist(ColumnList, ColumnListBottom, LineNext, 0, LengthBottom),
+    
+    countingNumberDots(LineListLeft, LineLeftCounterDots),
+    countingNumberDots(LineListRight, LineRightCounterDots),
+    countingNumberDots(ColumnListTop, ColumnTopCounterDots),
+    countingNumberDots(ColumnListBottom, ColumnBottomCounterDots),
+    
+    piece(LetterN, 'N'),
+    (LineRightCounterDots #= 1 #/\ LineLeftCounterDots #= 1 #/\ ColumnTopCounterDots #= 1 #/\ ColumnBottomCounterDots #= 1) #<=> Elem #= LetterN.
+
+% All restrictions aplied to O point
 restrictOpoint(Board, TransposeBoard, Index, N, Elem):-
     Line is Index // N,
     Column is Index - Line * N,
@@ -117,70 +166,15 @@ restrictOpoint(Board, TransposeBoard, Index, N, Elem):-
     LengthBottom is N - LengthTop - 1,
     LengthRight is N - LengthLeft - 1,
 
-    sublistOur(LineList, LineListLeft, 0, 0, LengthLeft),
-    sublistOur(LineList, LineListRight, ColumnNext, 0, LengthRight),
-    sublistOur(ColumnList, ColumnListTop, 0, 0, LengthTop),
-    sublistOur(ColumnList, ColumnListBottom, LineNext, 0, LengthBottom),
+    getSublist(LineList, LineListLeft, 0, 0, LengthLeft),
+    getSublist(LineList, LineListRight, ColumnNext, 0, LengthRight),
+    getSublist(ColumnList, ColumnListTop, 0, 0, LengthTop),
+    getSublist(ColumnList, ColumnListBottom, LineNext, 0, LengthBottom),
     
     countingNumberDots(LineListLeft, LineLeftCounterDots),
     countingNumberDots(LineListRight, LineRightCounterDots),
     countingNumberDots(ColumnListTop, ColumnTopCounterDots),
     countingNumberDots(ColumnListBottom, ColumnBottomCounterDots),
-
-    % print(LineListLeft), nl,
-    % print(LineListRight), nl,
-    % print(ColumnListTop), nl,
-    % print(ColumnListBottom), nl,
-    % nl,nl,nl,
-    % print(LineLeftCounterDots), nl,
-    % print(LineRightCounterDots), nl,
-    % print(ColumnTopCounterDots), nl,
-    % print(ColumnBottomCounterDots), nl,
     
     piece(LetterO, 'O'),
     ((LineRightCounterDots #= 2 #\/ LineLeftCounterDots #= 2) #/\ (ColumnTopCounterDots #= 2 #\/ ColumnBottomCounterDots #= 2)) #<=> Elem #= LetterO.
-
-sublistOur(List, [], Start, Length, Length).
-sublistOur(List,[H | T], Start, CounterLenght, Length):-
-    Index is Start +  CounterLenght,
-    CounterLenghtAux is CounterLenght + 1,
-    sublistOur(List, T, Start, CounterLenghtAux, Length),
-    nth0(Index, List, Elem),
-    H = Elem.
-
-
-
-
-
-
-
-
-
-% Vars  -> Board
-% Index -> checks if index is midpoint
-% N     -> Size of board (N*N)
-isMidpoint(Vars, Index, N) :-
-    checkLimits(Index, N) ->
-        % Get's all 4 adjacent positions
-        (
-            
-            Line is Index // N,
-            LengthLeft is Index - Line * N + 1, 
-            LengthTop is Line + 1,
-            LengthBottom is N - LengthTop + 1,
-            LengthRight is N - LengthLeft + 1,
-
-
-            LengthHorizontal = [LengthLeft, LengthRight],
-            LengthVertical =  [LengthTop, LengthBottom],
-
-            minimum(MinHorizontal, LengthHorizontal),
-            minimum(MinVertical, LengthVertical),
-            checkMidPoint(Index, N, Vars, 1, MinHorizontal, MinVertical)         
-        );
-        ( 
-            nth0(Index, Vars, Elem),
-            (Elem #= 0 #\/ Elem #= 1 #\/ Elem #= 3 #\/ Elem #= 4) #<=> 1
-        ).
-       
-
