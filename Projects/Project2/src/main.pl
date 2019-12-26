@@ -6,18 +6,21 @@
 main(N, Vars):- 
     Vars = [
         A0, 4, A2, A3, A4, 
-        4, A6, 4, A8, A9, 
-        A10, 4, A12, A13, A14, 
+        A5, A6, A7, A8, A9, 
+        4, A11, 4, A13, A14, 
         A15, A16, A17, A18, A19, 
-        A20, A21, A22, A23, A24
+        A20, 4, A22, A23, A24
     ], 
     % %reset_timer,
     % Limit is N*N,
     % length(Vars, Limit),
+    
     domain(Vars,  0,  4),
-    sumLines(Vars, N, 0), 
+    sumLines(Vars, N, 0),
+    print('Depois do sum lines'), nl, 
+    print(Vars),
+    nl,
     sumColumns(Vars, N, 0),
-    A2 #= A3 + 3,
     labeling([], Vars), 
     once(printBoard(Vars, N)).
 
@@ -77,13 +80,37 @@ sumColumnLetters(Vars, ColumnSize, Counter, Column, TotalSum):-
     (Elem #> 0 #/\  Elem #< 4) #<=> B,
     TotalSum #= TotalSumAux + B.
 
+
+
 % Vars  -> Board
 % Index -> index of element
 % N     -> Size of board (N*N)
 checkingLetter(Vars, Index, N):-
+    isOpoint(Vars, Index, N),
     isMidpoint(Vars, Index, N).
-    % isNpoint(Vars, Index, N),
     % isOpoint(Vars, Index, N).
+
+
+isOpoint(Vars, Index, N):-
+
+    RightPos is Index + 1,
+    LeftPos is Index - 1, 
+    UpPos is Index - N,
+    DownPos is Index + N,
+    piece(LetterO, 'O'),
+    Line is Index // N,
+    LengthLeft is Index - Line * N, 
+    LengthTop = Line,
+    LengthBottom is N - LengthTop - 1,
+    LengthRight is N - LengthLeft - 1,
+        
+    hasTopDot(UpPos, Vars, N, 0, LengthTop, DotSumTop),
+    hasBottomDot(DownPos, Vars, N, 0,  LengthBottom, DotSumBottom),
+    hasRightDot(RightPos, Vars, N,  0, LengthRight, DotSumRight),
+    hasLeftDot(LeftPos, Vars, N,  0, LengthLeft, DotSumLeft),
+    nth0(Index, Vars, Elem),
+
+    ((DotSumLeft #= 2 #/\ DotSumTop #= 2) #\/ (DotSumLeft #= 2 #/\ DotSumBottom #= 2) #\/ (DotSumRight #= 2 #/\ DotSumTop #= 2) #\/ (DotSumRight #= 2 #/\ DotSumBottom #= 2)) #<=> Elem #= LetterO.
 
 % Vars  -> Board
 % Index -> checks if index is midpoint
@@ -92,34 +119,20 @@ isMidpoint(Vars, Index, N) :-
     checkLimits(Index, N) ->
         % Get's all 4 adjacent positions
         (
-            RightPos is Index + 1,
-            LeftPos is Index - 1, 
-            UpPos is Index - N,
-            DownPos is Index + N,
-            % Get's all 4 adjacent elements
-            nth0(RightPos, Vars, Right),
-            nth0(LeftPos, Vars, Left),
-            nth0(UpPos, Vars, Up),
-            nth0(DownPos, Vars, Down),
-            nth0(Index, Vars, Elem),
-            piece(Mid, 'M'),
-            Line is Index // N,
-            LengthLeft is Index - Line * N, 
-            LengthTop = Line,
-            LengthBottom is N - LengthTop - 1,
-            LengthRight is N - LengthLeft - 1,
-
-            hasTopDot(UpPos, Vars, N, 0, LengthTop, DotSumTop),
-            hasBottomDot(DownPos, Vars, N, 0,  LengthBottom, DotSumBottom),
-            hasRightDot(RightPos, Vars, N,  0, LengthRight, DotSumRight),
-            hasLeftDot(LeftPos, Vars, N,  0, LengthLeft, DotSumLeft),
-
-
-        distanceTopDot(UpPos, Vars, N, 0, LengthTop, Distance),
             
+            Line is Index // N,
+            LengthLeft is Index - Line * N + 1, 
+            LengthTop is Line + 1,
+            LengthBottom is N - LengthTop + 1,
+            LengthRight is N - LengthLeft + 1,
 
 
-            (DotSumTop #= 1 #/\ DotSumBottom #= 1 #/\ DotSumRight #= 1 #/\ DotSumLeft #= 1) #<=> Elem #= Mid
+            LengthHorizontal = [LengthLeft, LengthRight],
+            LengthVertical =  [LengthTop, LengthBottom],
+
+            minimum(MinHorizontal, LengthHorizontal),
+            minimum(MinVertical, LengthVertical),
+            checkMidPoint(Index, N, Vars, 1, MinHorizontal, MinVertical)
         );
         ( 
             nth0(Index, Vars, Elem),
