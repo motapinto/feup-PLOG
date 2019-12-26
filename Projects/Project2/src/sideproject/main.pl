@@ -3,11 +3,6 @@
 :-[board].
 :-[lib].
 
-%   Generates and N*N board
-generate_board(N, Board) :-
-    length(Row, N),
-    findall(Row, between(1, N, _), Board).
-
 main(N, Board):- 
     %generate_board(N, Board),
     Board = [

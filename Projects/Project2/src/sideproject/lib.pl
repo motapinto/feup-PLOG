@@ -17,22 +17,28 @@ clear_console(N) :-
 	N1 is N-1,
 	clear_console(N1).
 
-countingNumberDots(List, N) :-
-    automaton(List, _, List,
-    [source(s), sink(s)],
-    [
-        arc(s,0,s),
-        arc(s,1,s),
-        arc(s,2,s),
-        arc(s,3,s),  
-		arc(s,4,s,[C+1])
-	],
-    [C],[0],[N]).
+%   Generates an N*N board
+generate_board(N, Board) :-
+    length(Row, N),
+    findall(Row, between(1, N, _), Board).
 
-getSublist(_, [], _, Length, Length).
-getSublist(List,[H | T], Start, CounterLenght, Length) :-
-    Index is Start +  CounterLenght,
-    CounterLenghtAux is CounterLenght + 1,
-    sublistOur(List, T, Start, CounterLenghtAux, Length),
-    nth0(Index, List, Elem),
-    H = Elem.	
+
+% countingNumberDots(List, N) :-
+%     automaton(List, _, List,
+%     [source(s), sink(s)],
+%     [
+%         arc(s,0,s),
+%         arc(s,1,s),
+%         arc(s,2,s),
+%         arc(s,3,s),  
+% 		arc(s,4,s,[C+1])
+% 	],
+%     [C],[0],[N]).
+
+% getSublist(_, [], _, Length, Length).
+% getSublist(List,[H | T], Start, CounterLenght, Length) :-
+%     Index is Start +  CounterLenght,
+%     CounterLenghtAux is CounterLenght + 1,
+%     sublistOur(List, T, Start, CounterLenghtAux, Length),
+%     nth0(Index, List, Elem),
+%     H = Elem.	
