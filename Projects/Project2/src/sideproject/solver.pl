@@ -4,7 +4,7 @@
 :-[lib].
 
 main(Matrix, N) :-
-    % generate_board()
+    %generate_board(N, Matrix),
     Matrix = [
         [A0, 4, A2, A3, A4, AASD], 
         [AFGF, A6, SDF, A8, A9, AS], 
@@ -23,6 +23,8 @@ main(Matrix, N) :-
     % Restrictions for columns
     transpose(Matrix, TMatrix),
     solveMatrix(TMatrix),
+
+    !, 
     % labeling of the one list matrix
     labeling([], OneListMatrix),
     % prints the game Board
@@ -64,45 +66,50 @@ solveMatrix([H|T]) :-
     solveMatrix(T).
 
 solveLine(Line, LineLength, LineLength).
-solveLine(Line, ElemIndex, LineLength) :-
-    restrictionsMpoint(ElemIndex, Line, LineLength),
+solveLine(Line, Index, LineLength) :-
+    restrictionsMpoint(Index, Line, LineLength),
     % restrictionsNpoint(Line, ElemIndex, LineLength),
     % restrictionsOpoint(Line, ElemIndex, LineLength),
 
     % Next iteration of the line to be solved
-    NextIndex is ElemIndex + 1,
+    NextIndex is Index + 1,
     solveLine(Line, NextIndex, LineLength).
 
 %1º)posto a esqerda e ponto direita
 %2º)igual distancia
 restrictionsMpoint(Index, Line, LineLength) :-
 
+    LastIndex is LineLength - 1,
     LengthLeft is Index,
     LengthRight is LineLength - Index - 1,
     LengthHorizontal = [LengthLeft, LengthRight],
 
+    nth0(Index, Line, IndexElem),
     minimum(MinHorizontal, LengthHorizontal),
-    checkMPoint(Index, IndexElem, Line, LineLength, 1, MinHorizontal).
+    MinHorizontalAux is MinHorizontal + 1,
+
+
+    (
+        (Index > 0 , Index < LastIndex) ->
+        checkMPoint(Index, IndexElem, Line, LineLength, 1, MinHorizontalAux);
+        (
+            piece(O, 'O'),
+            piece(Dot, '*'),
+            piece(Null, ' '),
+            IndexElem #= O #\/ IndexElem #= Dot #\/ IndexElem #= Null   
+        )
+    ).
+
 
 checkMPoint(_, _, _, _, N, N).
 checkMPoint(Index, IndexElem, Line, LineLength, ElemCounter, NumberIterations):-
-    LastIndex is LineLength - 1,
-    (Index > 0 , Index < LastIndex) ->
-    (
-        IndexLeft is Index - ElemCounter,
-        IndexRight is Index + ElemCounter,
-        nth0(IndexLeft, Line, Left),
-        nth0(IndexRight, Line, Right),
-        piece(Dot, '*'),
-        piece(M, '*'),
-        (Left #= Dot #/\ Right #= Dot) #=> IndexElem #= M,
-
-        ElemCounterNext is ElemCounter + 1,
-        checkMPoint(Index, IndexElem, Line, LineLength, ElemCounterNext, NumberIterations)
-    );
-    (
-        piece(O, 'O'),
-        piece(Dot, '*'),
-        piece(Null, ' '),
-        IndexElem #= O #\/ IndexElem #= Dot #\/ IndexElem #= Null
-    ).
+    
+    IndexLeft is Index - ElemCounter,
+    IndexRight is Index + ElemCounter,
+    nth0(IndexLeft, Line, Left),
+    nth0(IndexRight, Line, Right),
+    piece(Dot, '*'),
+    piece(M, 'M'),
+    (Left #= Dot #/\ Right #= Dot) #\/  (Left #= Dot #/\ Right #= Dot) #=> IndexElem #= M,
+    ElemCounterNext is ElemCounter + 1,
+    checkMPoint(Index, IndexElem, Line, LineLength, ElemCounterNext, NumberIterations).
