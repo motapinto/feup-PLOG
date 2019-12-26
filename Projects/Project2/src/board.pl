@@ -1,9 +1,9 @@
 :- (dynamic initialBoard/1).
 
-if_then_else(R, P, Q) :-
-    R, !, P.
-if_then_else(R, P, Q) :-
-    Q.
+% if_then_else(R, P, Q) :-
+%     R, !, P.
+% if_then_else(R, P, Q) :-
+%     Q.
 
 
 %   Conversion between what is stored and displayed     
