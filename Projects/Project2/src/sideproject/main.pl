@@ -3,54 +3,33 @@
 :-[board].
 :-[lib].
 
+%   Generates and N*N board
 generate_board(N, Board) :-
     length(Row, N),
     findall(Row, between(1, N, _), Board).
 
-
-printMatrixes(Board, TransposeBoard, OneListBoard):-
-    print('Board normal -->'), nl,
-    print(Board),
-    print('Board transposto -->'), nl,
-    print(TransposeBoard), nl,
-    print('Board one List -->'), nl,
-    print(OneListBoard), nl.
-
-
 main(N, Board):- 
 
     generate_board(N, Board),
-    % Board = [
-    %     [A0, A1, A2, A3, A4], 
-    %     [A5, A6, A7, A8, A9], 
-    %     [A10, A11, A12, A13, A14], 
-    %     [A15, A16, A17, A18, A19], 
-    %     [A20, A21, A22, A23, A24]
-    % ],
-    % a passar tudo só para uma lista
+    % Stores the one list board and the transpose board
     append(Board, OneListBoard),
     transpose(Board, TransposeBoard),
 
-    % impor as restrições para a linhas e para as colunas
-    % colunas e linhas só podem ter no máximo uma letra e dois pontos
+    % domain and minor restrictions -> vertically and horizontally 2 dots and 1 letter
     iterateListOfListsForDomain(Board),
     iterateListOfListsForDomain(TransposeBoard), 
 
-    % restringe, nas bordas do board só pode estar a letra O ou um ponto
+    % restrictions for M,N and O points
     Limit is N * N,
     restrictionsPos(OneListBoard , Board, TransposeBoard, 0, Limit, N),
 
-    %tentar fazer as restirçoes mid, O, N
-   
-
-    % fazer o labeling de só uma lista
+    % labeling of the one list board
     labeling([], OneListBoard),
     
-    printMatrixes(Board, TransposeBoard, OneListBoard),
-
-    % dar print do board, Atenção da print de uma lista de listas
+    % prints the game Board
     once(printBoard(Board, N)).
 
+%   Restricts all indexes of the board based on the rules of the game
 restrictionsPos(_, _, _, Limit, Limit, _).
 restrictionsPos(OneListBoard, Board, TransposeBoard, Index, Limit, N):-
     nth0(Index, OneListBoard, Elem),
@@ -62,11 +41,11 @@ restrictionsPos(OneListBoard, Board, TransposeBoard, Index, Limit, N):-
     IndexAux is Index + 1,
     restrictionsPos(OneListBoard,  Board, TransposeBoard, IndexAux, Limit, N).
 
+%   Checks if there is 2 points or 1 letter horizontally and vertically
 iterateListOfListsForDomain([]).
-iterateListOfListsForDomain([H | T]):-
+iterateListOfListsForDomain([H|T]):-
     domain(H, 0, 4), 
-    automaton(H, 
-        [source(n1), sink(n6)], 
+    automaton(H, [source(n1), sink(n6)], 
         [
             arc(n1, 0, n1),
             arc(n1, 4, n2),
