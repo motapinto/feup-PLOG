@@ -35,10 +35,4 @@ getSublist(List,[H | T], Start, CounterLenght, Length) :-
     CounterLenghtAux is CounterLenght + 1,
     sublistOur(List, T, Start, CounterLenghtAux, Length),
     nth0(Index, List, Elem),
-    H = Elem.
-	
-	
-	
-
-
-	
+    H = Elem.	
