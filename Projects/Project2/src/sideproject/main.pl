@@ -20,20 +20,17 @@ printMatrixes(Board, TransposeBoard, OneListBoard):-
 
 main(N, Board):- 
 
-    %generate_board(N, Board),
-    
-    Board = [
-        [A0, A1, A2, A3, A4], 
-        [A5, A6, A7, A8, A9], 
-        [A10, A11, A12, A13, A14], 
-        [A15, A16, A17, A18, A19], 
-        [A20, A21, A22, A23, A24]
-    ],
+    generate_board(N, Board),
+    % Board = [
+    %     [A0, A1, A2, A3, A4], 
+    %     [A5, A6, A7, A8, A9], 
+    %     [A10, A11, A12, A13, A14], 
+    %     [A15, A16, A17, A18, A19], 
+    %     [A20, A21, A22, A23, A24]
+    % ],
     % a passar tudo só para uma lista
     append(Board, OneListBoard),
     transpose(Board, TransposeBoard),
-    
-    printMatrixes(Board, TransposeBoard, OneListBoard),
 
     % impor as restrições para a linhas e para as colunas
     % colunas e linhas só podem ter no máximo uma letra e dois pontos
@@ -58,10 +55,11 @@ main(N, Board):-
 restrictionsPos(_, _, _, Limit, Limit, N).
 restrictionsPos(OneListBoard, Board, TransposeBoard, Index, Limit, N):-
     nth0(Index, OneListBoard, Elem),
+    
     %restrictMidpoint(OneListBoard, Index, N, Elem),
-    %restrictOpoint(Board, TransposeBoard, Index, N, Elem),
-    restrictOpoint(OneListBoard, Index, N),
     %restrictNpoint()
+    restrictOpoint(Board, TransposeBoard, Index, N, Elem),
+    
     IndexAux is Index + 1,
     restrictionsPos(OneListBoard,  Board, TransposeBoard, IndexAux, Limit, N).
 
@@ -100,66 +98,47 @@ iterateListOfListsForDomain([H | T]):-
     
     iterateListOfListsForDomain(T).
 
-% Vars  -> Board
-% Index -> index of element
-% N     -> Size of board (N*N)
-checkingLetter(Vars, Index, N):-
-    isOpoint(Vars, Index, N),
-    isMidpoint(Vars, Index, N).
-    % isOpoint(Vars, Index, N).
-
-countingNumberDots(List, N):-
-    automaton(List, _, List,
-    [source(s), sink(s)],
-    [
-        arc(s,0,s),
-        arc(s,1,s),
-        arc(s,2,s),
-        arc(s,3,s),  
-        arc(s,4,s,[C+1])
-    ],
-    [C],[0],[N]).
 
 
 
-% Para efeitos de teste
-% restrictOpoint(Board,  Index, N):-
-
-%     transpose(Board, TransposeBoard),
-
+printCounter(A, B) :-
+    print(A), nl, nl, print(B), nl, nl.
 
 restrictOpoint(Board, TransposeBoard, Index, N, Elem):-
-    
     Line is Index // N,
     Column is Index - Line * N,
+    ColumnNext is Column + 1,
+    LineNext is Line + 1,
     nth0(Line, Board, LineList),
     nth0(Column, TransposeBoard, ColumnList),
     
-    LengthLeft is Index - Line * N + 1, 
-    LengthTop is Line + 1,
-    LengthBottom is N - LengthTop + 1,
-    LengthRight is N - LengthLeft + 1,
-    
-    sublistOur(LineList, LineListLeft, 0, 0,),
-    sublistOur(LineList, LineListRight, ColumnAux, 0, ),
-    sublistOur(ColumnList, ColumnListTop, 0, 0, Line),
-    sublistOur(ColumnList, ColumnListBottom, LineAux, N),
+    LengthLeft is Index - Line * N, 
+    LengthTop is Line,
+    LengthBottom is N - LengthTop - 1,
+    LengthRight is N - LengthLeft - 1,
 
+    sublistOur(LineList, LineListLeft, 0, 0, LengthLeft),
+    sublistOur(LineList, LineListRight, ColumnNext, 0, LengthRight),
+    sublistOur(ColumnList, ColumnListTop, 0, 0, LengthTop),
+    sublistOur(ColumnList, ColumnListBottom, LineNext, 0, LengthBottom),
     
     countingNumberDots(LineListLeft, LineLeftCounterDots),
     countingNumberDots(LineListRight, LineRightCounterDots),
     countingNumberDots(ColumnListTop, ColumnTopCounterDots),
-    countingNumberDots(ColumnListBottom, ColumnBottomCounterDots).
+    countingNumberDots(ColumnListBottom, ColumnBottomCounterDots),
 
-    print(LineLeftCounterDots),
-    print(LineRightCounterDots),
-    print(ColumnTopCounterDots),
-    print(ColumnBottomCounterDots).
+    % print(LineListLeft), nl,
+    % print(LineListRight), nl,
+    % print(ColumnListTop), nl,
+    % print(ColumnListBottom), nl,
+    % nl,nl,nl,
+    % print(LineLeftCounterDots), nl,
+    % print(LineRightCounterDots), nl,
+    % print(ColumnTopCounterDots), nl,
+    % print(ColumnBottomCounterDots), nl,
     
     piece(LetterO, 'O'),
-    ((LineLeftCounterDots #= 0 #\/ LineRightCounterDots #= 0) #/\ (ColumnTopCounterDots #= 0 #\/ ColumnBottomCounterDots #= 0)) #<=> Elem #= LetterO.
-
-
+    ((LineRightCounterDots #= 2 #\/ LineLeftCounterDots #= 2) #/\ (ColumnTopCounterDots #= 2 #\/ ColumnBottomCounterDots #= 2)) #<=> Elem #= LetterO.
 
 sublistOur(List, [], Start, Length, Length).
 sublistOur(List,[H | T], Start, CounterLenght, Length):-

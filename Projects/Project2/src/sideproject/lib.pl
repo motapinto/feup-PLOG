@@ -16,56 +16,68 @@ clear_console(N) :-
 	N1 is N-1,
 	clear_console(N1).
 
+countingNumberDots(List, N):-
+    automaton(List, _, List,
+    [source(s), sink(s)],
+    [
+        arc(s,0,s),
+        arc(s,1,s),
+        arc(s,2,s),
+        arc(s,3,s),  
+		arc(s,4,s,[C+1])
+	],
+    [C],[0],[N]).
 
-hasLeftDot(Index, Vars, N, Lenght, Lenght, 0).
-hasLeftDot(Index, Vars, N, Counter, Lenght, DotSum) :-
 
-	ConterAux is Counter + 1,
-	hasLeftDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
+% hasLeftDot(Index, Vars, N, Lenght, Lenght, 0).
+% hasLeftDot(Index, Vars, N, Counter, Lenght, DotSum) :-
+
+% 	ConterAux is Counter + 1,
+% 	hasLeftDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
 	
-	IndexN is Index - Counter,
-	nth0(IndexN, Vars, Elem),
-	piece(Dot, '*'),
-	Elem #= Dot #<=> B,
-	DotSum #= DotSumAux + B.
+% 	IndexN is Index - Counter,
+% 	nth0(IndexN, Vars, Elem),
+% 	piece(Dot, '*'),
+% 	Elem #= Dot #<=> B,
+% 	DotSum #= DotSumAux + B.
 
-hasRightDot(Index, Vars, N, Lenght, Lenght, 0).
-hasRightDot(Index, Vars, N, Counter, Lenght, DotSum) :-
+% hasRightDot(Index, Vars, N, Lenght, Lenght, 0).
+% hasRightDot(Index, Vars, N, Counter, Lenght, DotSum) :-
 
-	ConterAux is Counter + 1,
-	hasRightDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
+% 	ConterAux is Counter + 1,
+% 	hasRightDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
 	
-	IndexN is Index + Counter,
-	nth0(IndexN, Vars, Elem),
-	piece(Dot, '*'),
-	Elem #= Dot #<=> B,
-	DotSum #= DotSumAux + B.	
+% 	IndexN is Index + Counter,
+% 	nth0(IndexN, Vars, Elem),
+% 	piece(Dot, '*'),
+% 	Elem #= Dot #<=> B,
+% 	DotSum #= DotSumAux + B.	
 	
 
-hasTopDot(Index, Vars, N, Lenght, Lenght, 0).
-hasTopDot(Index, Vars, N, Counter, Lenght, DotSum) :-
+% hasTopDot(Index, Vars, N, Lenght, Lenght, 0).
+% hasTopDot(Index, Vars, N, Counter, Lenght, DotSum) :-
 
-	ConterAux is Counter + 1,
-	hasTopDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
+% 	ConterAux is Counter + 1,
+% 	hasTopDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
 	
-	IndexN is Index - N * Counter,
-	piece(Dot, '*'),
-	nth0(IndexN, Vars, Elem),
-	Elem #= Dot #<=> B,
-	DotSum #= DotSumAux + B.
+% 	IndexN is Index - N * Counter,
+% 	piece(Dot, '*'),
+% 	nth0(IndexN, Vars, Elem),
+% 	Elem #= Dot #<=> B,
+% 	DotSum #= DotSumAux + B.
 
 
-hasBottomDot(Index, Vars, N, Lenght, Lenght, 0).
-hasBottomDot(Index, Vars, N, Counter, Lenght, DotSum) :-
+% hasBottomDot(Index, Vars, N, Lenght, Lenght, 0).
+% hasBottomDot(Index, Vars, N, Counter, Lenght, DotSum) :-
 
-	ConterAux is Counter + 1,
-	hasBottomDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
+% 	ConterAux is Counter + 1,
+% 	hasBottomDot(Index, Vars, N, CounterAux, Lenght, DotSumAux),
 	
-	IndexN is Index + N * Counter,
-	nth0(IndexN, Vars, Elem),
-	piece(Dot, '*'),
-	Elem #= Dot #<=> B,
-	DotSum #= DotSumAux + B.	
+% 	IndexN is Index + N * Counter,
+% 	nth0(IndexN, Vars, Elem),
+% 	piece(Dot, '*'),
+% 	Elem #= Dot #<=> B,
+% 	DotSum #= DotSumAux + B.	
 	
 checkLimits(Index, N):-
 	limitLine(Index, N),
