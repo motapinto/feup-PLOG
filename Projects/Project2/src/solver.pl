@@ -4,17 +4,23 @@
 :-[lib].
 
 main(Matrix, N) :-
-    generate_board(N, Matrix),
+    % generate_board(N, Matrix),
+    Matrix = [
+        A0, A1, A2, A3, A4, 
+        A5, A6, A7, A8, A9, 
+        A10, A11, A12, A13, A14, 
+        A15, A16, A17, A18, A19, 
+        A20, A21, A22, A23, A24
+    ], 
     % Stores the matrix as 1 dimension
     append(Matrix, OneListMatrix),
     % Specifies the domain of the matrix
     domain(OneListMatrix, 0, 4), 
-    % Stores the transposed of the matrix
-    transpose(Matrix, TMatrix),
     % Restrictions for lines
-    solveMatrix(Matrix),
+    %solveMatrix(Matrix),
     % Restrictions for columns
-    solveMatrix(TMatrix),
+    %transpose(Matrix, TMatrix),
+    %solveMatrix(TMatrix),
     % labeling of the one list matrix
     labeling([], OneListMatrix),
     % prints the game Board
@@ -52,10 +58,10 @@ solveMatrix([H|T]) :-
         ]
     ),
     length(H, LineLength),
-    solveLine(H, 0, LineLength),
+    %solveLine(H, 0, LineLength),
     solveMatrix(T).
 
-solveLine(Line, LineLength, LineLength).
+solveLine(_, LineLength, LineLength).
 solveLine(Line, Index, LineLength) :-
     nth0(Index, Line, IndexElem),
     piece(M, 'M'),
@@ -63,7 +69,7 @@ solveLine(Line, Index, LineLength) :-
     piece(Dot, '*'),
     piece(Null, ' '),
 
-    mpointAutomata(Line),
+    (mpointAutomata(Line) -> true ; true),
 
     NextIndex is Index + 1,
     solveLine(Line, NextIndex, LineLength).

@@ -16,3 +16,7 @@ clear_console(N) :-
 	nl,
 	N1 is N-1,
 	clear_console(N1).
+
+generate_board(N, Board) :-
+    length(Row, N),	    length(Row, N),
+    findall(Row, between(1, N, _), Board).
