@@ -92,25 +92,23 @@ checkingLetter(Vars, Index, N):-
 
 
 isOpoint(Vars, Index, N):-
-
+    
     RightPos is Index + 1,
     LeftPos is Index - 1, 
     UpPos is Index - N,
     DownPos is Index + N,
-    piece(LetterO, 'O'),
-    Line is Index // N,
-    LengthLeft is Index - Line * N, 
-    LengthTop = Line,
-    LengthBottom is N - LengthTop - 1,
-    LengthRight is N - LengthLeft - 1,
-        
-    hasTopDot(UpPos, Vars, N, 0, LengthTop, DotSumTop),
-    hasBottomDot(DownPos, Vars, N, 0,  LengthBottom, DotSumBottom),
-    hasRightDot(RightPos, Vars, N,  0, LengthRight, DotSumRight),
-    hasLeftDot(LeftPos, Vars, N,  0, LengthLeft, DotSumLeft),
+    % Get's all 4 adjacent elements
+    nth0(RightPos, Vars, Right),
+    nth0(LeftPos, Vars, Left),
+    nth0(UpPos, Vars, Up),
+    nth0(DownPos, Vars, Down),
     nth0(Index, Vars, Elem),
 
-    ((DotSumLeft #= 2 #/\ DotSumTop #= 2) #\/ (DotSumLeft #= 2 #/\ DotSumBottom #= 2) #\/ (DotSumRight #= 2 #/\ DotSumTop #= 2) #\/ (DotSumRight #= 2 #/\ DotSumBottom #= 2)) #<=> Elem #= LetterO.
+    hasTopDot(Index, Vars, N, Btop),
+    hasBottomDot(Index, Vars, N, Bbottom),
+    hasRightDot(Index, Vars, N, Bright),
+    hasLeftDot(Index, Vars, N, Bleft),
+    (Btop #= 1 #/\ Bbottom #= 1 #/\ Bright #= 1 #/\ Bleft #= 1) #<=> Elem #= Mid
 
 % Vars  -> Board
 % Index -> checks if index is midpoint
