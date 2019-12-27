@@ -4,23 +4,23 @@
 :-[lib].
 
 main(Matrix, N) :-
-    % generate_board(N, Matrix),
-    Matrix = [
-        A0, A1, A2, A3, A4, 
-        A5, A6, A7, A8, A9, 
-        A10, A11, A12, A13, A14, 
-        A15, A16, A17, A18, A19, 
-        A20, A21, A22, A23, A24
-    ], 
+    generate_board(N, Matrix),
+    % Matrix = [
+    %     A0, A1, A2, A3, A4, 
+    %     A5, A6, A7, A8, A9, 
+    %     A10, A11, A12, A13, A14, 
+    %     A15, A16, A17, A18, A19, 
+    %     A20, A21, A22, A23, A24
+    % ], 
     % Stores the matrix as 1 dimension
     append(Matrix, OneListMatrix),
     % Specifies the domain of the matrix
     domain(OneListMatrix, 0, 4), 
     % Restrictions for lines
-    %solveMatrix(Matrix),
+    solveMatrix(Matrix),
     % Restrictions for columns
-    %transpose(Matrix, TMatrix),
-    %solveMatrix(TMatrix),
+    transpose(Matrix, TMatrix),
+    solveMatrix(TMatrix),
     % labeling of the one list matrix
     labeling([], OneListMatrix),
     % prints the game Board
@@ -58,78 +58,60 @@ solveMatrix([H|T]) :-
         ]
     ),
     length(H, LineLength),
-    %solveLine(H, 0, LineLength),
+    solveLine(H, 0, LineLength),
     solveMatrix(T).
 
 solveLine(_, LineLength, LineLength).
 solveLine(Line, Index, LineLength) :-
     nth0(Index, Line, IndexElem),
     piece(M, 'M'),
+    piece(N, 'N'),
     piece(O, 'O'),
     piece(Dot, '*'),
     piece(Null, ' '),
 
-    (mpointAutomata(Line) -> true ; true),
+    allPointsAutomata(Line),
 
     NextIndex is Index + 1,
     solveLine(Line, NextIndex, LineLength).
 
-% The automaton for the M point
-mpointAutomata(Line) :-
-    automaton(Line, _, Line, [source(s), sink(s3)],
+% Automaton for M,N and O points
+allPointsAutomata(Line) :-
+    automaton(Line, _, Line, [source(s), sink(s3), sink(o2)],
         [
             arc(s, 0, s),
+            arc(s, 1, o3),
             arc(s, 4, s1),
             
             arc(s1, 0, s1, [C+1]),
             arc(s1, 2, s2),
+            %arc(s1, 3, s4),
+            %arc(s1, 4, o1),
 
             arc(s2, 0, s2, [C-1]),
             arc(s2, 4, s3),
 
-            arc(s3, 0, s3)
+            arc(o1, 0, o1),
+            arc(o1, 1, o2),
+
+            arc(o3, 0, o3),
+            arc(o3, 4, o4),
+
+            arc(o4, 0, o4),
+            arc(o4, 4, o2),
+
+            arc(s4, 0, s4),
+            arc(s4, 4, s3)
         ],
         [C], [0], [N]
-    ),
-    N #= 0.
-% The automaton fot the N point
-npointAutomata(Line) :-
-    automaton(Line, _, Line, [source(s), sink(s3)],
+    ).
+
+aux(Day, Allowed) :-
+    automaton(Day, _, Day,
+        [source(n),sink(n)],
         [
-            arc(s, 0, s),
-            arc(s, 4, s1),
-            
-            arc(s1, 0, s1, [C+1]),
-            arc(s1, 2, s2),
-
-            arc(s2, 0, s2, [C-1]),
-            arc(s2, 4, s3),
-
-            arc(s3, 0, s3)
+         arc(n, 0, n, [0]),
+         arc(n, 1, n, (C #\ Allowed -> [C+1]))
         ],
-        [C], [0], [N]
-    ),
-    N #\ 0.
-% The automaton fot the O point
-opointAutomata(Line) :- 
-    automaton(Line, [source(n1), sink(n4)], 
-        [
-            arc(n1, 0, n1),
-            arc(n1, 1, n2),
-            arc(n1, 4, n5),
-
-            arc(n2, 0, n2),
-            arc(n2, 4, n3),
-            
-            arc(n3, 0, n3),
-            arc(n3, 4, n4),
-
-            arc(n4, 0, n4),
-
-            arc(n5, 0, n5),
-            arc(n5, 4, n6),
-
-            arc(n6, 1, n4),
-            arc(n6, 0, n6)
-        ]
+        [C],[0],[_N]
     ).
