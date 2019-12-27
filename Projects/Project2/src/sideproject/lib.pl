@@ -8,16 +8,11 @@ print_time :-
 	TS is ((T // 10) * 10) / 1000,
     nl, write('Solution Time: '), write(TS), write('s'), nl, nl.
 
-clear :-
-    clear_console(100), !.
+clear :- 
+	clear_console(100), !.
 
 clear_console(0).
 clear_console(N) :-
 	nl,
 	N1 is N-1,
 	clear_console(N1).
-
-%   Generates an N*N board
-generate_board(N, Board) :-
-    length(Row, N),
-    findall(Row, between(1, N, _), Board).
