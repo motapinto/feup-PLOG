@@ -1,12 +1,17 @@
 :-use_module(library(lists)).
 :-use_module(library(between)).
+:-use_module(library(system)).
 :-[board].
 :-[lib].
 :-[puzzles].
 
-solve(Matrix, N) :-
+solver(Matrix, N) :-
+    % Resets time for statistics
+    reset_timer,
     % Generates a board bazed on predefined boards
-    generate_board(N, Matrix),
+    generate_board(N, Selected, Matrix),
+    once(printBoard(Selected, N)),
+    sleep(2),
     % Stores the matrix as 1 dimension
     append(Matrix, OneListMatrix),
     % Specifies the domain of the matrix
@@ -19,7 +24,9 @@ solve(Matrix, N) :-
     % labeling of the one list matrix
     labeling([], OneListMatrix),
     % prints the game Board
-    once(printBoard(Matrix, N)).
+    once(printBoard(Matrix, N)),
+    % prints elapsed time
+    print_time.
 
 solveMatrix([]).
 solveMatrix([H|T]) :-
