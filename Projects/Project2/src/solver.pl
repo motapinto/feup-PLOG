@@ -4,8 +4,9 @@
 :-[lib].
 :-[puzzles].
 
-main(Matrix, N) :-
-    %generate_board(N, Matrix),
+solve(Matrix, N) :-
+    % Generates a board bazed on predefined boards
+    generate_board(N, Matrix),
     % Stores the matrix as 1 dimension
     append(Matrix, OneListMatrix),
     % Specifies the domain of the matrix
