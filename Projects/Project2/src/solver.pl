@@ -20,49 +20,22 @@ solver(Matrix, N) :-
     solveMatrix(Matrix),
     % Restrictions for columns
     transpose(Matrix, TMatrix),
-    solveMatrix(TMatrix), !,
+    solveMatrix(TMatrix), 
     % labeling of the one list matrix
-    labeling([], OneListMatrix),
+    !, labeling([], OneListMatrix),
     % prints the game Board
     once(printBoard(Matrix, N)),
     % prints elapsed time
     print_time.
 
+% Solves received matrix (solves only the lines)
 solveMatrix([]).
 solveMatrix([H|T]) :-
-    %   Checks if there is 2 points or 1 letter horizontally and vertically
-    automaton(H, [source(n1), sink(n6)], 
-        [
-            arc(n1, 0, n1),
-            arc(n1, 4, n2),
-            arc(n1, 1, n4),
-            arc(n1, 2, n4),
-            arc(n1, 3, n4),
-
-            arc(n2, 0, n2),
-            arc(n2, 4, n3),
-            arc(n2, 1, n5),
-            arc(n2, 2, n5),
-            arc(n2, 3, n5),
-
-            arc(n3, 0, n3),
-            arc(n3, 1, n6),
-            arc(n3, 2, n6),
-            arc(n3, 3, n6),
-
-            arc(n4, 0, n4),
-            arc(n4, 4, n5),
-
-            arc(n5, 0, n5),
-            arc(n5, 4, n6),
-    
-            arc(n6, 0, n6)
-        ]
-    ),
     length(H, LineLength),
     solveLine(H, 0, LineLength),
     solveMatrix(T).
 
+% Restricts each line (2 dots and 1 letter per line + restricts line)
 solveLine(_, LineLength, LineLength).
 solveLine(Line, Index, LineLength) :-
     nth0(Index, Line, IndexElem),
@@ -106,7 +79,7 @@ allPointsAutomata(Line) :-
 
             arc(s3, 0, s3),
 
-            arc(s4, 0, s4),
+            arc(s4, 0, s4, [C-1]),
             arc(s4, 4, s3)
         ],
         [C], [0], [N]
