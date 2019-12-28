@@ -75,34 +75,81 @@ solveLine(Line, Index, LineLength) :-
     NextIndex is Index + 1,
     solveLine(Line, NextIndex, LineLength).
 
+leftArcs([H | T], 0, 1):-
+
+leftArcs([H | T], NumbersOfArcsLeft, NumbersOfArcsLeft):-
+    H = arc(NumbersOfArcsLeft, 0, m1),
+    Next is NumbersOfArcsLeft + 1.
+
+leftArcs([H | T], NumbersOfArcsLeft, Counter):-
+    NextCounter is Counter + 1,
+    H = arc(Counter, 0, NextCounter),
+    leftArcs(T, NumbersOfArcsLeft, NextCounter).
+
+rightArcs([H | T], 0, 1):-
+
+rightArcs([H | T], NumbersOfArcsRight, NumbersOfArcsRight):-
+    H = arc(NumbersOfArcsRight, 0, m2).
+rightArcs([H | T], NumbersOfArcsRight, Counter):-
+    NextCounter is Counter + 1,
+    H = arc(Counter, 0, NextCounter),
+    rightArcs(T , NumbersOfArcsRight, NextCounter).
+
+
+abs(Value, Ret):-
+    Value < 0 -> Ret is Value * (-1) ; Ret is Value.
 % Automaton for M,N and O points
 allPointsAutomata(Line) :-
+    piece(Dot, '*'),
+    piece(M, 'M'),
+
+    nth1(Left, Line, Dot),
+    element(MidPoint, Line, M),
+    NumbersOfArcsLeftAux is MidPoint - Left - 1,
+
+
+    abs(NumbersOfArcsLeftAux, NumbersOfArcsLeft),
+
+    leftArcs(ArcsLeft, NumbersOfArcsLeft, 0),
+    NumbersOfArcsRight is NumbersOfArcsLeft * 2,
+    CounterRight is NumbersOfArcsLeft + 1,
+
+    rightArcs(ArcsRight, NumbersOfArcsRight, CounterRight),
+    FirstRight is NumbersOfArcsLeft + 1,
+    append(ArcsLeft, ArcsRight, Arcs1),
+    
+    append(Arcs2, [arc(m2, 4, s3)], Arcs3),
+
+    ArcsAux = [
+    arc(s, 0, s),
+    arc(s, 1, o3),
+    
+    arc(1, 0, 1),
+    arc(1, 3, s4),
+    arc(1, 4, o1),
+
+    arc(o1, 0, o1),
+    arc(o1, 1, o2),
+
+    arc(o2, 0, o2),
+
+    arc(o3, 0, o3),
+    arc(o3, 4, o4),
+
+    arc(o4, 0, o4),
+    arc(o4, 4, o2),
+
+    arc(s3, 0, s3),
+
+    arc(s4, 0, s4),
+    arc(s4, 4, s3)],
+
+    append(Arcs3, ArcsAux, Arcs),
+    print(Arcs), nl, nl, nl,
+
+    !,
     automaton(Line, _, Line, [source(s), sink(s3), sink(o2)],
-        [
-            arc(s, 0, s),
-            arc(s, 1, o3),
-            arc(s, 4, s1),
-            
-            arc(s1, 0, s1, [C+1]),
-            arc(s1, 2, s2),
-            %arc(s1, 3, s4),
-            %arc(s1, 4, o1),
-
-            arc(s2, 0, s2, [C-1]),
-            arc(s2, 4, s3),
-
-            arc(o1, 0, o1),
-            arc(o1, 1, o2),
-
-            arc(o3, 0, o3),
-            arc(o3, 4, o4),
-
-            arc(o4, 0, o4),
-            arc(o4, 4, o2),
-
-            arc(s4, 0, s4),
-            arc(s4, 4, s3)
-        ],
+       Arcs,
         [C], [0], [N]
     ).
 
