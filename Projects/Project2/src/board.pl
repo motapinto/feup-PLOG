@@ -42,7 +42,6 @@ printBoardLine([H|T], Line) :-
 %   Prints the contents of a line
 printBoardBody([], N, N).
 printBoardBody([H|T], N, Line) :-    
-   
     %   Iterates through the rows of the board
     printBarsRows(N),
     write('|  '),

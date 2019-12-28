@@ -1,4 +1,5 @@
 :-use_module(library(clpfd)).
+:-use_module(library(random)).
 
 reset_timer :- 
 	statistics(walltime, _).
@@ -17,6 +18,12 @@ clear_console(N) :-
 	N1 is N-1,
 	clear_console(N1).
 
-generate_board(N, Board) :-
-    length(Row, N),	    length(Row, N),
-    findall(Row, between(1, N, _), Board).
+generate_board(N, Matrix) :-
+	N > 4,
+	N == 5 -> (random(0, 11, Puzzle), choosePuzzle(Puzzle, Matrix)) ; true,
+	N == 6 -> (random(12, 21, Puzzle), choosePuzzle(Puzzle, Matrix)); true,
+	N == 7 -> (random(21, 25, Puzzle), choosePuzzle(Puzzle, Matrix)); true,
+	N > 7 -> (
+			length(Row, N),
+			findall(Row, between(1, N, _), Matrix)
+		) ; fail.

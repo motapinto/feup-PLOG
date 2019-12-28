@@ -2,16 +2,10 @@
 :-use_module(library(between)).
 :-[board].
 :-[lib].
+:-[puzzles].
 
 main(Matrix, N) :-
-    generate_board(N, Matrix),
-    % Matrix = [
-    %     A0, A1, A2, A3, A4, 
-    %     A5, A6, A7, A8, A9, 
-    %     A10, A11, A12, A13, A14, 
-    %     A15, A16, A17, A18, A19, 
-    %     A20, A21, A22, A23, A24
-    % ], 
+    %generate_board(N, Matrix),
     % Stores the matrix as 1 dimension
     append(Matrix, OneListMatrix),
     % Specifies the domain of the matrix
@@ -20,7 +14,7 @@ main(Matrix, N) :-
     solveMatrix(Matrix),
     % Restrictions for columns
     transpose(Matrix, TMatrix),
-    solveMatrix(TMatrix),
+    solveMatrix(TMatrix), !,
     % labeling of the one list matrix
     labeling([], OneListMatrix),
     % prints the game Board
@@ -85,8 +79,8 @@ allPointsAutomata(Line) :-
             
             arc(s1, 0, s1, [C+1]),
             arc(s1, 2, s2),
-            %arc(s1, 3, s4),
-            %arc(s1, 4, o1),
+            arc(s1, 3, s4),
+            arc(s1, 4, o1),
 
             arc(s2, 0, s2, [C-1]),
             arc(s2, 4, s3),
@@ -94,24 +88,18 @@ allPointsAutomata(Line) :-
             arc(o1, 0, o1),
             arc(o1, 1, o2),
 
+            arc(o2, 0, o2),
+
             arc(o3, 0, o3),
             arc(o3, 4, o4),
 
             arc(o4, 0, o4),
             arc(o4, 4, o2),
 
+            arc(s3, 0, s3),
+
             arc(s4, 0, s4),
             arc(s4, 4, s3)
         ],
         [C], [0], [N]
-    ).
-
-aux(Day, Allowed) :-
-    automaton(Day, _, Day,
-        [source(n),sink(n)],
-        [
-         arc(n, 0, n, [0]),
-         arc(n, 1, n, (C #\ Allowed -> [C+1]))
-        ],
-        [C],[0],[_N]
     ).
