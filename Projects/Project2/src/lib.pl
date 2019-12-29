@@ -22,15 +22,16 @@ clear_console(N) :-
 	clear_console(N1).
 
 generate_board(N, Selected, Matrix) :-
-	N > 4,
-	N == 5 -> (random(0, 11, Puzzle), choosePuzzle(Puzzle, Selected), choosePuzzle(Puzzle, Matrix)) ; true,
-	N == 6 -> (random(12, 21, Puzzle), choosePuzzle(Puzzle, Selected), choosePuzzle(Puzzle, Matrix)); true,
-	N == 7 -> (random(21, 25, Puzzle), choosePuzzle(Puzzle, Selected), choosePuzzle(Puzzle, Matrix)); true,
-	N > 7 -> (
-			length(Row, N),
-			findall(Row, between(1, N, _), Selected),
-			findall(Row, between(1, N, _), Matrix)
-		) ; fail.
+	% N > 4,
+	% N == 5 -> (random(0, 11, Puzzle), choosePuzzle(Puzzle, Selected), choosePuzzle(Puzzle, Matrix)) ; true,
+	% N == 6 -> (random(12, 21, Puzzle), choosePuzzle(Puzzle, Selected), choosePuzzle(Puzzle, Matrix)); true,
+	% N == 7 -> (random(21, 25, Puzzle), choosePuzzle(Puzzle, Selected), choosePuzzle(Puzzle, Matrix)); true,
+	% N > 7 -> (
+	% 		length(Row, N),
+	% 		findall(Row, between(1, N, _), Selected),
+	% 		findall(Row, between(1, N, _), Matrix)
+	% 	) ; fail.
+	choosePuzzle(2, Selected), choosePuzzle(2, Matrix).
 
 
 
