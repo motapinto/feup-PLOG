@@ -101,18 +101,18 @@ teste(List):-
 
 dotDistance([]).
 dotDistance([H | T]):-
-    automaton(H, [source(s), sink(s3), sink(o2)],
+    automaton(H, _, H, [source(s), sink(s3), sink(o2)],
         [
             arc(s, 0, s),
             arc(s, 1, o3),
             arc(s, 4, s1),
             
-            arc(s1, 0, s1),
+            arc(s1, 0, s1, [C+1]),
             arc(s1, 2, s2),
             arc(s1, 3, s4),
             arc(s1, 4, o1),
 
-            arc(s2, 0, s2),
+            arc(s2, 0, s2, [C-1]),
             arc(s2, 4, s3),
 
             arc(o1, 0, o1),
@@ -128,28 +128,25 @@ dotDistance([H | T]):-
 
             arc(s3, 0, s3),
 
-            arc(s4, 0, s4),
+            arc(s4, 0, s4, [C-1]),
             arc(s4, 4, s3)
-        ]
+        ],
+        [C], [0], [DeltaDist]
     ),
     length(H, Length),
-    nth0(First, H, 4),
-    nth0(Last,  H, 4),
-    First #\= Last,
-    iterateList(H, First, Last, 0, Length),
+
+    iterateList(H, DeltaDist, 0, Length),
     dotDistance(T).
 
-iterateList(_, _, _, Length, Length).
-iterateList(List, IndexFirst, IndexLast, Counter, Lenght):-
+iterateList(_, _, Length, Length).
+iterateList(List, DeltaDist, Counter, Lenght):-
     nth0(Counter, List, Elem),
-    DistanceLeft is Counter - IndexFirst,
-    DistanceRight is IndexLast - Counter,
 
-    DistanceLeft #= DistanceRight #<= Elem #= 2,
-    (DistanceRight #\= DistanceLeft #/\ DistanceLeft #>0 #/\ DistanceRight #>0) #<= Elem #= 3,
+    DeltaDist #= 0 #<= Elem #= 2,
+    DeltaDist #\=0 #<= Elem #= 3,
 
     NextCounter is Counter + 1,
-    iterateList(List, IndexFirst, IndexLast, NextCounter, Lenght).
+    iterateList(List, DeltaDist, NextCounter, Lenght).
 
 
 
