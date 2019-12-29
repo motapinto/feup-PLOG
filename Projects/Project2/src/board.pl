@@ -4,7 +4,7 @@ piece(1, 'O').
 piece(2, 'M').
 piece(3, 'N').
 piece(4, '*').
-piece(_, ' ').
+
 
 %   Prints the top part of the board
 printBoardTop(0):-
