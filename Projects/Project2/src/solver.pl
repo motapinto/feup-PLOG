@@ -1,23 +1,31 @@
 :-use_module(library(lists)).
 :-use_module(library(between)).
 :-use_module(library(system)).
+:-use_module(library(random)).
 :-[board].
 :-[lib].
 :-[generator].
 :-[puzzles].
 
-main(N) :-
+main(N, Matrix) :-
     % Generates a board bazed on predefined boards
     generate_board(N, Matrix),
-    once(printBoard(Matrix, N)),
+    generate_board(N, Matrix1),
+    generate_board(N, Matrix2),
+    generate_board(N, Matrix3),
+    generate_board(N, Matrix4),
+    generate_board(N, Matrix5),
+    generate_board(N, Matrix6),
+    generate_board(N, Matrix7),
+
+    %once(printBoard(Matrix, N)),
     % Solves the random puzzle
-    once(solver(Matrix, N)),
+    solver(Matrix, N).
     % prints the game Board
-    once(printBoard(Matrix, N)).
+    %once(printBoard(Matrix, N)).
 
 solver(Matrix, N) :-
     % Resets time for statistics
-    reset_timer,
     % Stores the matrix as 1 dimension
     append(Matrix, OneListMatrix),
     % Specifies the domain of the matrix
@@ -30,10 +38,24 @@ solver(Matrix, N) :-
     % labeling of the one list matrix
     %median , ffc, 
     % bisect
-
-    !, labeling([bisect], OneListMatrix),
+    
+    !, 
+    reset_timer,
+    labeling([step, leftmost], OneListMatrix),
+    %labeling([bisect, min], OneListMatrix),
+    %labeling([bisect, max], OneListMatrix),
+    %labeling([bisect, first_fail], OneListMatrix),
+    %labeling([bisect, anti_first_fail], OneListMatrix),
+    %labeling([bisect, occurrence], OneListMatrix),
+    %labeling([bisect, most_constrained], OneListMatrix),
+    %labeling([bisect, max_regret], OneListMatrix),
     % prints elapsed time
     print_time.
+
+
+selRandom(ListOfVars, Var, Rest):-
+    random_select(Var, ListOfVars, Rest).
+
 
 % Solves received matrix (solves only the lines)
 solveMatrix([], _).
@@ -53,7 +75,6 @@ solveMatrix([H|T], N) :-
             arc(s2, 0, s5),
             arc(s2, 4, s3),
 
-            arc(s5, _, )
 
             arc(o1, 0, o1),
             arc(o1, 1, o2),
