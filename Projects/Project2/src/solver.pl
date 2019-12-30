@@ -6,16 +6,16 @@
 :-[generator].
 :-[puzzles].
 
-main(Matrix, N) :-
+main(N) :-
     % Generates a board bazed on predefined boards
-    generate_board(N, Matrix), !,
+    generate_board(N, Matrix),
     once(printBoard(Matrix, N)),
     % Solves the random puzzle
-    solver(Matrix), !,
+    once(solver(Matrix, N)),
     % prints the game Board
     once(printBoard(Matrix, N)).
 
-solver(Matrix) :-
+solver(Matrix, N) :-
     % Resets time for statistics
     reset_timer,
     % Stores the matrix as 1 dimension
@@ -23,18 +23,21 @@ solver(Matrix) :-
     % Specifies the domain of the matrix
     domain(OneListMatrix, 0, 4), 
     % Restrictions for lines
-    solveMatrix(Matrix),
+    solveMatrix(Matrix, N),
     % Restrictions for columns
     transpose(Matrix, TMatrix),
-    solveMatrix(TMatrix), 
+    solveMatrix(TMatrix, N), 
     % labeling of the one list matrix
-    !, labeling([], OneListMatrix),
+    %median , ffc, 
+    % bisect
+
+    !, labeling([bisect], OneListMatrix),
     % prints elapsed time
     print_time.
 
 % Solves received matrix (solves only the lines)
-solveMatrix([]).
-solveMatrix([H|T]) :-
+solveMatrix([], _).
+solveMatrix([H|T], N) :-
     automaton(H, _, H, [source(s), sink(s3), sink(o2)],
         [
             arc(s, 0, s),
@@ -47,7 +50,10 @@ solveMatrix([H|T]) :-
             arc(s1, 4, o1),
 
             arc(s2, 0, s2, [C-1]),
+            arc(s2, 0, s5),
             arc(s2, 4, s3),
+
+            arc(s5, _, )
 
             arc(o1, 0, o1),
             arc(o1, 1, o2),
@@ -67,12 +73,17 @@ solveMatrix([H|T]) :-
         ],
         [C], [0], [DeltaDist]
     ),    
-    solveLine(H, DeltaDist),
-    solveMatrix(T).
+    Naux is N - 1,
+    solveLine(H, DeltaDist, 0, Naux),
+    solveMatrix(T, N).
 
 % Restricts each line (2 dots and 1 letter per line + restricts line)
-solveLine([], _).
-solveLine([H | T], DeltaDist):-  
-    DeltaDist #= 0 #<= H #= 2,
-    DeltaDist #\=0 #<= H #= 3,
-    solveLine(T, DeltaDist).
+solveLine([], _, _, _).
+solveLine([H | T], DeltaDist, Counter, Length):-  
+    (
+        (Counter \=0, Counter \= Length) ->
+        fd_batch([DeltaDist #= 0 #<= H #= 2,DeltaDist #\=0 #<= H #= 3]); true
+    ),
+  
+    CounterAux is Counter + 1,
+    solveLine(T, DeltaDist, CounterAux, Length).

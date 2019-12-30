@@ -10,7 +10,8 @@ reset_timer :-
 print_time :-
 	statistics(walltime,[_,T]),
 	TS is ((T // 10) * 10) / 1000,
-    nl, write('Solution Time: '), write(TS), write('s'), nl, nl.
+	nl, write('Solution Time: '), write(TS), write('s'), nl, nl,
+	fd_statistics.
 
 clear :- 
 	clear_console(100), !.
