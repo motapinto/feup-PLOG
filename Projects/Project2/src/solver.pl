@@ -3,18 +3,19 @@
 :-use_module(library(system)).
 :-[board].
 :-[lib].
+:-[generator].
 :-[puzzles].
 
 main(Matrix, N) :-
     % Generates a board bazed on predefined boards
-    generate_board(N, Selected, Matrix),
-    once(printBoard(Selected, N)),
+    generate_board(N, Matrix), !,
+    once(printBoard(Matrix, N)),
     % Solves the random puzzle
-    solver(Matrix, N),
+    solver(Matrix), !,
     % prints the game Board
     once(printBoard(Matrix, N)).
 
-solver(Matrix, N) :-
+solver(Matrix) :-
     % Resets time for statistics
     reset_timer,
     % Stores the matrix as 1 dimension
@@ -66,7 +67,7 @@ solveMatrix([H|T]) :-
         ],
         [C], [0], [DeltaDist]
     ),    
-    solveLine(H),
+    solveLine(H, DeltaDist),
     solveMatrix(T).
 
 % Restricts each line (2 dots and 1 letter per line + restricts line)
@@ -74,4 +75,4 @@ solveLine([], _).
 solveLine([H | T], DeltaDist):-  
     DeltaDist #= 0 #<= H #= 2,
     DeltaDist #\=0 #<= H #= 3,
-    solveLine(T).
+    solveLine(T, DeltaDist).

@@ -34,8 +34,7 @@ printBarsRows(Counter):-
 printBoardLine([], _):-
     write('\n').
 printBoardLine([H|T], Line) :-
-    piece(H, S),
-    write(S),
+    (integer(H) -> (piece(H, S), write(S)) ; write(' ')),
     write('  |  '),
     printBoardLine(T, Line).
     

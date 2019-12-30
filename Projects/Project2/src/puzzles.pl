@@ -1,3 +1,13 @@
+generate_board(N, Matrix) :-
+	N > 4,
+	N == 5 -> (random(0, 11, Puzzle), choosePuzzle(Puzzle, Matrix)) ; true,
+	N == 6 -> (random(12, 21, Puzzle), choosePuzzle(Puzzle, Matrix)); true,
+	N == 7 -> (random(21, 25, Puzzle), choosePuzzle(Puzzle, Matrix)); true,
+	N > 7 -> (
+			length(Row, N),
+			findall(Row, between(1, N, _), Matrix)
+		) ; fail.
+
 choosePuzzle(I, M) :-
     I == 0 -> puzzle0(M) ; true,
     I == 1 -> puzzle1(M) ; true,
