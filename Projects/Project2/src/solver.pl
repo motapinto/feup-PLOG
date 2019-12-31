@@ -17,15 +17,24 @@ main(N, Matrix) :-
     generate_board(N, Matrix5),
     generate_board(N, Matrix6),
     generate_board(N, Matrix7),
+    solver(Matrix, N, 1),
+    solver(Matrix1, N, 2),
+    solver(Matrix2, N, 3),
+    solver(Matrix3, N, 4),
+    solver(Matrix4, N, 5),
+    solver(Matrix5, N, 6),
+    solver(Matrix6, N, 7),
+    solver(Matrix7, N, 8).
 
     %once(printBoard(Matrix, N)),
     % Solves the random puzzle
-    solver(Matrix, N).
+    % solver(Matrix, N).
     % prints the game Board
     %once(printBoard(Matrix, N)).
 
-solver(Matrix, N) :-
+solver(Matrix, N, Y) :-
     % Resets time for statistics
+    reset_timer,
     % Stores the matrix as 1 dimension
     append(Matrix, OneListMatrix),
     % Specifies the domain of the matrix
@@ -36,26 +45,16 @@ solver(Matrix, N) :-
     transpose(Matrix, TMatrix),
     solveMatrix(TMatrix, N), 
     % labeling of the one list matrix
-    %median , ffc, 
-    % bisect
-    
-    !, 
-    reset_timer,
-    labeling([step, leftmost], OneListMatrix),
-    %labeling([bisect, min], OneListMatrix),
-    %labeling([bisect, max], OneListMatrix),
-    %labeling([bisect, first_fail], OneListMatrix),
-    %labeling([bisect, anti_first_fail], OneListMatrix),
-    %labeling([bisect, occurrence], OneListMatrix),
-    %labeling([bisect, most_constrained], OneListMatrix),
-    %labeling([bisect, max_regret], OneListMatrix),
+    Y == 1 ->  labeling([step, leftmost], OneListMatrix) ; true,
+    Y == 2 ->  labeling([step, min], OneListMatrix) ; true,
+    Y == 3 ->  labeling([step, max], OneListMatrix) ; true,
+    Y == 4 ->  labeling([step, first_fail], OneListMatrix) ; true,
+    Y == 5 ->  labeling([step, anti_first_fail], OneListMatrix) ; true,
+    Y == 6 ->  labeling([step, occurrence], OneListMatrix) ; true,
+    Y == 7 ->  labeling([step, most_constrained], OneListMatrix) ; true,
+    Y == 8 ->  labeling([step, max_regret], OneListMatrix) ; true,
     % prints elapsed time
     print_time.
-
-
-selRandom(ListOfVars, Var, Rest):-
-    random_select(Var, ListOfVars, Rest).
-
 
 % Solves received matrix (solves only the lines)
 solveMatrix([], _).
