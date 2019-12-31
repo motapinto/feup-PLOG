@@ -1,7 +1,3 @@
-:-use_module(library(lists)).
-:-use_module(library(between)).
-:-use_module(library(system)).
-:-use_module(library(random)).
 :-[board].
 :-[lib].
 :-[generator].
@@ -10,25 +6,9 @@
 main(N, Matrix) :-
     % Generates a board bazed on predefined boards
     generate_board(N, Matrix),
-    generate_board(N, Matrix1),
-    generate_board(N, Matrix2),
-    generate_board(N, Matrix3),
-    generate_board(N, Matrix4),
-    generate_board(N, Matrix5),
-    generate_board(N, Matrix6),
-    generate_board(N, Matrix7),
-    solver(Matrix, N, 1),
-    solver(Matrix1, N, 2),
-    solver(Matrix2, N, 3),
-    solver(Matrix3, N, 4),
-    solver(Matrix4, N, 5),
-    solver(Matrix5, N, 6),
-    solver(Matrix6, N, 7),
-    solver(Matrix7, N, 8).
-
-    %once(printBoard(Matrix, N)),
+    once(printBoard(Matrix, N)),
     % Solves the random puzzle
-    % solver(Matrix, N).
+    solver(Matrix, N),
     % prints the game Board
     %once(printBoard(Matrix, N)).
 
@@ -45,14 +25,7 @@ solver(Matrix, N, Y) :-
     transpose(Matrix, TMatrix),
     solveMatrix(TMatrix, N), 
     % labeling of the one list matrix
-    Y == 1 ->  labeling([step, leftmost], OneListMatrix) ; true,
-    Y == 2 ->  labeling([step, min], OneListMatrix) ; true,
-    Y == 3 ->  labeling([step, max], OneListMatrix) ; true,
-    Y == 4 ->  labeling([step, first_fail], OneListMatrix) ; true,
-    Y == 5 ->  labeling([step, anti_first_fail], OneListMatrix) ; true,
-    Y == 6 ->  labeling([step, occurrence], OneListMatrix) ; true,
-    Y == 7 ->  labeling([step, most_constrained], OneListMatrix) ; true,
-    Y == 8 ->  labeling([step, max_regret], OneListMatrix) ; true,
+    labeling([], OneListMatrix),
     % prints elapsed time
     print_time.
 
