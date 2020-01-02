@@ -25,7 +25,18 @@ solver(Matrix, N, Y) :-
     transpose(Matrix, TMatrix),
     solveMatrix(TMatrix, N), 
     % labeling of the one list matrix
+<<<<<<< Updated upstream
     labeling([], OneListMatrix),
+=======
+    (Y == 1 ->  labeling([step, leftmost], OneListMatrix) ; true),
+    (Y == 2 ->  labeling([step, min], OneListMatrix) ; true),
+    (Y == 3 ->  labeling([step, max], OneListMatrix) ; true),
+    (Y == 4 ->  labeling([step, first_fail], OneListMatrix) ; true),
+    (Y == 5 ->  labeling([step, anti_first_fail], OneListMatrix) ; true),
+    (Y == 6 ->  labeling([step, occurrence], OneListMatrix) ; true),
+    (Y == 7 ->  labeling([step, most_constrained], OneListMatrix) ; true),
+    (Y == 8 ->  labeling([step, max_regret], OneListMatrix) ; true),
+>>>>>>> Stashed changes
     % prints elapsed time
     print_time.
 
