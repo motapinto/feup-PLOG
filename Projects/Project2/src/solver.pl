@@ -10,9 +10,9 @@ main(N, Matrix) :-
     % Solves the random puzzle
     solver(Matrix, N),
     % prints the game Board
-    %once(printBoard(Matrix, N)).
+    once(printBoard(Matrix, N)).
 
-solver(Matrix, N, Y) :-
+solver(Matrix, N) :-
     % Resets time for statistics
     reset_timer,
     % Stores the matrix as 1 dimension
@@ -20,23 +20,12 @@ solver(Matrix, N, Y) :-
     % Specifies the domain of the matrix
     domain(OneListMatrix, 0, 4), 
     % Restrictions for lines
-    solveMatrix(Matrix, N),
+    once(solveMatrix(Matrix, N)),
     % Restrictions for columns
     transpose(Matrix, TMatrix),
-    solveMatrix(TMatrix, N), 
+    once(solveMatrix(TMatrix, N)), 
     % labeling of the one list matrix
-<<<<<<< Updated upstream
-    labeling([], OneListMatrix),
-=======
-    (Y == 1 ->  labeling([step, leftmost], OneListMatrix) ; true),
-    (Y == 2 ->  labeling([step, min], OneListMatrix) ; true),
-    (Y == 3 ->  labeling([step, max], OneListMatrix) ; true),
-    (Y == 4 ->  labeling([step, first_fail], OneListMatrix) ; true),
-    (Y == 5 ->  labeling([step, anti_first_fail], OneListMatrix) ; true),
-    (Y == 6 ->  labeling([step, occurrence], OneListMatrix) ; true),
-    (Y == 7 ->  labeling([step, most_constrained], OneListMatrix) ; true),
-    (Y == 8 ->  labeling([step, max_regret], OneListMatrix) ; true),
->>>>>>> Stashed changes
+    labeling([leftmost, median], OneListMatrix),
     % prints elapsed time
     print_time.
 
@@ -57,7 +46,6 @@ solveMatrix([H|T], N) :-
             arc(s2, 0, s2, [C-1]),
             arc(s2, 0, s5),
             arc(s2, 4, s3),
-
 
             arc(o1, 0, o1),
             arc(o1, 1, o2),
