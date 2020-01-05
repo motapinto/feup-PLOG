@@ -34,6 +34,7 @@
     % list_to_fdset(Numbers, FDS_Numbers), 
     % Var in_set FDS_Numbers.
 
+% in/2 e in_set/2 mantêm consistência do domínio e são materializáveis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Aritmética [#= | #\= | #< | #=< | #> | #>=] (podem ser materializadas)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -48,10 +49,13 @@
     % C in 5..15,minimum(C, [A,B]).
     % A in 5..10,B in 5..10,C in 5..10
 
-% scalar_product/3 scalar_product/4 scalar_product/5 scalar_product/6 ?
+% scalar_product(+Coeffs, +Xs, +RelOp, ?Value)
+    % Verdadeira se sum(Coeffs*Xs) RelOp Value
+% scalar_product_reif(+Coeffs, +Xs, +RelOp, ?Value, ?Reif)
+    % Equivalente a materializar a restrição anterior (Mete em Reif o valor de verdade (0/1))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Preposicional [X #= 4 #\/ Y #= 6]
+% Preposicional [fórmulas proposicionais sobre restrições materializáveis]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % P#/\Q  -> verdadeira se as restrições P e Q são ambas verdadeiras (AND)
 % P#\/Q  -> verdadeira se pelo menos uma das restrições P e Q é verdadeira (OR)
@@ -60,7 +64,6 @@
 % P#=>Q
 % Q#<=P  -> verdadeira se a restrição Q é verdadeira ou se a restrição P é falsa (implicação)
 % P#<=>Q -> verdadeira se P e Q são ambas verdadeiras ou ambas falsas (equivalência)
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Combinatoria
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -68,7 +71,7 @@
     % Verdadeira se cada elemento de Xs é igual a um K e para cada 
     % par K-V exatamente V elementos de Xs são iguais a K
 
-    % global_cardinality([A,B,C],[1-2,3-1]).
+    % global_cardinality([A,B,C],[1-2,3-1]). [elemento 1 aparece 2 e elemento 3 aparece 1 vez]
     % A in{1}\/{3},
     % B in{1}\/{3},
     % C in{1}\/{3} 
@@ -90,7 +93,6 @@
     % X#\=Y, X#=1.
         % X = 1, Y = 3, Z = 3
 
-% ????????????????????????????????????????????????????????????
 % assignment/2 assignment/3 (Xi=j sse Yj=i) -> o valor na pos 4 é 1 o valor na pos 1 é 2 o valor na pos 5 é 3, ...
     % assignment([4,1,5,2,3], Ys).
     % Ys = [2,4,5,1,3]
