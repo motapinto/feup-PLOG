@@ -51,13 +51,54 @@ prog2(N, M, L1, L2) :-
 % verificar que prog2(2,4,L1,L2) nao tem simetrias e prog1(2,4,L1,L2) tem
 
 %4)
-gym_pairs(MenHeights, WomenHeights, Delta, Pairs) :-
-    length(MenHeights, N), length(WomenHeights, N),
-    domain(WomenIndexes, 1, N), all_distinct(WomenIndexes),
-	domain(MensIndexes, 1, N), all_distinct(MensIndexes),
-	
+% gym_pairs(MenHeights, WomenHeights, Delta, Pairs):-
+%     length(MenHeights, N), length(WomenHeights, N),
+% 	length(MensIndexes, N), domain(MensIndexes, 1, N), all_distinct(MensIndexes),
+%     length(WomenIndexes, N), domain(WomenIndexes, 1, N), all_distinct(WomenIndexes),
+%     restrictions(MenHeights, WomenHeights, Delta, MensIndexes, WomenIndexes),
+%     % eliminate symetry
+%     length(MP, N), sorting(MensIndexes, MP, MensIndexes),
+%     % find solutions
+% 	append(MensIndexes, WomenIndexes, Vars),
+%     labeling([], Vars),
+%     % store pairs has asked
+%     keys_and_values(Pairs, MensIndexes, WomenIndexes).
 
-height_rule(MenHeights, WomenHeights, Delta, MIndex, WIndex, 0, 0):-
-    element(MIndex, MenHeights, MElem),
-    element(WIndex, WomenHeights, WElem),
-    MElem #> WElem #/\ MElem - WElem #=< Delta.
+% restrictions(_, _, _, [], []).
+% restrictions(MenHeights, WomenHeights, Delta, [MenH|MenT], [WomenH|WomenT]) :-
+%     element(MenH, MenHeights, MenElem),
+% 	element(WomenH, WomenHeights, WomenElem),
+%     MenElem #> WomenElem #/\ MenElem - WomenElem #=< Delta,
+%     restrictions(MenHeights, WomenHeights, Delta, MenT, WomenT).
+
+%5)
+optimal_skating_pairs(MenHeights, WomenHeights, Delta, Pairs):-
+    length(MenHeights, NMen),
+    length(WomenHeights, NWomen),
+    minimum(Min, [NMen, NWomen]),
+    NPairs in 1..Min,
+    N #= NPairs,
+
+    length(Men, NPairs),
+    length(Women, NPairs),
+    domain(Men, 1, NMen),
+    domain(Women, 1, NWomen),
+    all_distinct(Men),
+    all_distinct(Women),
+
+    % eliminate symetry
+    length(MP, N), sorting(Men, MP, Men),
+
+    restrictionsOpt(Men, Women, Delta, MenHeights, WomenHeights),
+
+    append(Men, Women, Vars),
+    labeling([maximize(N)], Vars),
+    % store pairs has asked
+    keys_and_values(Pairs, Men, Women).
+
+restrictionsOpt([], [], _, _, _).
+restrictionsOpt([M|Men], [W|Women], Delta, MenHeights, WomenHeights):-
+    element(M, MenHeights, MH),
+    element(W, WomenHeights, WH),
+    MH #>= WH #/\ Delta #>= MH - WH,
+    restrictionsOpt(Men, Women, Delta, MenHeights, WomenHeights).
