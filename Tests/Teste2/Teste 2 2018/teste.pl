@@ -51,54 +51,41 @@ prog2(N, M, L1, L2) :-
 % verificar que prog2(2,4,L1,L2) nao tem simetrias e prog1(2,4,L1,L2) tem
 
 %4)
-% gym_pairs(MenHeights, WomenHeights, Delta, Pairs):-
-%     length(MenHeights, N), length(WomenHeights, N),
-% 	length(MensIndexes, N), domain(MensIndexes, 1, N), all_distinct(MensIndexes),
-%     length(WomenIndexes, N), domain(WomenIndexes, 1, N), all_distinct(WomenIndexes),
-%     restrictions(MenHeights, WomenHeights, Delta, MensIndexes, WomenIndexes),
-%     % eliminate symetry
-%     length(MP, N), sorting(MensIndexes, MP, MensIndexes),
-%     % find solutions
-% 	append(MensIndexes, WomenIndexes, Vars),
-%     labeling([], Vars),
-%     % store pairs has asked
-%     keys_and_values(Pairs, MensIndexes, WomenIndexes).
+gym_pairs(MenHeights, WomenHeights, Delta, Pairs):-
+    length(MenHeights, N), length(WomenHeights, N),
+	length(MensIndexes, N), domain(MensIndexes, 1, N), all_distinct(MensIndexes),
+    length(WomenIndexes, N), domain(WomenIndexes, 1, N), all_distinct(WomenIndexes),
+    restrictions(MenHeights, WomenHeights, Delta, MensIndexes, WomenIndexes),
+    % eliminate symetry
+    length(MP, N), sorting(MensIndexes, MP, MensIndexes),
+    % find solutions
+	append(MensIndexes, WomenIndexes, Vars),
+    labeling([], Vars),
+    % store pairs has asked
+    keys_and_values(Pairs, MensIndexes, WomenIndexes).
 
-% restrictions(_, _, _, [], []).
-% restrictions(MenHeights, WomenHeights, Delta, [MenH|MenT], [WomenH|WomenT]) :-
-%     element(MenH, MenHeights, MenElem),
-% 	element(WomenH, WomenHeights, WomenElem),
-%     MenElem #> WomenElem #/\ MenElem - WomenElem #=< Delta,
-%     restrictions(MenHeights, WomenHeights, Delta, MenT, WomenT).
+restrictions(_, _, _, [], []).
+restrictions(MenHeights, WomenHeights, Delta, [MenH|MenT], [WomenH|WomenT]) :-
+    element(MenH, MenHeights, MenElem),
+	element(WomenH, WomenHeights, WomenElem),
+    MenElem #> WomenElem #/\ MenElem - WomenElem #=< Delta,
+    restrictions(MenHeights, WomenHeights, Delta, MenT, WomenT).
 
 %5)
 optimal_skating_pairs(MenHeights, WomenHeights, Delta, Pairs):-
-    length(MenHeights, NMen),
-    length(WomenHeights, NWomen),
-    minimum(Min, [NMen, NWomen]),
-    NPairs in 1..Min,
-    N #= NPairs,
+    % restrictions
+    restrictions_optimal(1, MenHeights, WomenHeights, Delta, MenIndexes, WomenIndexes), 
+    all_distinct(MenIndexes), all_distinct(WomenIndexes),
+    length(MenIndexes, N), append(MenIndexes, WomenIndexes, Vars),
+    !, labeling([maximize(N)], Vars),
+    keys_and_values(Pairs, MenIndexes, WomenIndexes).
 
-    length(Men, NPairs),
-    length(Women, NPairs),
-    domain(Men, 1, NMen),
-    domain(Women, 1, NWomen),
-    all_distinct(Men),
-    all_distinct(Women),
-
-    % eliminate symetry
-    length(MP, N), sorting(Men, MP, Men),
-
-    restrictionsOpt(Men, Women, Delta, MenHeights, WomenHeights),
-
-    append(Men, Women, Vars),
-    labeling([maximize(N)], Vars),
-    % store pairs has asked
-    keys_and_values(Pairs, Men, Women).
-
-restrictionsOpt([], [], _, _, _).
-restrictionsOpt([M|Men], [W|Women], Delta, MenHeights, WomenHeights):-
-    element(M, MenHeights, MH),
-    element(W, WomenHeights, WH),
-    MH #>= WH #/\ Delta #>= MH - WH,
-    restrictionsOpt(Men, Women, Delta, MenHeights, WomenHeights).
+restrictions_optimal(_, [], _, _, [], []).
+restrictions_optimal(ManIndex, [ManHeight | Men], Women, Delta, [ManIndex | MenPairs], [WomenIndex | WomenPairs]):-
+    element(WomenIndex, Women, WomenHeight),
+    ManHeight #>= WomenHeight #/\ ManHeight - WomenHeight #< Delta,
+    NextManIndex is ManIndex + 1,
+    restrictions_optimal(NextManIndex, Men, Women, Delta, MenPairs, WomenPairs).
+restrictions_optimal(ManIndex, [_ | Men], Women, Delta, MenPairs, WomenPairs):-
+    NextManIndex is ManIndex + 1,
+    restrictions_optimal(NextManIndex, Men, Women, Delta, MenPairs, WomenPairs).

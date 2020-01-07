@@ -68,25 +68,23 @@ build(Budget, NPacks, ObjectCosts, ObjectPacks, Objects, UsedPacks) :-
     % find solution
     labeling([maximize(UsedPacks)], Objects).
 
-% 5) ?
-embrulha(Rolos, Presentes, RolosSelecionados) :-
-    length(Rolos, Domain), length(Presentes, Length),
-    length(RolosSelecionados, Length), domain(RolosSelecionados, 1, Domain),
-    % presents restrictions
-    presents(Rolos, Presentes, RolosSelecionados),
-    labeling([], RolosSelecionados).
+% 5)
+cut(Boards, Shelves, SelectedBoards):-
+    length(Shelves, NumShelves),
+    length(Boards, NumBoards),
+    length(SelectedBoards, NumShelves),
+    domain(SelectedBoards, 1, NumBoards),
+    makeItems(SelectedBoards, Shelves, Items),
+    makeBins(Boards, 1, Bins),    
+    bin_packing(Items, Bins),
+    labeling([], SelectedBoards).
 
-presents(Rolos, [], []).  
-presents(Rolos, [HPres|TPres], [HIndex|TIndex]) :-
-    element(HIndex, Rolos, Quantity),
-    Quantity #> HPres,
-    NewQuantity #= Quantity - HPres,
-    updateList(Rolos, HIndex, NewQuantity, NewRolos, 1),
-    presents(NewRolos, TPres, TIndex).
+makeItems([], [], []).
+makeItems([Bin | Bins], [Shelf | Shelves], [item(Bin, Shelf) | Items]):- 
+    makeItems(Bins, Shelves, Items).
 
-updateList([], _ , _, [], _).
-updateList([PrevH|PrevT], Index, Elem, [NewH|NewT], Counter) :-
-    Index #= Counter #=> NewH #= Elem,
-    Index #\= Counter #=> NewH #= PrevH,
-    CounterNext #= Counter + 1,
-    updateList(PrevT, Index, Elem, NewT, CounterNext).
+makeBins([], _, []).
+makeBins([Board | Boards], Id, [bin(Id, BinSize) | Bins]):-
+    BinSize in 0..Board,
+    NextID is Id + 1,
+    makeBins(Boards, NextID, Bins).
