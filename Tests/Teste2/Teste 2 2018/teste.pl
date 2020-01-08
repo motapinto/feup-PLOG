@@ -42,7 +42,6 @@ prog2(N, M, L1, L2) :-
     length(L1, N),
     length(P, N),
     N1 is N-1, length(L2, N1),
-    all_distinct(L1), all_distinct(L2),
     domain(L1, 1, M),
     domain(L2, 1, M),
     check1(L1, L2),
@@ -50,7 +49,7 @@ prog2(N, M, L1, L2) :-
     labeling([], L1).
 % verificar que prog2(2,4,L1,L2) nao tem simetrias e prog1(2,4,L1,L2) tem
 
-%4)
+% 4)
 gym_pairs(MenHeights, WomenHeights, Delta, Pairs):-
     length(MenHeights, N), length(WomenHeights, N),
 	length(MensIndexes, N), domain(MensIndexes, 1, N), all_distinct(MensIndexes),

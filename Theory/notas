@@ -1,10 +1,3 @@
-DUVIDAS
-
-Não estamos a entender o redo no removePieceAsk qunado metemos color invés de Color1
-
-
-
-
 
 % how to open files: consult(filePath).
 % how to debug: trace.
@@ -24,7 +17,6 @@ spy predicate.
 nospy predicate.
 
 Backtraking: problema prolog (constantes nas clausulas)
-
 
 Caso um predicado der fail todos os assignments são perdidos. 
 
@@ -48,6 +40,3 @@ Debug:
 trace / notrace
 spy "predicate" / nospy "predicate" / spyall / nospyall
 l -> leap function call
-
-
-

@@ -23,7 +23,8 @@ test([X1, X2, X3 | Xs]) :-
 % depois disso, verifica que para cada grupo de 3 elementos consecutivos 
 % têm que estar ordenados por ordem crescente ou decrescente nao podendo haver elementos iguais
 
-%2) Não é possível etiquetar Is, pois estas variáveis não têm domínio definido, e nem todas as restrições foram colocadas antes da fase da pesquisa.
+% 2) a) As variáveis de domínio estão a ser instanciadas antes da fase de pesquisa e nem todas as
+%       restrições foram colocadas antes da fase da pesquisa 
 
 :- use_module(library(clpfd)).
 % 3)
